@@ -4,25 +4,25 @@
 
 <div class='p-3'>
   <div  class='grid grid-cols-4 gap-4'>
-    <div class='bg-blue-600 h-[180px] rounded-2xl pl-7 py-4 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+    <div class='bg-gradient-to-br from-blue-700 to-blue-400 h-[180px] rounded-2xl pl-7 py-4 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>Ongoing Rentals</p>
       <h2 class='text-[55px] font-sans  leading-[.9]'>12</h2>
       <p class='text-[13px] mb-5 mt-2'>Currently Active</p>
       <p class='text-[13px]'>+ 15% from last month</p>
     </div>
-    <div class='bg-green-500 h-[180px] rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+    <div class='bg-gradient-to-br from-green-600 to-green-400 h-[180px] rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>Upcoming Bookings</p>
       <h2 class='text-[55px] font-sans  leading-[.9]'>6</h2>
       <p class='text-[13px] mb-5 mt-2'>Next 7 Days</p>
       <p class='text-[13px]'>3 require confirmation</p>
     </div>
-    <div class='bg-violet-500 h-[180px] rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+    <div class='bg-gradient-to-br from-violet-700 to-violet-400 h-[180px] rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>Monthly Revenue</p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>45k</h2>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>₱45k</h2>
       <p class='text-[13px] mb-5 mt-2'>This Month</p>
       <p class='text-[13px]'>+23% from last month</p>
     </div>
-    <div class='bg-red-600 h-[180px] rounded-xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+    <div class='bg-gradient-to-br from-red-700 to-red-400 h-[180px] rounded-xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>Overdue Returns</p>
       <h2 class='text-[55px] font-sans  leading-[.9]'>2</h2>
       <p class='text-[13px] mb-5 mt-2'>Requires Attention</p>
@@ -88,12 +88,12 @@
       <div class='grid grid-cols-2 gap-4'>
         <div class='bg-sky-50  shadow-sm  p-3 pl-5 rounded-md'>
           <p>Total Equipment</p>
-          <h2 class='text-4xl font-semibold leading-8 mb-3'>24</h2>
-          <p class='text-green-500 font-medium'>18 Available</p>
+          <h2 class='text-4xl font-semibold leading-8 mb-3'>{{count}}</h2>
+          <p class='text-green-500 font-medium'>{{available}} Available</p>
         </div>
         <div class='bg-sky-50  shadow-sm  p-3 pl-5 rounded-md'>
           <p>Categories</p>
-          <h2 class='text-4xl  leading-8 mb-3'>8</h2>
+          <h2 class='text-4xl  leading-8 mb-3'>{{category}}</h2>
           <p class='text-gray-300 '>Power Tools, Hand Tools</p>
         </div>
       </div>
