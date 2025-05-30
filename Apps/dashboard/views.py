@@ -1,4 +1,26 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from inventory.models import Equipments
+import math
 def info(request):
-  return render(request, 'apps/dashboard/index.html')
+  equipments =Equipments.objects.all()
+  equipments_count = Equipments.objects.count()
+  categories = Equipments.objects.values_list('category').distinct()
+  unique = sorted(set(categories))
+  total = 0
+  avail = 0
+  
+  for equipment in equipments:
+    total += equipment.total_quantity
+    avail += equipment.available_quantity 
+  data = {
+    'count': equipments_count,
+    'equipments': equipments, 
+    'category': len(unique),
+    'available': avail,
+    'rented': total - avail,
+    'available_percent': math.floor((avail / total) * 100),
+    'rented_percent' : math.floor(((total - avail) / total) * 100 ),
+    
+  }
+  return render(request, 'apps/dashboard/index.html', data)
