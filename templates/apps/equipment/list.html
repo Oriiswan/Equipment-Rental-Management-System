@@ -1,28 +1,28 @@
 {% extends "base.html" %}
 {% block 'nav' %}Equipment Management{% endblock 'nav' %}
 {% block 'content' %}
-
+{% load static %}
 <div class='p-3'>
   <div  class='grid grid-cols-4 gap-4 mb-20'>
-    <div class='bg-blue-600  rounded-2xl pl-7 py-4 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+    <div class='bg-gradient-to-br from-blue-700 to-blue-400 rounded-2xl pl-7 py-4 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'><Table>Total Equipment</Table></p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>24</h2>
-      <p class='text-[13px] mt-2'>4 Categories</p>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>{{count}}</h2>
+      <p class='text-[13px] mt-2'>{{category}} Categories</p>
       
     </div>
-    <div class='bg-green-500  rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+    <div class='bg-gradient-to-br from-green-600 to-green-400  rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>Available Now</p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>18</h2>
-      <p class='text-[13px] mb-5 mt-2'>75% Available</p>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>{{available}}</h2>
+      <p class='text-[13px] mb-5 mt-2'>{{available_percent}}% Available</p>
      
     </div>
-    <div class='bg-violet-600  rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+    <div class='bg-gradient-to-br from-violet-700 to-violet-400  rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>Currently Rented</p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>6</h2>
-      <p class='text-[13px] mb-5 mt-2'>25% Utilization</p>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>{{rented}}</h2>
+      <p class='text-[13px] mb-5 mt-2'>{{rented_percent}}% Utilization</p>
    
     </div>
-    <div class='bg-red-600  rounded-xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+    <div class='bg-gradient-to-br from-red-700 to-red-400 rounded-xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>Under Maintenance</p>
       <h2 class='text-[55px] font-sans  leading-[.9]'>0</h2>
       <p class='text-[13px] mb-5 mt-2'>All Operations</p>
@@ -34,90 +34,48 @@
     <div class='text-xl'>Equipment Inventory</div> 
 
     <ul class='flex gap-4'>
-      <li class='bg-blue-700 px-5 rounded-full text-center text-sm flex items-center text-white'>All</li>
-      <li class='bg-blue-50 px-5 rounded-full text-center text-sm flex items-center text-gray-400'>Available</li>
-      <li class='bg-blue-50 px-5 rounded-full text-center text-sm flex items-center text-gray-400'>Rented</li>
+      <a href="/equipments/list/" class=" px-5 rounded-full text-center text-sm flex items-center   {% if request.path == '/equipments/list/' %}bg-blue-700 text-white{% else %}bg-blue-50  text-gray-400{% endif %}">
+        <li>All</li>
+      </a>
+      <a href="/equipments/available/" class="bg-blue-50 px-5 rounded-full text-center text-sm flex items-center text-gray-400 ">
+        <li >Available</li>
+      </a>
+      <a href="/equipments/rented/" class="bg-blue-50 px-5 rounded-full text-center text-sm flex items-center text-gray-400 ">
+        <li >rented</li>
+      </a>
       <li class='bg-blue-50 px-5 rounded-full text-center text-sm flex items-center text-gray-400'>Maintenance</li>
-      <li class='bg-blue-700 font-semibold px-5 rounded-md text-center text-sm flex items-center text-white'>+Add Equipment</li>
+      <a href="/equipments/add/" class='bg-blue-700 font-semibold px-5 rounded-md text-center text-sm flex items-center text-white'>
+        <li >+Add Equipment</li>
+      </a>
+      
     </ul>
   </div>
  
 
   <div class='grid grid-cols-4 p-5 gap-4 mt-2'>
+    {% for equipment in equipments %}
     <div class='bg-white px-4 pb-5 rounded-xl shadow-lg pt-3'>
-      <div class='flex justify-center items-center bg-slate-50 p-4'><img class='w-[50%]' src="../static/images/camera-removebg-preview.png" alt=""></div>
-      <p class='font-semibold text-center text-xl leading-[.9]'>Electric Drill</p>
-      <p class='text-gray-500 text-center text-[13px] leading-1'>$200/day ID: EQ001</p>
-      <div class='flex items-center justify-center'>
-        <span class='px-4 bg-green-100 text-green-700 rounded-full text-[12px]'>3 of 5 Available</span>
-      </div>
+        <div class='flex justify-center items-center bg-slate-50 p-4 h-40'>
+            {% if equipment.image %}
+                <img class='w-auto h-full object-contain' 
+                     src="{{ equipment.image.url }}" 
+                     alt="{{ equipment.name }}">
+            {% else %}
+                <div class='text-gray-400'>No image available</div>
+            {% endif %}
+        </div>
+        <p class='font-semibold text-center text-xl leading-[.9] mt-2'>{{ equipment.name }}</p>
+        <p class='text-gray-500 text-center text-[13px] leading-1'>
+            ₱{{ equipment.daily_rate }}/day ID: EQ00{{ equipment.equipment_id }}
+        </p>
+        <div class='flex items-center justify-center mt-2'>
+            <span class='px-4 py-1   {% if equipment.available_quantity >= 1 %} text-green-700  bg-green-100 {% else %}bg-red-100 text-red-700{% endif %} rounded-full text-[12px]'>
+                {{ equipment.available_quantity }} of {{ equipment.total_quantity }} {% if equipment.available_quantity >= 1 %} Available   {% else %} Out of Stock{% endif %}
+            </span>
+        </div>
     </div>
-    
-    <div class='bg-white px-4 pb-5 rounded-xl shadow-lg pt-3'>
-      <div class='flex justify-center items-center bg-slate-50 p-4'><img class='w-[50%]' src="../static/images/microphone.png" alt=""></div>
-      <p class='font-semibold text-center text-xl leading-[.9]'>Microphone</p>
-      <p class='text-gray-500 text-center text-[13px] leading-1'>$200/day ID: EQ001</p>
-      <div class='flex items-center justify-center'>
-        <span class='px-4 bg-yellow-200 text-orange-400 rounded-full text-[12px]'>3 of 5 Available</span>
-      </div>
-    </div>
-
-    <div class='bg-white px-4 pb-5 rounded-xl shadow-lg pt-3'>
-      <div class='flex justify-center items-center bg-slate-50 p-4'><img class='w-[50%]' src="../static/images/projector.png" alt=""></div>
-      <p class='font-semibold text-center text-xl leading-[.9]'>Projector</p>
-      <p class='text-gray-500 text-center text-[13px] leading-1'>$200/day ID: EQ001</p>
-      <div class='flex items-center justify-center '>
-        <span class='px-4 bg-red-100 text-red-500 rounded-full text-[12px]'>0 of 5 Available</span>
-      </div>
-    </div>
-
-    <div class='bg-white px-4 pb-5 rounded-xl shadow-lg  pt-3'>
-      <div class='flex justify-center items-center bg-slate-50 p-4'><img class='w-[50%]' src="../static/images/speaker.png" alt=""></div>
-      <p class='font-semibold text-center text-xl leading-[.9]'>Speaker</p>
-      <p class='text-gray-500 text-center text-[13px] leading-1'>$200/day ID: EQ001</p>
-      <div class='flex items-center justify-center'>
-        <span class='px-4 bg-green-100 text-green-700 rounded-full text-[12px]'>3 of 5 Available</span>
-      </div>
-    </div>
-
-    <div class='bg-white px-4 pb-5 rounded-xl shadow-lg pt-3'>
-      <div class='flex justify-center items-center bg-slate-50 p-4'><img class='w-[50%]' src="../static/images/mic.png" alt=""></div>
-      <p class='font-semibold text-center text-xl leading-[.9]'>Mic</p>
-      <p class='text-gray-500 text-center text-[13px] leading-1'>$200/day ID: EQ001</p>
-      <div class='flex items-center justify-center'>
-        <span class='px-4 bg-green-100 text-green-700 rounded-full text-[12px]'>3 of 5 Available</span>
-      </div>
-    </div>
-
-    <div class='bg-white px-4 pb-5 rounded-xl shadow-lg pt-3'>
-      <div class='flex justify-center items-center bg-slate-50 p-4'><img class='w-[50%]' src="../static/images/screen.png" alt=""></div>
-      <p class='font-semibold text-center text-xl leading-[.9]'>Screen</p>
-      <p class='text-gray-500 text-center text-[13px] leading-1'>$200/day ID: EQ001</p>
-      <div class='flex items-center justify-center '>
-        <span class='px-4 bg-green-100 text-green-700 rounded-full text-[12px]'>3 of 5 Available</span>
-      </div>
-    </div>
-
-    <div class='bg-white px-4 pb-5 rounded-xl shadow-lg pt-3'>
-      <div class='flex justify-center items-center bg-slate-50 p-4'><img class='w-[50%] h-[160.125px]' src="../static/images/drone.png" alt=""></div>
-      <p class='font-semibold text-center text-xl leading-[.9]'>Camera Drone</p>
-      <p class='text-gray-500 text-center text-[13px] leading-1'>$200/day ID: EQ001</p>
-      <div class='flex items-center justify-center'>
-        <span class='px-4 bg-yellow-200 text-orange-400 rounded-full text-[12px]'>1 of 3 Available</span>
-      </div>
-    </div>
-
-    <div class='bg-white px-4 pb-5 rounded-xl shadow-lg pt-3'>
-      <div class='flex justify-center items-center bg-slate-50 p-4'><img class='w-[50%]' src="../static/images/printer.png" alt=""></div>
-      <p class='font-semibold text-center text-xl leading-[.9]'>Printer</p>
-      <p class='text-gray-500 text-center text-[13px] leading-1'>$200/day ID: EQ001</p>
-      <div class='flex items-center justify-center'>
-        <span class='px-4bg-green-100 text-green-700 rounded-full text-[12px]'>3 of 5 Available</span>
-      </div>
-    </div>
-
-    
-  </div>
+    {% endfor %}
+</div>
   
 </div>
 {% endblock 'content' %}

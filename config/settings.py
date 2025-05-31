@@ -94,10 +94,12 @@ DATABASES = {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
             # Add this line to bypass the version check:
             'init_command': "SET GLOBAL innodb_strict_mode=0",
+            'sql_mode': 'STRICT_TRANS_TABLES',
         }
     }
 }
-
+# settings.py
+SILENCED_SYSTEM_CHECKS = ['mysql.W002']
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
