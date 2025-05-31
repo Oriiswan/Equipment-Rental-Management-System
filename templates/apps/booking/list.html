@@ -6,19 +6,23 @@
   <div  class='grid grid-cols-5 gap-4 '>
     <div class='bg-gradient-to-br from-green-600 to-green-400  rounded-2xl pl-7 py-4 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'><Table>Active Rentals</Table></p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>42</h2>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>
+        {% if active_count %}{{active_count}} {% else %}0 {% endif %}
+      </h2>
       <p class='text-[13px] mt-2'>Currently out</p>
       
     </div>
     <div class='bg-gradient-to-br from-red-700 to-red-400  rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>Overdue</p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>7</h2>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>
+        {% if overdue_count %}{{overdue_count}} {% else %}0 {% endif %}
+      </h2>
       <p class='text-[13px] mb-5 mt-2'>Need attention</p>
      
     </div>
     <div class='bg-gradient-to-br from-teal-700 to-teal-400  rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>Returned Today</p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>5</h2>
+      <h2 class='text-[55px] font-sans  leading-[.9]'> {% if returned_count %}{{returned_count}} {% else %}0 {% endif %}</h2>
       <p class='text-[13px] mb-5 mt-2'>Items returned</p>
    
     </div>
@@ -29,11 +33,12 @@
    
     </div>
     <div class=' flex justify-center items-center'>
-      <div class='bg-white shadow-lg hover:shadow-xl w-[90%] rounded-xl cursor-pointer h-[70%] text-center pt-3 '>
+        <a href="/booking/add/" class='bg-white shadow-lg hover:shadow-xl w-[90%] rounded-xl cursor-pointer h-[70%] text-center pt-3 '>
         <p class='text-2xl font-extrabold text-blue-600'>+</p>
         <p class='font-medium text-medium'>New Rental</p>
         <p class='text-sm'>Create rental</p>
-      </div>
+        </a>
+      
     </div>
   </div>
 
@@ -43,9 +48,9 @@
     <div class='text-2xl mb-5 font-semibold'>Active Rentals</div>
     <div class='grid grid-cols-4 gap-3 w-[400px] mb-6'>
       <div class='text-center bg-gradient-to-br text-white bg-green-500 px-5 py-1 rounded-full text-[15px] font-semibold'>All</div>
-      <div class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Active</div>
-      <div class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</div>
-      <div class='text-center bg-gray-100 text-gray-400  py-1 px-5 rounded-full text-[15px] font-semibold'>Overdue</div>
+      <a href='/booking/active/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Active</a>
+      <a href='/booking/pending' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</a>
+      <a href='/booking/overdue/' class='text-center bg-gray-100 text-gray-400  py-1 px-5 rounded-full text-[15px] font-semibold'>Overdue</a>
     </div>
 
     <! Table !>
@@ -82,55 +87,73 @@
             </tr>
         </thead>
         <tbody>
+            {% for rental in rentals %}
             <tr class="bg-white  hover:bg-gray-50 ">
                 
                 <th scope="row" class=" py-4 text-gray-900 whitespace-nowrap ">
                     
                     <div class="ps-3">
-                        <div class="text-base font-semibold">RNT-001</div>
-                        <div class="font-normal text-gray-500">May 25, 2025</div>
+                        <div class="text-base font-semibold">RNT-00{{rental.rental_id}}</div>
+                        <div class="font-normal text-gray-500">{{rental.created_at}}</div>
                     </div>  
                 </th>
                 <td scope="row" class="flex items-center  py-4 text-gray-900 whitespace-nowrap ">
                     
                     <div class="ps-3">
-                        <div class="text-base font-semibold">Neil Sims</div>
-                        <div class="font-normal text-gray-500">ID: CUS-001</div>
+                        <div class="text-base font-semibold">
+                            {% for customer in customers  %}
+                                {% if customer.customer_id == rental.customer_id %}
+                                {{customer.firstname}} {{customer.lastname}}
+                                {% endif %}
+                            {% endfor %}</div>
+                        <div class="font-normal text-gray-500">ID: CUS-00{{rental.customer_id}}</div>
                     </div>  
                 </td>
                 <td  class=" items-center  py-4 text-gray-900 whitespace-nowrap ">
                     
                     <div class="ps-3">
-                        <div class="text-base font-semibold ">Drone</div>
+                        <div class="text-base font-semibold ">
+                            {% for equipment in equipments  %}
+                                {% if equipment.equipment_id == rental.equipment_id %}
+                                {{equipment.name}}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                         <div class="font-normal text-gray-500">Model: HD-2000</div>
                     </div>  
                 </td>
                 <td class=" py-4">
-                    <div class="px-4 py-1 bg-green-100 text-green-600 w-[50%] rounded-full text-center font-semibold">
-                        Active
+                    <div class="px-4 py-1 {% if rental.status == 'Active' %}bg-green-100 text-green-600 {% elif rental.status == 'Overdue' %} bg-red-100 text-red-600  {% else%} bg-orange-100 text-orange-600  {% endif %}  w-[50%] rounded-full text-center font-semibold">
+                        {{rental.status}}
                     </div>
                 </td>
                 
                 <td scope="row" class="flex items-center py-4 text-gray-900 whitespace-nowrap ">
                     
                     <div class="ps-3">
-                        <div class="text-base ">May 25, 2025</div>
-                        <div class="font-medium text-gray-400 text-[12px]">3 days ago</div>
+                        <div class="text-base ">{{rental.rental_date}}</div>
+                        <div class="font-medium text-gray-400 text-[12px]">{{rdate}} days ago</div>
                     </div>  
                 </td>
 
                 <td  class=" items-center  py-4 text-gray-900 whitespace-nowrap ">
                     
                     <div class="ps-3">
-                        <div class="text-base ">May 30,2025</div>
-                        <div class="font-medium text-green-500 text-[12px]">In 1 day</div>
+                        <div class="text-base ">{{rental.due_date}}</div>
+                        <div class="font-medium text-green-500 text-[12px]">In {{ddate}} day</div>
                     </div>  
                 </td>
 
                <td  class=" items-center  py-4 text-gray-900 whitespace-nowrap ">
                     
                     <div class="ps-3">
-                        <div class="text-base font-semibold ">₱300</div>
+                        <div class="text-base font-semibold ">
+                             {% for equipment in equipments  %}
+                                {% if equipment.equipment_id == rental.equipment_id %}
+                                ₱{{equipment.daily_rate}}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                         <div class="font-normal text-gray-500">Per day</div>
                     </div>  
                 </td>
@@ -139,121 +162,9 @@
                     <a href="#" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
                 </td>
             </tr>
-            <tr class="bg-white  hover:bg-gray-50 ">
-                
-                <th scope="row" class=" py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base font-semibold">RNT-002</div>
-                        <div class="font-normal text-gray-500">May 25, 2025</div>
-                    </div>  
-                </th>
-                <td scope="row" class="flex items-center  py-4 font-medium text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base font-semibold">Bonnie Green</div>
-                        <div class="font-normal text-gray-500">ID: CUS-002</div>
-                    </div>
-                </td>
-                <td  class=" items-center  py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base font-semibold ">Drone</div>
-                        <div class="font-normal text-gray-500">Model: HD-2000</div>
-                    </div>  
-                </td>
-                <td class=" py-4">
-                    <div class="px-4 py-1 bg-red-100 text-red-600 w-[50%] rounded-full text-center font-semibold">
-                        Overdue
-                    </div>
-                </td>
-
-                <td scope="row" class="flex items-center  py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">May 18, 2025</div>
-                        <div class="font-medium text-gray-400 text-[12px]">10 days ago</div>
-                    </div>  
-                </td>
-
-                <td  class=" items-center py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base text-red-500 ">May 23,2025</div>
-                        <div class="font-medium text-red-500 text-[12px]">5 days overdue</div>
-                    </div>  
-                </td>
-                <td  class=" items-center  py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base font-semibold ">₱200</div>
-                        <div class="font-normal text-gray-500">Per day</div>
-                    </div>  
-                </td>
-                <td class=" py-4">
-                    <!-- Modal toggle -->
-                    <a href="#" type="button" data-modal-show="editUserModal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
-                </td>
-            </tr>
-            <tr class="bg-white  hover:bg-gray-50 ">
-                
-                <th scope="row" class=" py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base font-semibold">RNT-003</div>
-                        <div class="font-normal text-gray-500">May 18, 2025</div>
-                    </div>  
-                </th>
-                <td scope="row" class="flex items-center py-4 font-medium text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base font-semibold">Jese Leos</div>
-                        <div class="font-normal text-gray-500">ID: CUS-003</div>
-                    </div>
-                </td>
-                <td  class=" items-center  py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base font-semibold ">Drone</div>
-                        <div class="font-normal text-gray-500">Model: HD-2000</div>
-                    </div>  
-                </td>
-                <td class=" py-4">
-                    <div class="px-4 py-1 bg-red-100 text-red-600 w-[50%] rounded-full text-center font-semibold">
-                        Overdue
-                    </div>
-                </td>
-
-                <td  class=" items-center  py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">May 17, 2025</div>
-                        <div class="font-medium text-gray-400 text-[12px]">11 days ago</div>
-                    </div> 
-                </td>
-
-                <td  class=" items-center  py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base  text-red-500">May 23,2025</div>
-                        <div class="font-medium text-red-500 text-[12px]"> 6 days overdue</div>
-                    </div>  
-                </td>
-
-                <td  class=" items-center  py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base font-semibold ">₱200</div>
-                        <div class="font-normal text-gray-500">Per day</div>
-                    </div>  
-                </td>
-                <td class=" py-4">
-                    <!-- Modal toggle -->
-                    <a href="#" type="button" data-modal-show="editUserModal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
-                </td>
-                
-            </tr>
-           
+            {% endfor %}
+            
+            
             
         </tbody>
     </table>

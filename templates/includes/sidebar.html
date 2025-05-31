@@ -27,7 +27,7 @@
             </a>
          </li>
          <li>
-            <a href="/customers/list/" class="flex items-center p-2  rounded-lg {% if request.path == '/customers/list/' %}dark:bg-blue-200 dark:hover:bg-blue-200  text-blue-700{% else %}dark:hover:bg-blue-50{% endif %}  ">
+            <a href="/customers/list/" class="flex items-center p-2  rounded-lg {% if request.path == '/customers/list/' or request.path == '/customers/add/' or request.path == '/customers/active/' or request.path == '/customers/overdue/' %}dark:bg-blue-200 dark:hover:bg-blue-200  text-blue-700{% else %}dark:hover:bg-blue-50{% endif %}  ">
                <div class='shrink-0 w-6 h-6'>👥</div>
                <span class="ms-3">Customers</span>
             </a>

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block 'nav' %}Equipment Management{% endblock 'nav' %}
+{% block 'content' %}
+
+<div method = 'post' class=' shadow-lg  border  border-gray-100 rounded-xl m-7 bg-white'>
+
+  <div class='text-2xl bg-gray-50 rounded-t-xl  p-6 pl-8 border border-b-gray-100'>
+    <span class='text-blue-600 text-3xl'>+</span>
+    Add New Rental
+  </div>
+  
+  <form  method='POST' class='p-7 px-9 text-medium ' enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class='text-lg border-b pb-3 border-b-gray-200 mb-5'>Rental Information</div>
+
+    <div class='grid grid-cols-2 gap-6 pb-5'>
+      
+
+      <div class='mt-[-15px]'>
+        <label for="customer" class='block text-sm font-medium text-gray-700 mb-1'>Customer</label>
+        <select name="customer" required id="customer" class='hover:border-black mt-2 w-full shadow-sm focus:outline-blue-500 rounded-md p-3 border border-gray-100'>
+          <option value="">Select Customer</option>
+          <!-- Add dynamic customer options here -->
+          {% for customer in customers  %}
+          <option value="{{customer.customer_id}}">{{customer.firstname}} {{customer.lastname}}</option>
+          {% endfor %}
+          
+        </select>
+      </div>
+      
+      <div class='mt-[-15px]'>
+        <label for="equipment" class='block text-sm font-medium text-gray-700 mb-1'>Equipment</label>
+        <select name="equipment" required id="equipment" class='mt-2 focus:outline-blue-500 w-full hover:border-black shadow-sm rounded-md p-3 border border-gray-100'>
+          <option value="">Select Equipment</option>
+          <!-- Add dynamic equipment options here -->
+          {% for equipment in equipments %}
+          <option name='equipment' value="{{equipment.equipment_id}}" >{{equipment.name}} <br> {{equipment.equipment_id}}</option>
+          {% endfor %}
+          
+        </select>
+      </div>
+
+      
+      
+      <div class='mt-[-15px]'>
+        <label for="rental_date" class='block text-sm font-medium text-gray-700 mb-1'>Rental Date</label>
+        <input type="date" required name="rental_date" id="rental_date" class='mt-2 focus:outline-blue-500 hover:border-black w-full shadow-sm rounded-md p-3 border border-gray-100'>
+      </div>
+
+      <div class='mt-[-15px]'>
+        <label for="due_date" class='block text-sm font-medium text-gray-700 mb-1'>Due Date</label>
+        <input type="date" required name="due_date" id="due_date" class='mt-2 focus:outline-blue-500 hover:border-black w-full shadow-sm rounded-md p-3 border border-gray-100'>
+      </div>
+
+      
+      
+    </div>
+
+    <div class='text-lg border-b pb-3 border-b-gray-200 mt-5'>Additional Information</div>
+    
+    <div class='mt-5'>
+      <label for="notes" class='block text-sm font-medium text-gray-700 mb-1'>Notes (Optional)</label>
+      <textarea name="notes" id="notes" rows="3" class='mt-2 focus:outline-blue-500 hover:border-black w-full shadow-sm rounded-md p-3 border border-gray-100' placeholder='Additional notes about this rental...'></textarea>
+    </div>
+
+    <div class='mt-5'>
+      <label class='block mb-2 text-sm font-medium text-gray-700 ' for="rental_agreement">Upload Rental Agreement (Optional)</label>
+      <input type="file" name="rental_agreement" id="rental_agreement" accept=".pdf,.doc,.docx" class='block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer dark:text-gray-400 focus:outline-none  dark:border-gray-100  
+        file:mr-4 file:py-2 file:px-4
+        file:cursor-pointer
+        file:rounded-md file:border-0
+        file:text-sm file:font-semibold
+       file:text-blue-700
+        hover:file:bg-blue-700'>
+      <p class='mt-1 text-sm text-gray-500'>PDF, DOC, DOCX up to 5MB</p>
+    </div>
+
+    <div class='mt-16 flex justify-end'>
+      <div>
+        <a href="/booking/list/" class='border border-gray-100 shadow-md px-7 text-gray-500 py-1 mr-3 hover:border-black rounded-sm font-semibold'> Cancel</a>
+        <button type='submit'  class='bg-blue-500 hover:bg-blue-600 text-white rounded-md px-6 p-1 font-semibold'><span class='mr-3 font-semibold'>+</span>Add Rental</button>
+      </div>
+    </div>
+  </form>
+  
+
+</div>
+
+{% endblock 'content' %}
