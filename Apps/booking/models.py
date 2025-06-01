@@ -1,8 +1,12 @@
 from django.db import models
 from customers.models import Customers
 from inventory.models import Equipments  # You'll need to create this model
+from datetime import date,datetime
+from django.utils import timezone
+from datetime import timedelta
 
 class rental(models.Model):  # Changed to PascalCase (Django convention)
+    calculated_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     rental_id = models.BigAutoField(primary_key=True)
     customer = models.ForeignKey(
         Customers, 
@@ -54,5 +58,49 @@ class rental(models.Model):  # Changed to PascalCase (Django convention)
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-   
+    @property
+    def days_ago(self):
+        return (date.today() - self.rental_date).days
+    @property
+    def days_left(self):
+        return (self.due_date - date.today() ).days
+    @property
+    def total_amount(self):
+        rental_duration = (self.due_date - self.rental_date).days
+        return rental_duration * self.equipment.daily_rate
+    @property
+    def fullname(self):
+        return self.customer.firstname +' '+self.customer.lastname
+    @property
+    def equipment_name(self):
+        return self.equipment.name
+    @property
+    def created(self):
+        """Returns time elapsed since creation as a timedelta"""
+        return timezone.now() - self.created_at
+    
+    @property 
+    def created_display(self):
+        """
+        Returns human-readable time since creation
+        Format: "X days, Y hours ago" or "Just now"
+        """
+        delta = self.created
+        
+        if delta < timedelta(minutes=1):
+            return "Just now"
+        elif delta < timedelta(hours=1):
+            minutes = delta.seconds // 60
+            return f"{minutes} minute{'s' if minutes != 1 else ''} ago"
+        elif delta < timedelta(days=1):
+            hours = delta.seconds // 3600
+            return f"{hours} hour{'s' if hours != 1 else ''} ago"
+        else:
+            days = delta.days
+            hours = (delta.seconds // 3600)
+            if hours > 0:
+                return f"{days} day{'s' if days != 1 else ''}, {hours} hour{'s' if hours != 1 else ''} ago"
+            return f"{days} day{'s' if days != 1 else ''} ago"
+    def save(self, *args, **kwargs):
+        self.calculated_amount = self.total_amount  # Uses your property
+        super().save(*args, **kwargs)

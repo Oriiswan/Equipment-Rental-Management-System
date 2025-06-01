@@ -28,7 +28,7 @@
     </div>
     <div class='bg-gradient-to-br from-violet-700 to-violet-400  rounded-xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>Revenue (Month)</p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>₱58k</h2>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>₱{{total|stringformat:"s"|slice:":2"}}K</h2>
       <p class='text-[13px] mb-5 mt-2'>This month</p>
    
     </div>
@@ -41,7 +41,6 @@
       
     </div>
   </div>
-
 
   <div class='px-[30px] py-[20px] shadow-lg border pb-24 border-gray-100 rounded-xl mt-10 bg-white'>
 
@@ -125,7 +124,7 @@
                     </div>  
                 </td>
                 <td class=" py-4">
-                    <div class="px-4 py-1 {% if rental.status == 'Active' %}bg-green-100 text-green-600 {% elif rental.status == 'Overdue' %} bg-red-100 text-red-600  {% else%} bg-orange-100 text-orange-600  {% endif %}  rounded-full text-center font-semibold">
+                    <div class="px-4 py-1 {% if rental.status == 'Active' %}bg-green-100 text-green-600 {% elif rental.status == 'Overdue' %} bg-red-100 text-red-600  {% else%} bg-orange-100 text-orange-600  {% endif %}   rounded-full text-center font-semibold">
                         {{rental.status}}
                     </div>
                 </td>
@@ -134,7 +133,7 @@
                     
                     <div class="ps-3">
                         <div class="text-base ">{{rental.rental_date}}</div>
-                        <div class="font-medium text-gray-400 text-[12px]">{{rdate}} days ago</div>
+                        <div class="font-medium text-gray-400 text-[12px]">{% if rental.days_ago == 0 %}Today {% else %}{{rental.days_ago}} days ago{% endif %} </div>
                     </div>  
                 </td>
 
@@ -142,7 +141,7 @@
                     
                     <div class="ps-3">
                         <div class="text-base ">{{rental.due_date}}</div>
-                        <div class="font-medium text-green-500 text-[12px]">In {{ddate}} day</div>
+                        <div class="font-medium {% if rental.days_left < 0 %}text-red-500 {% else %}text-green-500 {% endif %} text-[12px]">{% if rental.days_left == 0 %}Today {% elif rental.days_left < 0 %} {{rental.days_left}} {% if rental.days_left == -1 %} day {% else %} days{% endif %} ago {% else %}In {{rental.days_left}} day {% endif %}</div>
                     </div>  
                 </td>
 
@@ -150,13 +149,9 @@
                     
                     <div class="ps-3">
                         <div class="text-base font-semibold ">
-                             {% for equipment in equipments  %}
-                                {% if equipment.equipment_id == rental.equipment_id %}
-                                ₱{{equipment.daily_rate}}
-                                {% endif %}
-                            {% endfor %}
+                             ₱{{rental.total_amount}}
                         </div>
-                        <div class="font-normal text-gray-500">Per day</div>
+                        
                     </div>  
                 </td>
                 <td class="py-4">
