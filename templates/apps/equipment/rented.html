@@ -34,14 +34,14 @@
     <div class='text-xl'>Equipment Inventory</div> 
 
     <ul class='flex gap-4'>
-      <a href="/equipments/list/" class=" px-5 rounded-full text-center text-sm flex items-center   {% if request.path == '/equipments/list/' %}bg-blue-700 text-white{% else %}bg-blue-50  text-gray-400{% endif %}">
-        <li>All</li>
+      <a href="/equipments/list/" class='bg-blue-50  text-gray-400 px-5 rounded-full text-center text-sm flex items-center '>
+        <li >All</li>
       </a>
-      <a href="/equipments/available/" class="bg-blue-50 px-5 rounded-full text-center text-sm flex items-center text-gray-400 ">
+      <a href="/equipments/available/" class="{% if request.path == '/equipments/available/' %}bg-blue-700 text-white{% else %}bg-blue-50  text-gray-400{% endif %} px-5 rounded-full text-center text-sm flex items-center ">
         <li >Available</li>
       </a>
-      <a href="/equipments/rented/" class="bg-blue-50 px-5 rounded-full text-center text-sm flex items-center text-gray-400 ">
-        <li >rented</li>
+      <a href="/equipments/rented/" class=" px-5 rounded-full text-center text-sm flex items-center   {% if request.path == '/equipments/rented/' %}bg-blue-700 text-white{% else %}bg-blue-50  text-gray-400{% endif %}">
+        <li>rented</li>
       </a>
       <li class='bg-blue-50 px-5 rounded-full text-center text-sm flex items-center text-gray-400'>Maintenance</li>
       <a href="/equipments/add/" class='bg-blue-700 font-semibold px-5 rounded-md text-center text-sm flex items-center text-white'>
@@ -54,6 +54,7 @@
 
   <div class='grid grid-cols-4 p-5 gap-4 mt-2'>
     {% for equipment in equipments %}
+    {% if equipment.available_quantity != equipment.total_quantity %}
     <div class='bg-white px-4 pb-5 rounded-xl shadow-lg pt-3'>
         <div class='flex justify-center items-center bg-slate-50 p-4 h-40'>
             {% if equipment.image %}
@@ -70,10 +71,13 @@
         </p>
         <div class='flex items-center justify-center mt-2'>
             <span class='px-4 py-1   {% if equipment.available_quantity >= 1 %} text-green-700  bg-green-100 {% else %}bg-red-100 text-red-700{% endif %} rounded-full text-[12px]'>
-                {{ equipment.available_quantity }} of {{ equipment.total_quantity }} {% if equipment.available_quantity >= 1 %} Available   {% else %} Out of Stock{% endif %}
+                {% if equipment.available_quantity >= 1 %}{{ equipment.available_quantity }} of {{ equipment.total_quantity }}  Available   {% else %} Out of Stock{% endif %}
             </span>
         </div>
     </div>
+    
+    {% endif %}
+    
     {% endfor %}
 </div>
   

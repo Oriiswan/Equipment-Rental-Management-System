@@ -1,56 +1,57 @@
 {% extends "base.html" %}
-{% block 'nav' %}Rentals{% endblock 'nav' %}
+{% block 'nav' %}Customers{% endblock 'nav' %}
 {% block 'content' %}
 
 <div class='p-3'>
   <div  class='grid grid-cols-5 gap-4 '>
-    <div class='bg-gradient-to-br from-green-600 to-green-400  rounded-2xl pl-7 py-4 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
-      <p class='font-semibold'><Table>Active Rentals</Table></p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>
-        {% if active_count %}{{active_count}} {% else %}0 {% endif %}
-      </h2>
-      <p class='text-[13px] mt-2'>Currently out</p>
+    <div class='bg-gradient-to-br from-blue-700 to-blue-400  rounded-2xl pl-7 py-4 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+      <p class='font-semibold'><Table>Total Customers</Table></p>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>{{count}}</h2>
+      <p class='text-[13px] mt-2'>Active customers</p>
       
     </div>
-    <div class='bg-gradient-to-br from-red-700 to-red-400  rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
-      <p class='font-semibold'>Overdue</p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>
-        {% if overdue_count %}{{overdue_count}} {% else %}0 {% endif %}
-      </h2>
-      <p class='text-[13px] mb-5 mt-2'>Need attention</p>
+    <div class='bg-gradient-to-br from-green-600 to-green-400  rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+      <p class='font-semibold'>Active Rentals</p>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>{{active}}</h2>
+      <p class='text-[13px] mb-5 mt-2'>Currently renting</p>
      
     </div>
-    <div class='bg-gradient-to-br from-teal-700 to-teal-400  rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
-      <p class='font-semibold'>Returned Today</p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'> {% if returned_count %}{{returned_count}} {% else %}0 {% endif %}</h2>
-      <p class='text-[13px] mb-5 mt-2'>Items returned</p>
+    <div class='bg-gradient-to-br from-violet-700 to-violet-400  rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+      <p class='font-semibold'>New This Month</p>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>{{count}}</h2>
+      <p class='text-[13px] mb-5 mt-2'>New custopmers</p>
    
     </div>
-    <div class='bg-gradient-to-br from-violet-700 to-violet-400  rounded-xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
-      <p class='font-semibold'>Revenue (Month)</p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>₱58k</h2>
-      <p class='text-[13px] mb-5 mt-2'>This month</p>
+    <div class='bg-gradient-to-br from-red-700 to-red-400  rounded-xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+      <p class='font-semibold'>Overdue Returns</p>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>{{overdue}}</h2>
+      <p class='text-[13px] mb-5 mt-2'>Need follow-up</p>
    
     </div>
     <div class=' flex justify-center items-center'>
-        <a href="/booking/add/" class='bg-white shadow-lg hover:shadow-xl w-[90%] rounded-xl cursor-pointer h-[70%] text-center pt-3 '>
+      <a href="{% url 'add_customer' %}" class='bg-white shadow-lg hover:shadow-xl w-[90%] rounded-xl cursor-pointer h-[70%] text-center pt-3 '>
+        
         <p class='text-2xl font-extrabold text-blue-600'>+</p>
-        <p class='font-medium text-medium'>New Rental</p>
-        <p class='text-sm'>Create rental</p>
-        </a>
+        <p class='font-medium text-medium'>Add Customer</p>
+        <p class='text-sm'>Create new</p>
       
+      </a>
     </div>
   </div>
 
 
   <div class='px-[30px] py-[20px] shadow-lg border pb-24 border-gray-100 rounded-xl mt-10 bg-white'>
 
-    <div class='text-2xl mb-5 font-semibold'>Active Rentals</div>
+    <div class='text-2xl mb-5 font-semibold'>Customer Directory</div>
     <div class='grid grid-cols-4 gap-3 w-[400px] mb-6'>
-      <div class='text-center bg-gradient-to-br text-white bg-green-500 px-5 py-1 rounded-full text-[15px] font-semibold'>All</div>
-      <a href='/booking/active/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Active</a>
-      <a href='/booking/pending' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</a>
-      <a href='/booking/overdue/' class='text-center bg-gray-100 text-gray-400  py-1 px-5 rounded-full text-[15px] font-semibold'>Overdue</a>
+      <a href="/customers/list/" class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>
+        <div >All</div>
+      </a>
+      <a href="/customers/active/" class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>
+        <div >Active</div>
+      </a>
+      <div class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</div>
+      <div class='text-center bg-gradient-to-br text-white from-blue-700 to-blue-500 px-5 py-1 rounded-full text-[15px] font-semibold'>Overdue</div>
     </div>
 
     <! Table !>
@@ -60,112 +61,77 @@
     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-sky-50 dark:text-gray-400">
             <tr>
-                <th scope="col" class="px-3 py-3">
-                    RENTAL ID
-                </th>
-                <th scope="col" class="px-3 py-3">
+              
+                <th scope="col" class="px-6 py-3">
                     Customer
                 </th>
-                <th scope="col" class="px-3 py-3">
-                    Equipment
+                <th scope="col" class="px-6 py-3">
+                    Contact
                 </th>
-                <th scope="col" class="px-3 py-3">
+                <th scope="col" class="px-6 py-3">
                     Status
                 </th>
-                <th scope="col" class="px-3 py-3">
-                    RENTAL DATE
+                <th scope="col" class="px-6 py-3">
+                    TOTAL RENTALS
                 </th>
-                <th scope="col" class="px-3 py-3">
-                    DUE DATE
+                <th scope="col" class="px-6 py-3">
+                    LAST RENTALS
                 </th>
-                <th scope="col" class="px-3 py-3">
-                    AMOUNT
-                </th>
-                <th scope="col" class="px-3 py-3">
+                <th scope="col" class="px-6 py-3">
                     ACTIONS
                 </th>
             </tr>
         </thead>
-        <tbody>
-            {% for rental in rentals %}
-            <tr class="bg-white  hover:bg-gray-50 ">
+       <tbody>
+            {% for customer in customers  %}
+            {% if customer.isactive == False %}
+            <tr class="bg-white  ">
                 
-                <th scope="row" class=" py-4 text-gray-900 whitespace-nowrap ">
-                    
+                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
                     <div class="ps-3">
-                        <div class="text-base font-semibold">RNT-00{{rental.rental_id}}</div>
-                        <div class="font-normal text-gray-500">{{rental.created_at}}</div>
+                        <div class="text-base font-semibold">{{customer.firstname}} {{customer.lastname}}</div>
+                        <div class="font-normal text-gray-500">ID: CUS-00{{customer.customer_id}}</div>
                     </div>  
                 </th>
-                <td scope="row" class="flex items-center  py-4 text-gray-900 whitespace-nowrap ">
+                <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
                     
                     <div class="ps-3">
-                        <div class="text-base font-semibold">
-                            {% for customer in customers  %}
-                                {% if customer.customer_id == rental.customer_id %}
-                                {{customer.firstname}} {{customer.lastname}}
-                                {% endif %}
-                            {% endfor %}</div>
-                        <div class="font-normal text-gray-500">ID: CUS-00{{rental.customer_id}}</div>
+                        <div class="text-base ">{{customer.contact_number}}</div>
+                        <div class="font-normal text-gray-500">{{customer.email}}</div>
                     </div>  
                 </td>
-                <td  class=" items-center  py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base font-semibold ">
-                            {% for equipment in equipments  %}
-                                {% if equipment.equipment_id == rental.equipment_id %}
-                                {{equipment.name}}
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                        <div class="font-normal text-gray-500">Model: HD-2000</div>
-                    </div>  
-                </td>
-                <td class=" py-4">
-                    <div class="px-4 py-1 {% if rental.status == 'Active' %}bg-green-100 text-green-600 {% elif rental.status == 'Overdue' %} bg-red-100 text-red-600  {% else%} bg-orange-100 text-orange-600  {% endif %}   rounded-full text-center font-semibold">
-                        {{rental.status}}
+                <td class="px-6 py-4">
+                    <div class="px-4 {% if customer.isactive %}  bg-green-100 text-green-600 {% else %}bg-red-100 text-red-600{% endif %}   w-[60%] rounded-full text-center font-semibold">
+                        {% if customer.isactive %}Active {% else %}Overdue{% endif %}
                     </div>
                 </td>
                 
-                <td scope="row" class="flex items-center py-4 text-gray-900 whitespace-nowrap ">
+                <td scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
                     
                     <div class="ps-3">
-                        <div class="text-base ">{{rental.rental_date}}</div>
-                        <div class="font-medium text-gray-400 text-[12px]">{{rdate}} days ago</div>
-                    </div>  
-                </td>
-
-                <td  class=" items-center  py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">{{rental.due_date}}</div>
-                        <div class="font-medium text-green-500 text-[12px]">In {{ddate}} day</div>
-                    </div>  
-                </td>
-
-               <td  class=" items-center  py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base font-semibold ">
-                             {% for equipment in equipments  %}
-                                {% if equipment.equipment_id == rental.equipment_id %}
-                                ₱{{equipment.daily_rate}}
-                                {% endif %}
-                            {% endfor %}
+                        <div class="text-base ">
+                            {{customer.total_rent}}
                         </div>
-                        <div class="font-normal text-gray-500">Per day</div>
+                        <div class="font-normal text-gray-500">rentals</div>
                     </div>  
                 </td>
-                <td class="py-4">
+
+                <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
+                    
+                    <div class="ps-3">
+                        <div class="text-base ">May 18,2025</div>
+                        <div class="font-normal text-gray-500">Circular Saw</div>
+                    </div>  
+                </td>
+                <td class="px-6 py-4">
                     <!-- Modal toggle -->
                     <a href="#" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
                 </td>
             </tr>
+            {% endif %}
+            
+        
             {% endfor %}
-            
-            
-            
         </tbody>
     </table>
     <!-- Edit user modal -->

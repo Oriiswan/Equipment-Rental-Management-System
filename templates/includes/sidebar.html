@@ -8,7 +8,7 @@
 <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 pb-10 h-screen transition-transform shadow-lg -translate-x-full sm:translate-x-0" aria-label="Sidebar">
    <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 relative ">
       <a href="https://flowbite.com/" class="">
-        <div class='text-center p-1 text-white mb-7 rounded-lgdark:hover:bg-blue-100 bg-blue-700 rounded-lg'>
+        <div class='text-center p-1 text-white mb-7 rounded-lgdark:hover:bg-blue-100 bg-gradient-to-br from-blue-800 to-blue-400 rounded-lg'>
           <p class='text-xl font-bold tracking-wider '>Equipment</p>
           <h4 class='text-[11px]'>Rental Management</h4>
         </div>
@@ -21,19 +21,19 @@
             </a>
          </li>
          <li>
-            <a href="/equipments" class="flex items-center p-2  rounded-lg    {% if request.path == '/equipments/' %}dark:bg-blue-200 text-blue-700 dark:hover:bg-blue-200 {% else %}opacity-100{% endif %} dark:hover:bg-blue-50 ">
+            <a href="/equipments/list" class="flex items-center p-2  rounded-lg    {% if request.path == '/equipments/list/' or request.path == '/equipments/available/' %}dark:bg-blue-200 text-blue-700 dark:hover:bg-blue-200 {% else %}dark:hover:bg-blue-50{% endif %} ">
                <div class='shrink-0 w-6 h-6'>📦</div>
                <span class="ms-3">Equipment</span>
             </a>
          </li>
          <li>
-            <a href="/customers" class="flex items-center p-2  rounded-lg {% if request.path == '/customers/' %}dark:bg-blue-200 dark:hover:bg-blue-200  text-blue-700{% else %}opacity-100{% endif %}  dark:hover:bg-blue-50">
+            <a href="/customers/list/" class="flex items-center p-2  rounded-lg {% if request.path == '/customers/list/' or request.path == '/customers/add/' or request.path == '/customers/active/' or request.path == '/customers/overdue/' %}dark:bg-blue-200 dark:hover:bg-blue-200  text-blue-700{% else %}dark:hover:bg-blue-50{% endif %}  ">
                <div class='shrink-0 w-6 h-6'>👥</div>
                <span class="ms-3">Customers</span>
             </a>
          </li>
          <li>
-            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg  dark:hover:bg-blue-50">
+               <a href="/booking/list" class="flex items-center p-2 text-gray-900 rounded-lg  {% if request.path == '/booking/list/' %}dark:bg-blue-200 dark:hover:bg-blue-200  text-blue-700{% else %}dark:hover:bg-blue-50{% endif %}  ">
                <div class='shrink-0 w-6 h-6'>📅</div>
                <span class="ms-3">Rentals</span>
             </a>

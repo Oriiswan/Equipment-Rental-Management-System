@@ -4,36 +4,38 @@
 
 <div class='p-3'>
   <div  class='grid grid-cols-5 gap-4 '>
-    <div class='bg-blue-600  rounded-2xl pl-7 py-4 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+    <div class='bg-gradient-to-br from-blue-700 to-blue-400  rounded-2xl pl-7 py-4 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'><Table>Total Customers</Table></p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>127</h2>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>{{count}}</h2>
       <p class='text-[13px] mt-2'>Active customers</p>
       
     </div>
-    <div class='bg-green-500  rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+    <div class='bg-gradient-to-br from-green-600 to-green-400  rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>Active Rentals</p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>42</h2>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>{{active}}</h2>
       <p class='text-[13px] mb-5 mt-2'>Currently renting</p>
      
     </div>
-    <div class='bg-violet-600  rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+    <div class='bg-gradient-to-br from-violet-700 to-violet-400  rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>New This Month</p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>8</h2>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>{{count}}</h2>
       <p class='text-[13px] mb-5 mt-2'>New custopmers</p>
    
     </div>
-    <div class='bg-red-600  rounded-xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
+    <div class='bg-gradient-to-br from-red-700 to-red-400  rounded-xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>Overdue Returns</p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>3</h2>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>{{overdue}}</h2>
       <p class='text-[13px] mb-5 mt-2'>Need follow-up</p>
    
     </div>
     <div class=' flex justify-center items-center'>
-      <div class='bg-white shadow-lg hover:shadow-xl w-[90%] rounded-xl cursor-pointer h-[70%] text-center pt-3 '>
+      <a href="{% url 'add_customer' %}" class='bg-white shadow-lg hover:shadow-xl w-[90%] rounded-xl cursor-pointer h-[70%] text-center pt-3 '>
+        
         <p class='text-2xl font-extrabold text-blue-600'>+</p>
         <p class='font-medium text-medium'>Add Customer</p>
         <p class='text-sm'>Create new</p>
-      </div>
+      
+      </a>
     </div>
   </div>
 
@@ -43,9 +45,13 @@
     <div class='text-2xl mb-5 font-semibold'>Customer Directory</div>
     <div class='grid grid-cols-4 gap-3 w-[400px] mb-6'>
       <div class='text-center bg-gradient-to-br text-white from-blue-700 to-blue-500 px-5 py-1 rounded-full text-[15px] font-semibold'>All</div>
-      <div class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Active</div>
+      <a href="/customers/active/" class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>
+        <div >Active</div>
+      </a>
       <div class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</div>
-      <div class='text-center bg-gray-100 text-gray-400  py-1 px-5 rounded-full text-[15px] font-semibold'>Overdue</div>
+      <a href="/customers/overdue/" class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>
+        <div >Overdue</div>
+      </a>
     </div>
 
     <! Table !>
@@ -76,33 +82,36 @@
                 </th>
             </tr>
         </thead>
-        <tbody>
-            <tr class="bg-white  hover:bg-gray-50 ">
+       <tbody>
+            {% for customer in customers  %}
+        
+            <tr class="bg-white  ">
                 
                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
-                    <img class="w-10 h-10 rounded-full" src="/docs/images/people/profile-picture-1.jpg" alt="Jese image">
                     <div class="ps-3">
-                        <div class="text-base font-semibold">Neil Sims</div>
-                        <div class="font-normal text-gray-500">neil.sims@flowbite.com</div>
+                        <div class="text-base font-semibold">{{customer.firstname}} {{customer.lastname}}</div>
+                        <div class="font-normal text-gray-500">ID: CUS-00{{customer.customer_id}}</div>
                     </div>  
                 </th>
                 <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
                     
                     <div class="ps-3">
-                        <div class="text-base ">0912-345-6789</div>
-                        <div class="font-normal text-gray-500">Neilsims@gmail.com</div>
+                        <div class="text-base ">{{customer.contact_number}}</div>
+                        <div class="font-normal text-gray-500">{{customer.email}}</div>
                     </div>  
                 </td>
                 <td class="px-6 py-4">
-                    <div class="px-4 bg-green-100 text-green-600 w-[60%] rounded-full text-center font-semibold">
-                        Active
+                    <div class="px-4 {% if customer.isactive %}  bg-green-100 text-green-600 {% else %}bg-red-100 text-red-600{% endif %}   w-[60%] rounded-full text-center font-semibold">
+                        {% if customer.isactive %}Active {% else %}Overdue{% endif %}
                     </div>
                 </td>
                 
                 <td scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
                     
                     <div class="ps-3">
-                        <div class="text-base ">12</div>
+                        <div class="text-base ">
+                            {{customer.total_rent}}
+                        </div>
                         <div class="font-normal text-gray-500">rentals</div>
                     </div>  
                 </td>
@@ -119,176 +128,8 @@
                     <a href="#" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
                 </td>
             </tr>
-            <tr class="bg-white  hover:bg-gray-50 ">
-                
-                <th scope="row" class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                    <img class="w-10 h-10 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="Jese image">
-                    <div class="ps-3">
-                        <div class="text-base font-semibold">Bonnie Green</div>
-                        <div class="font-normal text-gray-500">bonnie@flowbite.com</div>
-                    </div>
-                </th>
-                <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">0932-345-6758</div>
-                        <div class="font-normal text-gray-500">Bonniegreen@gmail.com</div>
-                    </div>  
-                </td>
-                <td class="px-6 py-4">
-                    <div class="px-4 bg-green-100 text-green-600 w-[60%] rounded-full text-center font-semibold">
-                        Active
-                    </div>
-                </td>
-
-                <td scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">8</div>
-                        <div class="font-normal text-gray-500">rentals</div>
-                    </div>  
-                </td>
-
-                <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">May 18,2025</div>
-                        <div class="font-normal text-gray-500">Circular Saw</div>
-                    </div>  
-                </td>
-                <td class="px-6 py-4">
-                    <!-- Modal toggle -->
-                    <a href="#" type="button" data-modal-show="editUserModal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
-                </td>
-            </tr>
-            <tr class="bg-white  hover:bg-gray-50 ">
-                
-                <th scope="row" class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                    <img class="w-10 h-10 rounded-full" src="/docs/images/people/profile-picture-2.jpg" alt="Jese image">
-                    <div class="ps-3">
-                        <div class="text-base font-semibold">Jese Leos</div>
-                        <div class="font-normal text-gray-500">jese@flowbite.com</div>
-                    </div>
-                </th>
-                <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">0902-342-6789</div>
-                        <div class="font-normal text-gray-500">Jeseleos@gmail.com</div>
-                    </div>  
-                </td>
-                <td class="px-6 py-4">
-                    <div class="px-4 bg-green-100 text-green-600 w-[60%] rounded-full text-center font-semibold">
-                        Active
-                    </div>
-                </td>
-
-                <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">5</div>
-                        <div class="font-normal text-gray-500">rentals</div>
-                    </div>  
-                </td>
-
-                <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">May 18,2025</div>
-                        <div class="font-normal text-gray-500">Circular Saw</div>
-                    </div>  
-                </td>
-
-                
-                <td class="px-6 py-4">
-                    <!-- Modal toggle -->
-                    <a href="#" type="button" data-modal-show="editUserModal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
-                </td>
-                
-            </tr>
-            <tr class="bg-white  hover:bg-gray-50 ">
-                
-                <th scope="row" class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                    <img class="w-10 h-10 rounded-full" src="/docs/images/people/profile-picture-5.jpg" alt="Jese image">
-                    <div class="ps-3">
-                        <div class="text-base font-semibold">Thomas Lean</div>
-                        <div class="font-normal text-gray-500">thomes@flowbite.com</div>
-                    </div>
-                </th>
-                <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">0901-235-6789</div>
-                        <div class="font-normal text-gray-500">ThomasLean@gmail.com</div>
-                    </div>   
-                </td>
-                <td class="px-6 py-4">
-                    <div class="px-4 bg-green-100 text-green-600 w-[60%] rounded-full text-center font-semibold">
-                        Active
-                    </div>
-                </td>
-
-                <td scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">3</div>
-                        <div class="font-normal text-gray-500">rentals</div>
-                    </div>   
-                </td>
-
-                  <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">May 18,2025</div>
-                        <div class="font-normal text-gray-500">Circular Saw</div>
-                    </div>  
-                </td>
-                <td class="px-6 py-4">
-                    <!-- Modal toggle -->
-                    <a href="#" type="button" data-modal-show="editUserModal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
-                </td>
-            </tr>
-            <tr class="bg-white  hover:bg-gray-50 ">
-               
-                <th scope="row" class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                    <img class="w-10 h-10 rounded-full" src="/docs/images/people/profile-picture-4.jpg" alt="Jese image">
-                    <div class="ps-3">
-                        <div class="text-base font-semibold">Leslie Livingston</div>
-                        <div class="font-normal text-gray-500">leslie@flowbite.com</div>
-                    </div>
-                </th>
-                <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">0999-345-6789</div>
-                        <div class="font-normal text-gray-500">Leslielivingston@gmail.com</div>
-                    </div>    
-                </td>
-                <td class="px-6 py-4">
-                    <div class="px-4 bg-red-100 text-red-600 w-[60%] rounded-full text-center font-semibold">
-                        Overdue
-                    </div>
-                </td>
-                <td scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">1</div>
-                        <div class="font-normal text-gray-500">rentals</div>
-                    </div>  
-                </td>
-
-                  <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">May 18,2025</div>
-                        <div class="font-normal text-gray-500">Circular Saw</div>
-                    </div>  
-                </td>
-                <td class="px-6 py-4">
-                    <!-- Modal toggle -->
-                    <a href="#" type="button" data-modal-show="editUserModal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
-                </td>
-            </tr>
+        
+            {% endfor %}
         </tbody>
     </table>
     <!-- Edit user modal -->

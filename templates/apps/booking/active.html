@@ -47,10 +47,10 @@
 
     <div class='text-2xl mb-5 font-semibold'>Active Rentals</div>
     <div class='grid grid-cols-4 gap-3 w-[400px] mb-6'>
-      <div class='text-center bg-gradient-to-br text-white bg-green-500 px-5 py-1 rounded-full text-[15px] font-semibold'>All</div>
-      <a href='/booking/active/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Active</a>
+      <a href='/booking/list/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>All</a>
+      <a href='/booking/active/'  class='text-center bg-gradient-to-br text-white bg-green-500 px-5 py-1 rounded-full text-[15px] font-semibold'>Active</a>
       <a href='/booking/pending' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</a>
-      <a href='/booking/overdue/' class='text-center bg-gray-100 text-gray-400  py-1 px-5 rounded-full text-[15px] font-semibold'>Overdue</a>
+      <a href='/booking/overdue/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold' >Overdue</a>
     </div>
 
     <! Table !>
@@ -88,6 +88,7 @@
         </thead>
         <tbody>
             {% for rental in rentals %}
+           {% if rental.status == 'Active' %}
             <tr class="bg-white  hover:bg-gray-50 ">
                 
                 <th scope="row" class=" py-4 text-gray-900 whitespace-nowrap ">
@@ -123,7 +124,7 @@
                     </div>  
                 </td>
                 <td class=" py-4">
-                    <div class="px-4 py-1 {% if rental.status == 'Active' %}bg-green-100 text-green-600 {% elif rental.status == 'Overdue' %} bg-red-100 text-red-600  {% else%} bg-orange-100 text-orange-600  {% endif %}   rounded-full text-center font-semibold">
+                    <div class="px-4 py-1 {% if rental.status == 'Active' %}bg-green-100 text-green-600 {% elif rental.status == 'Overdue' %} bg-red-100 text-red-600  {% else%} bg-orange-100 text-orange-600  {% endif %}  rounded-full text-center font-semibold">
                         {{rental.status}}
                     </div>
                 </td>
@@ -162,6 +163,7 @@
                     <a href="#" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
                 </td>
             </tr>
+           {% endif %}
             {% endfor %}
             
             
