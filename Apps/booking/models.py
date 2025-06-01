@@ -60,6 +60,10 @@ class rental(models.Model):  # Changed to PascalCase (Django convention)
     updated_at = models.DateTimeField(auto_now=True)
     @property
     def days_ago(self):
+        if not self.rental_date:
+            return "Pending"  # no date set
+        if self.rental_date > date.today():
+            return "Pending"  # date is in the future
         return (date.today() - self.rental_date).days
     @property
     def days_left(self):

@@ -132,7 +132,7 @@
                     
                     <div class="ps-3">
                         <div class="text-base ">{{rental.rental_date}}</div>
-                        <div class="font-medium text-gray-400 text-[12px]">{% if rental.days_ago == 0 %}Today {% else %}{{rental.days_ago}} days ago{% endif %} </div>
+                        <div class="font-medium text-gray-400 text-[12px]">{% if rental.days_ago == 0 %}Today {% elif rental.days_ago == 'Pending' %}Pending {% else %}{{rental.days_ago}} days ago{% endif %} </div>
                     </div>  
                 </td>
 
