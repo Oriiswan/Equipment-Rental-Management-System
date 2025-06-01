@@ -7,6 +7,8 @@ from datetime import date,datetime
 from django.db import connection
 from django.contrib import messages
 def booking_list(request):
+    records = rental.objects.all()
+    total = sum(item.total_amount for item in records)
     return render(request, 'apps/booking/list.html',{
       'rentals': rental.objects.all(),
       'equipments': Equipments.objects.all(),
@@ -14,9 +16,12 @@ def booking_list(request):
       'overdue_count': rental.objects.filter(status='Overdue').count(),
       'returned_count': rental.objects.filter(status='Returned').count(),
       'active_count': rental.objects.filter(status='Active').count(),
+      'total': total
     })
     
 def active_list(request):
+    records = rental.objects.all()
+    total = sum(item.total_amount for item in records)
     return render(request, 'apps/booking/active.html',{
       'rentals': rental.objects.all(),
       'equipments': Equipments.objects.all(),
@@ -25,8 +30,11 @@ def active_list(request):
       'returned_count': rental.objects.filter(status='Returned').count(),
       'active_count': rental.objects.filter(status='Active').count(),
       'active_list': rental.objects.filter(status='Active'),
+      'total': total
     })
 def pending_list(request):
+    records = rental.objects.all()
+    total = sum(item.total_amount for item in records)
     return render(request, 'apps/booking/pending.html',{
       'rentals': rental.objects.all(),
       'equipments': Equipments.objects.all(),
@@ -35,9 +43,12 @@ def pending_list(request):
       'returned_count': rental.objects.filter(status='Returned').count(),
       'active_count': rental.objects.filter(status='Active').count(),
       'pending_list': rental.objects.filter(status='Pending'),
+      'total': total
       
     })
 def overdue_list(request):
+    records = rental.objects.all()
+    total = sum(item.total_amount for item in records)
     return render(request, 'apps/booking/overdue.html',{
       'rentals': rental.objects.all(),
       'equipments': Equipments.objects.all(),
@@ -46,6 +57,7 @@ def overdue_list(request):
       'returned_count': rental.objects.filter(status='Returned').count(),
       'overdue_list': rental.objects.filter(status='Overdue'),
       'active_count': rental.objects.filter(status='Active').count(),
+      'total': total,
     })
 
 def add_booking(request):
@@ -73,7 +85,7 @@ def add_booking(request):
                 status=determine_status(rental_date, due_date)
             )
             records = rental.objects.all()
-            
+            total = sum(item.total_amount for item in records)
             # Update customer
             
             
@@ -85,6 +97,7 @@ def add_booking(request):
               'overdue_count': rental.objects.filter(status='Overdue').count(),
               'returned_count': rental.objects.filter(status='Returned').count(),
               'active_count': rental.objects.filter(status='Active').count(),
+              'total': total
               
             })
             
