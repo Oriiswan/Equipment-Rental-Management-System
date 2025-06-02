@@ -20,8 +20,8 @@ def equipment_list(request):
     'category': len(unique),
     'available': avail,
     'rented': total - avail,
-    'available_percent': math.floor((avail / total) * 100),
-    'rented_percent' : math.floor(((total - avail) / total) * 100 ),
+    'available_percent': math.floor(((avail / total) * 100)),
+    'rented_percent' : math.floor(((total - avail) / total) * 100 ) ,
     
     
   }
@@ -39,6 +39,9 @@ def add_equipment(request):
       
       exists = Equipments.objects.filter(name=name).exists()
       if exists:
+        messages.error(request, 'This product is already exists')
+        return render(request, 'apps/equipment/Add-equipment.html')
+      elif total_quantity < available_quantity:
         messages.error(request, 'This product is already exists')
         return render(request, 'apps/equipment/Add-equipment.html')
       else:

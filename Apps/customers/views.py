@@ -68,7 +68,7 @@ def add_customer(request):
       
       exists = Customers.objects.filter(firstname = first_name, lastname = last_name).exists()
       if exists:
-        messages.error(request, 'This product is already exists')
+        messages.error(request, 'This Customer is already exists')
         return render(request, 'apps/customers/Add-users.html')
       else:
         Customers.objects.create(

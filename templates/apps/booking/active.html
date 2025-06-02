@@ -45,12 +45,116 @@
   <div class='px-[30px] py-[20px] shadow-lg border pb-24 border-gray-100 rounded-xl mt-10 bg-white'>
 
     <div class='text-2xl mb-5 font-semibold'>Active Rentals</div>
-    <div class='grid grid-cols-4 gap-3 w-[400px] mb-6'>
+    <div class='flex justify-between'>
+    <div class='grid grid-cols-5 gap-3 w-[580px] mb-6'>
       <a href='/booking/list/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>All</a>
       <a href='/booking/active/'  class='text-center bg-gradient-to-br text-white bg-green-500 px-5 py-1 rounded-full text-[15px] font-semibold'>Active</a>
-      <a href='/booking/pending' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</a>
+      <a href='/booking/pending/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</a>
       <a href='/booking/overdue/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold' >Overdue</a>
+      <a href='/booking/return_list/' class='text-center bg-gray-100 text-gray-400  py-1 px-5 rounded-full text-[15px] font-semibold'>Returned</a>
     </div>
+
+    <div class="relative inline-block">
+        <!-- Dropdown Button -->
+        <button 
+            id="dropdownButton"
+            class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+        >
+            <!-- Calendar Icon -->
+            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <span class="text-sm font-medium text-gray-700" id="selectedText">
+                Sort by Date: Newest First
+            </span>
+            <!-- Chevron Icon -->
+            <svg 
+                id="chevron" 
+                class="w-4 h-4 text-gray-500 transition-transform" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+            >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div 
+            id="dropdownMenu" 
+            class="absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10 hidden"
+        >
+            <div class="py-1">
+                <!-- Newest First -->
+                <button 
+                    class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors bg-blue-50 text-blue-700" 
+                    data-value="newest"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
+                    <span>Newest First</span>
+                    <div class="ml-auto w-2 h-2 bg-blue-600 rounded-full"></div>
+                </button>
+                
+                <!-- Oldest First -->
+                <button 
+                    class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors text-gray-700" 
+                    data-value="oldest"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                    </svg>
+                    <span>Oldest First</span>
+                </button>
+                
+                <!-- Today -->
+                <button 
+                    class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors text-gray-700" 
+                    data-value="today"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>Today</span>
+                </button>
+                
+                <!-- This Week -->
+                <button 
+                    class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors text-gray-700" 
+                    data-value="week"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>This Week</span>
+                </button>
+                
+                <!-- This Month -->
+                <button 
+                    class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors text-gray-700" 
+                    data-value="month"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>This Month</span>
+                </button>
+                
+                <!-- This Year -->
+                <button 
+                    class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors text-gray-700" 
+                    data-value="year"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>This Year</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
     <! Table !>
 
@@ -93,7 +197,7 @@
                 <th scope="row" class=" py-4 text-gray-900 whitespace-nowrap ">
                     
                     <div class="ps-3">
-                        <div class="text-base font-semibold">RNT-00{{rental.rental_id}}</div>
+                        <div class="text-base font-semibold text-blue-500">RNT-00{{rental.rental_id}}</div>
                         <div class="font-normal text-gray-500">{{rental.created_at}}</div>
                     </div>  
                 </th>
@@ -153,9 +257,10 @@
                         
                     </div>  
                 </td>
-                <td class="py-4">
+               <td class="py-4">
                     <!-- Modal toggle -->
-                    <a href="#" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
+                    <a href="/booking/mark_as_returned/{{rental.rental_id}}"  data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md bg-green-500 mr-1">Return</a>
+                      <a href="#" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-4 text-white rounded-md bg-blue-500">Edit</a>
                 </td>
             </tr>
            {% endif %}

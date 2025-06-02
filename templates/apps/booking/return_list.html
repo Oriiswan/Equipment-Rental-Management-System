@@ -2,8 +2,9 @@
 {% block 'nav' %}Rentals{% endblock 'nav' %}
 {% block 'content' %}
 
-<div class='p-3'>
+<div class='p-3 '>
   <div  class='grid grid-cols-5 gap-4 '>
+
     <div class='bg-gradient-to-br from-green-600 to-green-400  rounded-2xl pl-7 py-4 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'><Table>Active Rentals</Table></p>
       <h2 class='text-[55px] font-sans  leading-[.9]'>
@@ -48,11 +49,12 @@
     <div class='text-2xl mb-5 font-semibold'>Active Rentals</div>
     <div class='flex justify-between'>
     <div class='grid grid-cols-5 gap-3 w-[580px] mb-6'>
-      <a href='/booking/list/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>All</a>
+      <a href='/booking/list/' class='text-center bg-gray-100 text-gray-400  py-1 px-5 rounded-full text-[15px] font-semibold'>All</a>
       <a href='/booking/active/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Active</a>
-      <div class='text-center bg-gradient-to-br text-white bg-green-500 px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</div>
-      <a href='/booking/overdue/' class='text-center bg-gray-100 text-gray-400  py-1 px-5 rounded-full text-[15px] font-semibold'>Overdue</a>
-      <a href='/booking/return_list/' class='text-center bg-gray-100 text-gray-400  py-1 px-5 rounded-full text-[15px] font-semibold'>Returned</a>
+      <a href='/booking/pending/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</a>
+      <a href='/booking/overdue/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Overdue</a>
+      <div class='text-center bg-gradient-to-br text-white bg-green-500 px-5 py-1 rounded-full text-[15px] font-semibold'>Returned</div>
+      
     </div>
        
     <div class="relative inline-block">
@@ -182,6 +184,9 @@
                     DUE DATE
                 </th>
                 <th scope="col" class="px-3 py-3">
+                    RETURN DATE
+                </th>
+                <th scope="col" class="px-3 py-3">
                     AMOUNT
                 </th>
                 <th scope="col" class="px-3 py-3">
@@ -191,8 +196,8 @@
         </thead>
         <tbody>
             {% for rental in rentals %}
-             {% if rental.status == 'Pending' %}
-             <tr class="bg-white  hover:bg-gray-50 ">
+            {% if rental.status == 'Returned' %}
+            <tr class="bg-white  hover:bg-gray-50 ">
                 
                 <th scope="row" class=" py-4 text-gray-900 whitespace-nowrap ">
                     
@@ -227,16 +232,16 @@
                     </div>  
                 </td>
                 <td class=" py-4">
-                    <div class="px-4 py-1 {% if rental.status == 'Active' %}bg-green-100 text-green-600 {% elif rental.status == 'Overdue' %} bg-red-100 text-red-600  {% else%} bg-orange-100 text-orange-600  {% endif %}   rounded-full text-center font-semibold">
+                    <div class="px-4 py-1 bg-sky-100 text-sky-700   rounded-full text-center font-semibold">
                         {{rental.status}}
                     </div>
                 </td>
                 
-                <td scope="row" class="flex items-center py-4 text-gray-900 whitespace-nowrap ">
+                <td scope="row" class=" items-center py-4 text-gray-900 whitespace-nowrap ">
                     
                     <div class="ps-3">
                         <div class="text-base ">{{rental.rental_date}}</div>
-                        <div class="font-medium text-gray-400 text-[12px]">{% if rental.days_ago == 0 %}Today {% elif rental.days_ago == 'Pending' %}Pending {% else %}{{rental.days_ago}} days ago{% endif %} </div>
+                        
                     </div>  
                 </td>
 
@@ -244,7 +249,14 @@
                     
                     <div class="ps-3">
                         <div class="text-base ">{{rental.due_date}}</div>
-                        <div class="font-medium {% if rental.days_left < 0 %}text-red-500 {% else %}text-green-500 {% endif %} text-[12px]">{% if rental.days_left == 0 %}Today {% elif rental.days_left < 0 %} {{rental.days_left}} {% if rental.days_left == -1 %} day {% else %} days{% endif %} ago {% else %}In {{rental.days_left}} day {% endif %}</div>
+                        
+                    </div>  
+                </td>
+                <td  class=" items-center  py-4 text-gray-900 whitespace-nowrap ">
+                    
+                    <div class="ps-3">
+                        <div class="text-base ">{{rental.return_date}}</div>
+                        
                     </div>  
                 </td>
 
@@ -259,10 +271,11 @@
                 </td>
                 <td class="py-4">
                     <!-- Modal toggle -->
-                    <a href="/booking/mark_as_returned/{{rental.rental_id}}"  data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md bg-green-500 mr-1">Return</a>
+                    <a href="/booking/delete/{{booking.rental_id}}" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md bg-red-500 mr-1">Delete</a>
                       <a href="#" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-4 text-white rounded-md bg-blue-500">Edit</a>
                 </td>
-            </tr>{% endif %}
+            </tr>
+            {% endif %}
             {% endfor %}
             
             

@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from inventory.models import Equipments
 from customers.models import Customers
@@ -6,11 +6,15 @@ from .models import rental
 from datetime import date,datetime
 from django.db import connection
 from django.contrib import messages
+from django.utils import timezone
+from django.db.models import Sum
 def booking_list(request):
     records = rental.objects.all()
+    today = date.today()
+    
     total = sum(item.total_amount for item in records)
     return render(request, 'apps/booking/list.html',{
-      'rentals': rental.objects.all(),
+      'rentals': records,
       'equipments': Equipments.objects.all(),
       'customers': Customers.objects.all(),
       'overdue_count': rental.objects.filter(status='Overdue').count(),
@@ -21,9 +25,10 @@ def booking_list(request):
     
 def active_list(request):
     records = rental.objects.all()
+    
     total = sum(item.total_amount for item in records)
     return render(request, 'apps/booking/active.html',{
-      'rentals': rental.objects.all(),
+      'rentals': records,
       'equipments': Equipments.objects.all(),
       'customers': Customers.objects.all(),
       'overdue_count': rental.objects.filter(status='Overdue').count(),
@@ -34,9 +39,10 @@ def active_list(request):
     })
 def pending_list(request):
     records = rental.objects.all()
+    
     total = sum(item.total_amount for item in records)
     return render(request, 'apps/booking/pending.html',{
-      'rentals': rental.objects.all(),
+      'rentals': records,
       'equipments': Equipments.objects.all(),
       'customers': Customers.objects.all(),
       'overdue_count': rental.objects.filter(status='Overdue').count(),
@@ -48,9 +54,10 @@ def pending_list(request):
     })
 def overdue_list(request):
     records = rental.objects.all()
+    
     total = sum(item.total_amount for item in records)
     return render(request, 'apps/booking/overdue.html',{
-      'rentals': rental.objects.all(),
+      'rentals': records,
       'equipments': Equipments.objects.all(),
       'customers': Customers.objects.all(),
       'overdue_count': rental.objects.filter(status='Overdue').count(),
@@ -121,3 +128,46 @@ def determine_status(rental_date, due_date):
     elif today > due_date:
         return 'Overdue'
     return 'Pending'
+
+def mark_as_returned(request, rental_id):
+    # Get the specific rental object
+    rental_obj = get_object_or_404(rental, pk=rental_id)
+    now = datetime.now()
+    if request.method == 'POST':
+        # Update status to Returned
+        rental_obj.status = 'Returned'
+        rental_obj.return_date = timezone.now().date()  # Add if you track return dates
+        rental_obj.updated_at = rental_obj.return_date
+        rental_obj.save()
+        
+        # Update equipment availability if needed
+        equipment = rental_obj.equipment
+        equipment.available_quantity += 1
+        equipment.save()
+        
+        messages.success(request, f'Equipment {equipment.name} has been returned successfully!')
+        
+        return redirect('booking_list')
+    
+    # For GET requests
+    context = {
+        'booking': rental_obj,
+        'rentals': rental.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': rental.objects.aggregate(total=Sum('calculated_amount'))['total'] or 0,
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+    }
+    return render(request, 'apps/booking/return.html', context)
+def return_list(request):
+    return render(request, 'apps/booking/return_list.html', {
+        'rentals': rental.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': rental.objects.aggregate(total=Sum('calculated_amount'))['total'] or 0,
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+    })
