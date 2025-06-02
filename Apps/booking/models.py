@@ -1,11 +1,11 @@
 from django.db import models
 from customers.models import Customers
-from inventory.models import Equipments  # You'll need to create this model
+from inventory.models import Equipments 
 from datetime import date,datetime
 from django.utils import timezone
 from datetime import timedelta
 
-class rental(models.Model):  # Changed to PascalCase (Django convention)
+class rental(models.Model):  
     calculated_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     rental_id = models.BigAutoField(primary_key=True)
     customer = models.ForeignKey(
@@ -15,7 +15,7 @@ class rental(models.Model):  # Changed to PascalCase (Django convention)
         related_name='customer_rentals'
     )
     equipment = models.ForeignKey(
-        Equipments,  # Changed to point to Equipment model
+        Equipments,  
         on_delete=models.CASCADE,
         
         related_name='equipment_rentals'
@@ -61,9 +61,9 @@ class rental(models.Model):  # Changed to PascalCase (Django convention)
     @property
     def days_ago(self):
         if not self.rental_date:
-            return "Pending"  # no date set
+            return "Pending" 
         if self.rental_date > date.today():
-            return "Pending"  # date is in the future
+            return "Pending"  
         return (date.today() - self.rental_date).days
     @property
     def days_left(self):
@@ -107,4 +107,17 @@ class rental(models.Model):  # Changed to PascalCase (Django convention)
             return f"{days} day{'s' if days != 1 else ''} ago"
     def save(self, *args, **kwargs):
         self.calculated_amount = self.total_amount  # Uses your property
+        super().save(*args, **kwargs)
+    def update_status(self):
+        today = timezone.now().date()
+        if self.status != 'Returned':
+            if today >= self.rental_date and today <= self.due_date:
+               self.status = 'Active'
+            elif today > self.due_date:
+                self.status = 'Overdue'
+            else:
+                self.status = 'Pending'
+    
+    def save(self, *args, **kwargs):
+        self.update_status()
         super().save(*args, **kwargs)

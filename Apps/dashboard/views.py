@@ -5,9 +5,9 @@ import math
 from booking.models import rental
 from django.db.models import Sum
 def info(request):
-  last_four = rental.objects.order_by('-created_at')[:4]
+  last_four = rental.objects.order_by('-created_at', '-updated_at')[:5]
   records = rental.objects.all()
-  total = rental.objects.aggregate(total=Sum('calculated_amount'))['total']
+  totals = sum(item.total_amount for item in records)
   equipments =Equipments.objects.all()
   equipments_count = Equipments.objects.count()
   categories = Equipments.objects.values_list('category').distinct()
@@ -30,7 +30,7 @@ def info(request):
     'returned_count': rental.objects.filter(status='Returned').count(),
     'active_count': rental.objects.filter(status='Active').count(),
     'pending_count': rental.objects.filter(status='Pending').count(),
-    'total': total,
+    'total': totals,
     'recent_activities': last_four,
     
   }
