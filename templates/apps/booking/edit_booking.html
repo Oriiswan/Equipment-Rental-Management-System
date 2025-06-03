@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block 'nav' %}Equipment Management{% endblock 'nav' %}
+{% block 'content' %}
+
+<div method = 'post' class=' shadow-lg  border  border-gray-100 rounded-xl m-7 bg-white'>
+
+  <div class='text-2xl bg-gray-50 rounded-t-xl  p-6 pl-8 border border-b-gray-100'>
+    Rental Information
+    
+  </div>
+  
+  <form action="" method='POST' class='p-7 px-9 text-medium ' enctype="multipart/form-data">
+    {% csrf_token %}
+    
+
+    <div class='grid grid-cols-2 gap-6 pb-5'>
+      <div class=''>
+        <label for="rental_id font-semibold">Rental ID</label>
+        <input type="text" value={{rental_id}} name="rental_id" required id="rental_id" class='mt-2 focus:outline-blue-500  w-full hover:border-black shadow-sm rounded-md p-3 border border-gray- cursor-none pointer-events-none' placeholder={{rental_id}} >
+        
+      </div>
+      <div class=''>
+        <label for="customer font-semibold">Customer</label>
+        
+            <select name="customer" required id="customer" class='hover:border-black mt-2 w-full shadow-sm focus:outline-blue-500 rounded-md p-3 border border-gray-100'>
+          <option value={{booking.customer.customer_id}}>{{booking.customer.firstname}} {{booking.customer.lastname}}</option>
+          <!-- Add dynamic customer options here -->
+          {% for customer in customers  %}
+          <option value="{{customer.customer_id}}">{{customer.firstname}} {{customer.lastname}}</option>
+          {% endfor %}
+          
+        </select>
+      </div>
+      
+     <div class='mt-[-15px]'>
+        <label for="rental_date font-semibold">Rental Date</label>
+       
+        <input type="date" name="rental_date" required id="rental_date" class='mt-2 focus:outline-blue-500 w-full hover:border-black shadow-sm rounded-md p-3 border border-gray-100' placeholder={{booking.rental_date}}>
+        
+      </div>
+
+       <div class='mt-[-15px]'>
+        <label for="due_date font-semibold">Due Date</label>
+        
+        <input type="date" name="due_date" required id="due_date" class='mt-2 focus:outline-blue-500 hover:border-black w-full shadow-sm rounded-md p-3 border border-gray-100' placeholder={{booking.due_date}}>
+        
+      </div>
+      
+      <div class='mt-[-15px]'>
+        <select name="equipment" required id="equipment" class='mt-2 focus:outline-blue-500 w-full hover:border-black shadow-sm rounded-md p-3 border border-gray-100'>
+          <option value={{booking.equipment_id}}>{{booking.equipment.name}}</option>
+          <!-- Add dynamic equipment options here -->
+          {% for equipment in equipments %}
+          <option name='equipment' value="{{equipment.equipment_id}}" >{{equipment.name}} </option>
+          {% endfor %}
+          
+        </select>
+      </div>
+      
+      
+    </div>
+   
+    <div class='mt-16 flex justify-end'>
+      <div>
+        <a href="/booking/list/" class='border border-gray-100 shadow-md px-7 text-gray-500 py-1 mr-3 hover:border-black rounded-md font-semibold'> Cancel</a>
+        <button type='submit'  class='bg-green-500 hover:bg-green-600 text-white rounded-md px-6 p-1 font-semibold'>Save</button>
+      </div>
+    </div>
+  </form>
+  
+
+</div>
+
+{% endblock 'content' %}

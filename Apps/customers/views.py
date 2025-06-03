@@ -7,7 +7,13 @@ def customer_list(request):
   rentals = rental.objects.all()
   customers = Customers.objects.all()
   
-  
+  for customer in customers:
+    for record in rentals:
+      if customer == record.customer:
+        customer.recent_pickups = record.equipment.name
+        
+        customer.save()
+        
   for customer in customers:
       customer.total_rent = rentals.filter(customer_id=customer.customer_id).count()
       customer.save()
