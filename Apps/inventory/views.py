@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from .models import Equipments
 from django.contrib import messages
 import math
+from booking.models import rental
+from django.db.models import Q
 def equipment_list(request):
   equipments =Equipments.objects.all()
   equipments_count = Equipments.objects.count()
@@ -16,6 +18,7 @@ def equipment_list(request):
     avail += equipment.available_quantity 
   data = {
     'count': equipments_count,
+    
     'equipments': equipments, 
     'category': len(unique),
     'available': avail,

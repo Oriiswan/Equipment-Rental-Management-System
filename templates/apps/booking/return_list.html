@@ -29,7 +29,7 @@
     </div>
     <div class='bg-gradient-to-br from-violet-700 to-violet-400  rounded-xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>Revenue (Month)</p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>₱{{total|stringformat:"s"|slice:":2"}}K</h2>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>{% if total >= 10000 %} ₱{{total|stringformat:"s"|slice:":2"}}K {% else %} ₱{{total}} {% endif %}</h2>
       <p class='text-[13px] mb-5 mt-2'>This month</p>
    
     </div>
@@ -187,7 +187,7 @@
                     RETURN DATE
                 </th>
                 <th scope="col" class="px-3 py-3">
-                    AMOUNT
+                    TOTAL AMOUNT
                 </th>
                 <th scope="col" class="px-3 py-3">
                     ACTIONS
@@ -264,14 +264,14 @@
                     
                     <div class="ps-3">
                         <div class="text-base font-semibold ">
-                             ₱{{rental.total_amount}}
+                             {% if rental.return_date > rental.due_date %} ₱{{rental.total_amount_afterdue}} {% else %} ₱{{rental.total_amount}}{% endif %}
                         </div>
                         
                     </div>  
                 </td>
                 <td class="py-4">
                     <!-- Modal toggle -->
-                    <a href="/booking/delete/{{booking.rental_id}}" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md bg-red-500 mr-1">Delete</a>
+                    <a href="/booking/delete_returned/{{rental.rental_id}}" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md bg-red-500 mr-1">Delete</a>
                       <a href="#" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-4 text-white rounded-md bg-blue-500">Edit</a>
                 </td>
             </tr>

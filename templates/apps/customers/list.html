@@ -101,8 +101,8 @@
                     </div>  
                 </td>
                 <td class="px-6 py-4">
-                    <div class="px-4 {% if customer.isactive %}  bg-green-100 text-green-600 {% else %}bg-red-100 text-red-600{% endif %}   w-[60%] rounded-full text-center font-semibold">
-                        {% if customer.isactive %}Active {% else %}Not Active{% endif %}
+                    <div class="px-4 {% if customer.total_rent %}  bg-green-100 text-green-600 {% else %}bg-red-100 text-red-600{% endif %}   w-[60%] rounded-full text-center font-semibold">
+                        {% if customer.total_rent %}Active {% else %}Not Active{% endif %}
                     </div>
                 </td>
                 
@@ -119,7 +119,7 @@
                 <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
                     
                     <div class="ps-3">
-                        <div class="text-base ">May 18,2025</div>
+                        <div class="text-base ">{{customer.last_rent}}</div>
                         <div class="font-normal text-gray-500">{{customer.recent_pickups}}</div>
                     </div>  
                 </td>

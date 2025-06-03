@@ -1,27 +1,82 @@
 {% extends "base.html" %}
 {% block 'nav' %}Rentals{% endblock 'nav' %}
 {% block 'content' %}
-<div class="fixed inset-0 flex items-center justify-center z-[1000] pointer-events-none ">
-  
-  <div class="bg-white  rounded-lg shadow-xl  w-full max-w-md pointer-events-auto">
-    <div class='bg-green-500 py-4 text-center font-medium text-white rounded-lg'>Confirm Return</div>
-    <div class='px-6 py-1 text-sm'>
-      <div>Are you sure you want to mark this rental as returned?</div>
-      <div class='text-gray-500'>Rental ID: RNT-00{{booking.rental_id}} - {{booking.equipment.name}}</div>
-      <div class='text-gray'>Customer: {{booking.customer.firstname}} {{booking.customer.lastname}}</div>
+
+<!-- Modal Overlay -->
+<div class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
+    
+    <!-- Modal Container -->
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 animate-scale-in overflow-hidden">
+        
+        <!-- Header with Icon -->
+        <div class="px-6 pt-6 pb-4 text-center">
+            <div class="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Delete Booking</h3>
+            <p class="text-gray-600">This action cannot be undone. Are you sure?</p>
+        </div>
+
+        <!-- Booking Details Card -->
+        <div class="mx-6 mb-6 bg-gray-50 rounded-lg p-4 border-l-4 border-red-500">
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-gray-700">Rental ID:</span>
+                    <span class="text-sm font-mono bg-white px-2 py-1 rounded text-gray-900">RNT-00{{booking.rental_id}}</span>
+                </div>
+                <div class="flex justify-between items-start">
+                    <span class="text-sm font-medium text-gray-700">Equipment:</span>
+                    <span class="text-sm text-gray-900 text-right">{{booking.equipment.name}}</span>
+                </div>
+                <div class="flex justify-between items-start">
+                    <span class="text-sm font-medium text-gray-700">Customer:</span>
+                    <span class="text-sm text-gray-900 text-right">{{booking.customer.firstname}} {{booking.customer.lastname}}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="px-6 pb-6 flex flex-col-reverse sm:flex-row gap-3">
+            <a href="/booking/pending/" 
+               class="flex-1 px-4 py-3 text-center font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-200 hover:scale-[1.02]">
+                Keep Booking
+            </a>
+            
+            <form action="" method="POST" class="flex-1">
+                {% csrf_token %}
+                <button type="submit" 
+                        onclick="this.classList.add('animate-shake'); setTimeout(() => this.classList.remove('animate-shake'), 500)"
+                        class="w-full px-4 py-3 font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-all duration-200 hover:scale-[1.02] focus:ring-4 focus:ring-red-200 focus:outline-none">
+                    <span class="flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Delete Booking
+                    </span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Warning Footer -->
+        <div class="bg-red-50 px-6 py-3 border-t border-red-100">
+            <div class="flex items-center gap-2 text-xs text-red-700">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+                <span>This will permanently remove the booking from your system</span>
+            </div>
+        </div>
     </div>
-    <div class="mt-6 flex justify-end space-x-3 mr-5 mb-5">
-      <form action="" method='POST'>
-        {% csrf_token %}
-      
-        <button class="px-4 py-2 text-sm font-medium text-white bg-green-500 hover:bg-green-400 rounded-md" type='submit'>Confirm</button>
-      
-      <a href='/booking/list/' class="px-4 py-2 text-sm font-medium text-white bg-gray-500 hover:bg-gray-400 rounded-md">
-        Cancel
-      </a>
-      </form>
-    </div>
-  </div>
+</div>
+
+<!-- Demo: Show modal trigger for testing -->
+<div class="fixed top-4 right-4 z-40">
+    <button onclick="location.reload()" 
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+        Reload Demo
+    </button>
 </div>
  <div class="absolute inset-0 pointer-events-auto"></div>
 <div class='p-3 '>
@@ -214,7 +269,7 @@
         </thead>
         <tbody>
             {% for rental in rentals %}
-            {% if rental.status != 'Returned' %}
+            {% if rental.status == 'Pending' %}
             <tr class="bg-white  hover:bg-gray-50 ">
                 
                 <th scope="row" class=" py-4 text-gray-900 whitespace-nowrap ">
@@ -282,7 +337,13 @@
                 </td>
                 <td class="py-4">
                     <!-- Modal toggle -->
-                    <a href="/booking/mark_as_returned/{{booking.rental_id}}" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md bg-green-500 mr-1">Return</a>
+                    {% if rental.status == 'Pending' %}
+                    <a href="/booking/delete/{{rental.rental_id}}" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md bg-red-500 mr-1">Delete</a>
+                    {% else %}
+                    <a  href="/booking/mark_as_returned/{{rental.rental_id}}"  data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md {% if rental.status == 'Active' %} bg-green-500 {% elif rental.status == 'Overdue' %} bg-red-600 {% else %} bg-gray-500 pointer-events-none cursor-not-allowed {% endif %} mr-1" >Return</a>
+                    {% endif %}
+                    
+                    
                       <a href="#" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-4 text-white rounded-md bg-blue-500">Edit</a>
                 </td>
             </tr>

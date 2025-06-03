@@ -51,7 +51,7 @@
     </div>
     <div class='bg-gradient-to-br from-violet-700 to-violet-400  rounded-xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>Revenue (Month)</p>
-      <h2 class='text-[55px] font-sans  leading-[.9]'>₱{{total|stringformat:"s"|slice:":2"}}K</h2>
+      <h2 class='text-[55px] font-sans  leading-[.9]'>{% if total >= 10000 %} ₱{{total|stringformat:"s"|slice:":2"}}K {% else %} ₱{{total}} {% endif %}</h2>
       <p class='text-[13px] mb-5 mt-2'>This month</p>
    
     </div>

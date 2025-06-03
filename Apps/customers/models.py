@@ -14,4 +14,5 @@ class Customers(models.Model):
   valid_id = models.ImageField(upload_to='./static/images/', blank=False)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
-  recent_pickups = models.CharField(max_length=55, blank=True)
+  recent_pickups = models.CharField(max_length=56, blank=True)
+  last_rent = models.DateField(null=True, blank=True)

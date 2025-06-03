@@ -69,8 +69,8 @@
             ₱{{ equipment.daily_rate }}/day ID: EQ00{{ equipment.equipment_id }}
         </p>
         <div class='flex items-center justify-center mt-2'>
-            <span class='px-4 py-1   {% if equipment.available_quantity >= 1 %} text-green-700  bg-green-100 {% else %}bg-red-100 text-red-700{% endif %} rounded-full text-[12px]'>
-                {{ equipment.available_quantity }} of {{ equipment.total_quantity }} {% if equipment.available_quantity >= 1 %} Available   {% else %} Out of Stock{% endif %}
+            <span class='px-4 py-1   {% if equipment.available_quantity >= 1 %} text-green-700  bg-green-100 {% else %}bg-red-100 text-red-700{% endif %} rounded-full text-[12px]'>{% if equipment.available_quantity == 0 %}Out of Stock {% elif equipment.available_quantity >= 1 %}
+                {{ equipment.available_quantity }} of {{ equipment.total_quantity }}  Available   {% endif %}
             </span>
         </div>
     </div>

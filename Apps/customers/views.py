@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import Customers
 from django.contrib import messages
 from booking.models import rental
+from django.db.models import Q
 def customer_list(request):
   rentals = rental.objects.all()
   customers = Customers.objects.all()
@@ -11,15 +12,12 @@ def customer_list(request):
     for record in rentals:
       if customer == record.customer:
         customer.recent_pickups = record.equipment.name
-        
+        customer.last_rent = record.rental_date
         customer.save()
         
   for customer in customers:
-      customer.total_rent = rentals.filter(customer_id=customer.customer_id).count()
+      customer.total_rent = rentals.filter(Q(customer=customer) & (Q(status='Active') | Q(status ='Overdue'))).count()
       customer.save()
-      if rentals.filter(customer_id=customer.customer_id).exists():
-        customer.isactive = True
-        customer.save()
       
       
   overdue = Customers.objects.filter(isactive = False)
