@@ -33,18 +33,19 @@
       </div>
       
      <div class='mt-[-15px]'>
-        <label for="rental_date font-semibold">Rental Date</label>
-       
-        <input type="date" name="rental_date" required id="rental_date" class='mt-2 focus:outline-blue-500 w-full hover:border-black shadow-sm rounded-md p-3 border border-gray-100' placeholder={{booking.rental_date}}>
-        
-      </div>
+  <label for="rental_date font-semibold">Rental Date</label>
+  <input type="date" name="rental_date" required id="rental_date" 
+         value="{{ booking.rental_date|date:'Y-m-d' }}" 
+         class="mt-2 focus:outline-blue-500 w-full hover:border-black shadow-sm rounded-md p-3 border {% if booking.status == 'Active' %}
+         cursor-none pointer-events-none{% endif %} border-gray-100">
+</div>
 
-       <div class='mt-[-15px]'>
-        <label for="due_date font-semibold">Due Date</label>
-        
-        <input type="date" name="due_date" required id="due_date" class='mt-2 focus:outline-blue-500 hover:border-black w-full shadow-sm rounded-md p-3 border border-gray-100' placeholder={{booking.due_date}}>
-        
-      </div>
+<div class='mt-[-15px]'>
+  <label for="due_date font-semibold">Due Date</label>
+  <input type="date" name="due_date" required id="due_date" 
+         value="{{ booking.due_date|date:'Y-m-d' }}" 
+         class='mt-2 focus:outline-blue-500 hover:border-black w-full shadow-sm rounded-md p-3 border border-gray-100'>
+</div>
       
       <div class='mt-[-15px]'>
         <select name="equipment" required id="equipment" class='mt-2 focus:outline-blue-500 w-full hover:border-black shadow-sm rounded-md p-3 border border-gray-100'>
