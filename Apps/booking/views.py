@@ -22,7 +22,29 @@ def booking_list(request):
       'active_count': rental.objects.filter(status='Active').count(),
       'total': total
     })
+def edit_booking(request, rental_id):
+    booking = rental.objects.get(rental_id=rental_id)
     
+    if request.method == 'POST':
+        
+        rental_date_str = request.POST.get('rental_date')
+        due_date_str = request.POST.get('due_date')
+        customer_id = request.POST.get('customer')
+        equipment_id = request.POST.get('equipment')
+        
+        booking.customer = Customers.objects.get(customer_id=customer_id)
+        booking.equipment = Equipments.objects.get(equipment_id=equipment_id)
+        booking.rental_date = datetime.strptime(rental_date_str, "%Y-%m-%d").date()
+        booking.due_date = datetime.strptime(due_date_str, "%Y-%m-%d").date()
+        booking.save()
+        return redirect('booking_list')
+    else:
+        return render(request, 'apps/booking/edit_booking.html', {
+            'customers':Customers.objects.all(),
+            'equipments': Equipments.objects.all(),
+            'booking': booking,
+            'rental_id': f'RNT-00{booking.rental_id}'
+        })
 def active_list(request):
     records = rental.objects.all()
     
