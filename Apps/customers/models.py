@@ -16,3 +16,6 @@ class Customers(models.Model):
   updated_at = models.DateTimeField(auto_now=True)
   recent_pickups = models.CharField(max_length=56, blank=True)
   last_rent = models.DateField(null=True, blank=True)
+  
+
+     

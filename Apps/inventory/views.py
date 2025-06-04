@@ -44,8 +44,8 @@ def add_equipment(request):
       if exists:
         messages.error(request, 'This product is already exists')
         return render(request, 'apps/equipment/Add-equipment.html')
-      elif total_quantity < available_quantity:
-        messages.error(request, 'This product is already exists')
+      elif total_quantity < available_quantity  or total_quantity > available_quantity:
+        messages.error(request, 'The quantity must be both equal')
         return render(request, 'apps/equipment/Add-equipment.html')
       else:
         Equipments.objects.create(

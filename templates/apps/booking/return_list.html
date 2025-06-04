@@ -264,13 +264,13 @@
                     
                     <div class="ps-3">
                         <div class="text-base font-semibold ">
-                             {% if rental.return_date > rental.due_date %} ₱{{rental.total_amount_afterdue}} {% else %} ₱{{rental.total_amount}}{% endif %}
+                             {% if rental.return_date > rental.due_date %} ₱{{rental.total_amount_afterdue}} {% else %} ₱{{rental.total_amount_afterdue}}{% endif %}
                         </div>
                         
                     </div>  
                 </td>
                 <td class="py-4">
-                    <!-- Modal toggle -->
+                    
                     <a href="/booking/delete_returned/{{rental.rental_id}}" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md bg-red-500 mr-1">Delete</a>
                       <a href="#" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-4 text-white rounded-md bg-blue-500">Edit</a>
                 </td>

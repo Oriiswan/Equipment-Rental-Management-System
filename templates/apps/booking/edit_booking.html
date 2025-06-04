@@ -16,7 +16,7 @@
     <div class='grid grid-cols-2 gap-6 pb-5'>
       <div class=''>
         <label for="rental_id font-semibold">Rental ID</label>
-        <input type="text" value={{rental_id}} name="rental_id" required id="rental_id" class='mt-2 focus:outline-blue-500  w-full hover:border-black shadow-sm rounded-md p-3 border border-gray- cursor-none pointer-events-none' placeholder={{rental_id}} >
+        <input type="text" value={{rental_id}} name="rental_id" required id="rental_id" class='mt-2 placeholder:text-gray-100 focus:outline-blue-500  w-full hover:border-black shadow-sm rounded-md p-3 border border-gray- cursor-not-allowed pointer-events-none' placeholder={{rental_id}} >
         
       </div>
       <div class=''>
@@ -26,7 +26,9 @@
           <option value={{booking.customer.customer_id}}>{{booking.customer.firstname}} {{booking.customer.lastname}}</option>
           <!-- Add dynamic customer options here -->
           {% for customer in customers  %}
+          {% if booking.customer != customer %}
           <option value="{{customer.customer_id}}">{{customer.firstname}} {{customer.lastname}}</option>
+          {% endif %}
           {% endfor %}
           
         </select>
@@ -52,7 +54,9 @@
           <option value={{booking.equipment_id}}>{{booking.equipment.name}}</option>
           <!-- Add dynamic equipment options here -->
           {% for equipment in equipments %}
+          {% if booking.equipment.name != equipment.name %}
           <option name='equipment' value="{{equipment.equipment_id}}" >{{equipment.name}} </option>
+          {% endif %}
           {% endfor %}
           
         </select>

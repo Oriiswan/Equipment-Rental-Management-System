@@ -2,6 +2,88 @@
 {% block 'nav' %}Customers{% endblock 'nav' %}
 {% block 'content' %}
 
+
+<!-- Modal Overlay -->
+<div class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
+    
+    <!-- Modal Container -->
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 animate-scale-in overflow-hidden">
+        
+        <!-- Header with Icon -->
+        <div class="px-6 pt-6 pb-4 text-center">
+            <div class="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Delete Customer</h3>
+            <p class="text-gray-600">This action cannot be undone. Are you sure?</p>
+        </div>
+
+        <!-- Booking Details Card -->
+        <div class="mx-6 mb-6 bg-gray-50 rounded-lg p-4 border-l-4 border-red-500">
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-gray-700">Rental ID:</span>
+                    <span class="text-sm font-mono bg-white px-2 py-1 rounded text-gray-900">ID: CUS-00{{customer.customer_id}}</span>
+                </div>
+                <div class="flex justify-between items-start">
+                    <span class="text-sm font-medium text-gray-700">Name:</span>
+                    <span class="text-sm text-gray-900 text-right">{{customer.firstname}} {{customer.lastname}}</span>
+                </div>
+                <div class="flex justify-between items-start">
+                    <span class="text-sm font-medium text-gray-700">Email:</span>
+                    <span class="text-sm text-gray-900 text-right"> {{customer.email}}</span>
+                </div>
+                <div class="flex justify-between items-start">
+                    <span class="text-sm font-medium text-gray-700">Total_rent:</span>
+                    <span class="text-sm text-gray-900 text-right"> {{customer.total_rent}}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="px-6 pb-6 flex flex-col-reverse sm:flex-row gap-3">
+            <a href="/customers/list/" 
+               class="flex-1 px-4 py-3 text-center font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-200 hover:scale-[1.02]">
+                Cancel
+            </a>
+            
+            <form action="" method="POST" class="flex-1">
+                {% csrf_token %}
+                <button type="submit" 
+                        onclick="this.classList.add('animate-shake'); setTimeout(() => this.classList.remove('animate-shake'), 500)"
+                        class="w-full px-4 py-3 font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-all duration-200 hover:scale-[1.02] focus:ring-4 focus:ring-red-200 focus:outline-none">
+                    <span class="flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Delete 
+                    </span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Warning Footer -->
+        <div class="bg-red-50 px-6 py-3 border-t border-red-100">
+            <div class="flex items-center gap-2 text-xs text-red-700">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+                <span>This will permanently remove the customer from your system</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Demo: Show modal trigger for testing -->
+<div class="fixed top-4 right-4 z-40">
+    <button onclick="location.reload()" 
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+        Reload Demo
+    </button>
+</div>
+
 <div class='p-3'>
   <div  class='grid grid-cols-5 gap-4 '>
     <div class='bg-gradient-to-br from-blue-700 to-blue-400  rounded-2xl pl-7 py-4 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
@@ -19,7 +101,7 @@
     <div class='bg-gradient-to-br from-violet-700 to-violet-400  rounded-2xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
       <p class='font-semibold'>New This Month</p>
       <h2 class='text-[55px] font-sans  leading-[.9]'>{{count}}</h2>
-      <p class='text-[13px] mb-5 mt-2'>New custopmers</p>
+      <p class='text-[13px] mb-5 mt-2'>New customers</p>
    
     </div>
     <div class='bg-gradient-to-br from-red-700 to-red-400  rounded-xl pl-7 py-3 text-white hover:shadow-xl hover:translate-y-[-1px] cursor-pointer'>
@@ -44,14 +126,14 @@
 
     <div class='text-2xl mb-5 font-semibold'>Customer Directory</div>
     <div class='grid grid-cols-4 gap-3 w-[600px] mb-6'>
-      <a href="/customers/list/" class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>
-        <div >All</div>
-      </a>
+      <div class='text-center bg-gradient-to-br text-white from-blue-700 to-blue-500 px-5 py-1 rounded-full text-[15px] font-semibold'>All</div>
       <a href="/customers/active/" class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>
         <div >Active</div>
       </a>
-      <div class='text-center bg-gradient-to-br text-white from-blue-700 to-blue-500 px-5 py-1 rounded-full text-[15px] font-semibold'>Not Active</div>
-      <div class='text-center hidden bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</div>
+      <div class=' hidden text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</div>
+      <a href="/customers/overdue/" class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>
+        <div >Overdue</div>
+      </a>
     </div>
 
     <! Table !>
@@ -84,7 +166,7 @@
         </thead>
        <tbody>
             {% for customer in customers  %}
-            {% if not customer.total_rental%}
+        
             <tr class="bg-white  ">
                 
                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
@@ -119,17 +201,22 @@
                 <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
                     
                     <div class="ps-3">
-                        <div class="text-base ">May 18,2025</div>
-                        <div class="font-normal text-gray-500">Circular Saw</div>
+                        <div class="text-base ">{{customer.last_rent}}</div>
+                        <div class="font-normal text-gray-500">{{customer.recent_pickups}}</div>
                     </div>  
                 </td>
-                <td class="px-6 py-4">
+                <td class="py-4">
                     <!-- Modal toggle -->
-                    <a href="#" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
+                    {% if customer.total_rent %}
+                    <a href="/customers/delete_customer/{{customer.customer_id}}" >
+                    <button disabled  type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium bg-gray-500 p-1 px-2 text-white rounded-md 0 cursor-not-allowed  mr-1" >Delete</button>
+                    </a>
+                    {% else %}
+                    <a href="/customers/delete_customer/{{customer.customer_id}}" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md bg-red-500 mr-1">Delete</a>
+                    {% endif %}
+                      <a href="/customers/edit/{{customer.customer_id}}" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-4 text-white rounded-md bg-blue-500">Edit</a>
                 </td>
             </tr>
-            {% endif %}
-            
         
             {% endfor %}
         </tbody>

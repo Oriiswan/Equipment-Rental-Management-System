@@ -12,7 +12,7 @@ def booking_list(request):
     records = rental.objects.all()
     today = date.today()
     
-    total = sum(item.total_amount for item in records)
+    total = sum(item.total_amount_afterdue for item in records)
     return render(request, 'apps/booking/list.html',{
       'rentals': records,
       'equipments': Equipments.objects.all(),
@@ -35,7 +35,7 @@ def edit_booking(request, rental_id):
         equipment_id = request.POST.get('equipment')
         equipment = Equipments.objects.get(pk=equipment_id)
         if due_date <=  rental_date:
-            messages.error(request,'Invalid rental date')
+            messages.error(request,'Due date must be after rental date')
             return render(request, 'apps/booking/edit_booking.html', {
             'customers':Customers.objects.all(),
             'equipments': Equipments.objects.all(),
@@ -53,6 +53,7 @@ def edit_booking(request, rental_id):
             equipment.save()
         return redirect('booking_list')
     else:
+        
         return render(request, 'apps/booking/edit_booking.html', {
             'customers':Customers.objects.all(),
             'equipments': Equipments.objects.all(),
@@ -239,7 +240,7 @@ def mark_as_returned(request, rental_id):
         
         rental_obj.status = 'Returned'
         rental_obj.return_date = timezone.now().date()  # Add if you track return dates
-        rental_obj.updated_at = rental_obj.return_date
+        rental_obj.updated_at = timezone.now().date() 
         rental_obj.save()
         
         # Update equipment availability if needed
@@ -374,7 +375,7 @@ def return_list(request):
         'overdue_count': rental.objects.filter(status='Overdue').count(),
         'returned_count': rental.objects.filter(status='Returned').count(),
         'active_count': rental.objects.filter(status='Active').count(),
-        'total': sum(item.total_amount for item in rentals),
+        'total': sum(item.total_amount_afterdue for item in rentals),
         'equipments': Equipments.objects.all(),
         'customers': Customers.objects.all(),
     })

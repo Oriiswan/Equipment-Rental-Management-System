@@ -3,3 +3,41 @@
 @tailwind utilities;
 
 /* Custom CSS for your rental system */
+.transition-all {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  /* Focus ring enhancement */
+  input:focus, textarea:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  /* Hover effects */
+  button:hover {
+    transform: translateY(-1px);
+  }
+  
+  /* Loading state styles */
+  .loading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  
+  /* Custom scrollbar for textarea */
+  textarea::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  textarea::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  
+  textarea::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+  }
+  
+  textarea::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
