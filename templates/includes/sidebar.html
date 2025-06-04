@@ -16,7 +16,7 @@
       <ul class="space-y-2 font-medium ">
          <li>
 
-            <a href="{% url 'info' %}" class="flex items-center p-2  rounded-lg     {% if request.path == '' %}dark:bg-blue-200 text-blue-700 dark:hover:bg-blue-200 {% else %}opacity-100{% endif %} dark:hover:bg-blue-50">
+            <a href="{% url 'info' %}" class="flex items-center p-2  rounded-lg     {% if request.path == '/' %}dark:bg-blue-200 text-blue-700 dark:hover:bg-blue-200 {% else %}opacity-100{% endif %} dark:hover:bg-blue-50">
                <div class='shrink-0 w-6 h-6'>📊</div>
                <span class="ms-3 ">Dashboard</span>
             </a>
