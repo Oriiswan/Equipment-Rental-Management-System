@@ -18,7 +18,7 @@
 
       <div class='mt-[-15px]'>
         <label for="customer" class='block text-sm font-medium text-gray-700 mb-1'>Customer</label>
-        <select name="customer" required id="customer" class='hover:border-black mt-2 w-full shadow-sm focus:outline-blue-500 rounded-md p-3 border border-gray-100'>
+        <select name="customer" required id="customer" class='hover:border-black mt-2 w-full shadow-sm focus:outline-blue-500 rounded-md p-3 border border-gray-300'>
           <option value="">Select Customer</option>
           <!-- Add dynamic customer options here -->
           {% for customer in customers  %}
@@ -30,7 +30,7 @@
       
       <div class='mt-[-15px]'>
         <label for="equipment" class='block text-sm font-medium text-gray-700 mb-1'>Equipment</label>
-        <select name="equipment" required id="equipment" class='mt-2  focus:outline-blue-500 w-full hover:border-black shadow-sm rounded-md p-3 border border-gray-100'>
+        <select name="equipment" required id="equipment" class='mt-2  focus:outline-blue-500 w-full hover:border-black shadow-sm rounded-md p-3 border border-gray-300'>
           <option value="">Select Equipment</option>
           <!-- Add dynamic equipment options here -->
           {% for equipment in equipments %}
@@ -49,12 +49,12 @@
       
       <div class='mt-[-15px]'>
         <label for="rental_date" class='block text-sm font-medium text-gray-700 mb-1'>Rental Date</label>
-        <input type="date" required name="rental_date" id="rental_date" class='mt-2 focus:outline-blue-500 hover:border-black w-full shadow-sm rounded-md p-3 border border-gray-100'>
+        <input type="date" required name="rental_date" id="rental_date" class='mt-2 focus:outline-blue-500 hover:border-black w-full shadow-sm rounded-md p-3 border border-gray-300'>
       </div>
 
       <div class='mt-[-15px]'>
         <label for="due_date" class='block text-sm font-medium text-gray-700 mb-1'>Due Date</label>
-        <input type="date" required name="due_date" id="due_date" class='mt-2 focus:outline-blue-500 hover:border-black w-full shadow-sm rounded-md p-3 border border-gray-100'>
+        <input type="date" required name="due_date" id="due_date" class='mt-2 focus:outline-blue-500 hover:border-black w-full shadow-sm rounded-md p-3 border border-gray-300'>
       </div>
 
       
@@ -65,7 +65,7 @@
     
     <div class='mt-5'>
       <label for="notes" class='block text-sm font-medium text-gray-700 mb-1'>Notes (Optional)</label>
-      <textarea name="notes" id="notes" rows="3" class='mt-2 focus:outline-blue-500 hover:border-black w-full shadow-sm rounded-md p-3 border border-gray-100' placeholder='Additional notes about this rental...'></textarea>
+      <textarea name="notes" id="notes" rows="3" class='mt-2 focus:outline-blue-500 hover:border-black w-full shadow-sm rounded-md p-3 border border-gray-300' placeholder='Additional notes about this rental...'></textarea>
     </div>
 
     <div class='mt-5'>

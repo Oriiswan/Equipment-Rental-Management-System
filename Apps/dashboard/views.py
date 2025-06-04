@@ -7,7 +7,7 @@ from django.db.models import Sum
 def info(request):
   last_four = rental.objects.order_by('-created_at', '-updated_at')[:5]
   records = rental.objects.all()
-  totals = sum(item.total_amount for item in records)
+  totals = sum(item.total_amount_afterdue for item in records)
   equipments =Equipments.objects.all()
   equipments_count = Equipments.objects.count()
   categories = Equipments.objects.values_list('category').distinct()

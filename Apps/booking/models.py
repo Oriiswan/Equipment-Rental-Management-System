@@ -77,9 +77,9 @@ class rental(models.Model):
     def total_amount_afterdue(self):
         if not self.return_date:  # Equipment not returned yet
           return self.total_amount
-    
+        if self.return_date < self.due_date:
+            return self.total_amount
         extra_fee = (self.return_date - self.due_date).days * self.equipment.daily_rate
-        
         return self.total_amount + extra_fee
         
     @property
