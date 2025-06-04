@@ -1,5 +1,5 @@
 from django.db import models
-
+import math
 # Create your models here.
 class Equipments(models.Model):
   equipment_id = models.BigAutoField(primary_key=True, blank=False)
@@ -12,3 +12,11 @@ class Equipments(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
   
+  
+  @property
+  def utilization(self):
+    return math.floor(((self.total_quantity - self.available_quantity) / self.total_quantity) * 100) 
+  
+  @property
+  def availability(self):
+    return math.floor((self.available_quantity / self.total_quantity) * 100)

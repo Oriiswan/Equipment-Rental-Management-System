@@ -8,6 +8,7 @@ from django.db import connection
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Sum
+
 def booking_list(request):
     records = rental.objects.all()
     today = date.today()
@@ -236,11 +237,10 @@ def mark_as_returned(request, rental_id):
     rental_obj = get_object_or_404(rental, pk=rental_id)
     now = datetime.now()
     if request.method == 'POST':
-        # Update status to Returned
+        
         
         rental_obj.status = 'Returned'
-        rental_obj.return_date = timezone.now().date()  # Add if you track return dates
-        rental_obj.updated_at = timezone.now().date() 
+        rental_obj.return_date = timezone.now().date()  
         rental_obj.save()
         
         # Update equipment availability if needed

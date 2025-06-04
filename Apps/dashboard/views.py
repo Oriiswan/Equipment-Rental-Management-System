@@ -4,8 +4,11 @@ from inventory.models import Equipments
 import math
 from booking.models import rental
 from django.db.models import Sum
+from django.db.models import F,Q
 def info(request):
-  last_four = rental.objects.order_by('-created_at', '-updated_at')[:5]
+  last_four = rental.objects.order_by('-updated_at')[:5]
+  most = Equipments.objects.filter(~Q(available_quantity=F('total_quantity')))
+  
   records = rental.objects.all()
   totals = sum(item.total_amount_afterdue for item in records)
   equipments =Equipments.objects.all()
@@ -22,6 +25,7 @@ def info(request):
     'count': equipments_count,
     'equipments': equipments, 
     'category': len(unique),
+    'categories': categories,
     'available': avail,
     'rented': total - avail,
     'available_percent': math.floor((avail / total) * 100),
@@ -32,6 +36,7 @@ def info(request):
     'pending_count': rental.objects.filter(status='Pending').count(),
     'total': totals,
     'recent_activities': last_four,
+    'most_popular_equipment': most.order_by('available_quantity')[:4]
     
   }
   return render(request, 'apps/dashboard/index.html', data)

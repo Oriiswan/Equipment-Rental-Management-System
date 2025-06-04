@@ -4,7 +4,7 @@ from inventory.models import Equipments
 from datetime import date,datetime
 from django.utils import timezone
 from datetime import timedelta
-
+from utils.zapier import notify_overdue_booking
 class rental(models.Model):  
     calculated_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     rental_id = models.BigAutoField(primary_key=True)
@@ -93,6 +93,16 @@ class rental(models.Model):
         """Returns time elapsed since creation as a timedelta"""
         return timezone.now() - self.created_at
     
+    @property
+    def updated(self):
+        """Returns time elapsed since creation as a timedelta"""
+        return timezone.now() - self.updated_at
+    
+    @property
+    def created(self):
+        """Returns time elapsed since creation as a timedelta"""
+        return timezone.now() - self.created_at
+    
     @property 
     def created_display(self):
         """
@@ -100,6 +110,27 @@ class rental(models.Model):
         Format: "X days, Y hours ago" or "Just now"
         """
         delta = self.created
+        
+        if delta < timedelta(minutes=1):
+            return "Just now"
+        elif delta < timedelta(hours=1):
+            minutes = delta.seconds // 60
+            return f"{minutes} minute{'s' if minutes != 1 else ''} ago"
+        elif delta < timedelta(days=1):
+            hours = delta.seconds // 3600
+            return f"{hours} hour{'s' if hours != 1 else ''} ago"
+        else:
+            days = delta.days
+            hours = (delta.seconds // 3600)
+            if hours > 0:
+                return f"{days} day{'s' if days != 1 else ''}, {hours} hour{'s' if hours != 1 else ''} ago"
+            return f"{days} day{'s' if days != 1 else ''} ago"
+    def recent_display(self):
+        """
+        Returns human-readable time since creation
+        Format: "X days, Y hours ago" or "Just now"
+        """
+        delta = self.updated
         
         if delta < timedelta(minutes=1):
             return "Just now"
@@ -125,6 +156,7 @@ class rental(models.Model):
                self.status = 'Active'
             elif today > self.due_date:
                 self.status = 'Overdue'
+                notify_overdue_booking(self)
             else:
                 self.status = 'Pending'
     
