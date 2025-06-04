@@ -30,13 +30,23 @@ def edit_booking(request, rental_id):
         rental_date_str = request.POST.get('rental_date')
         due_date_str = request.POST.get('due_date')
         rental_date = datetime.strptime(rental_date_str, "%Y-%m-%d").date()
+        due_date = datetime.strptime(due_date_str, "%Y-%m-%d").date()
         customer_id = request.POST.get('customer')
         equipment_id = request.POST.get('equipment')
         equipment = Equipments.objects.get(pk=equipment_id)
+        if due_date <=  rental_date:
+            messages.error(request,'Invalid rental date')
+            return render(request, 'apps/booking/edit_booking.html', {
+            'customers':Customers.objects.all(),
+            'equipments': Equipments.objects.all(),
+            'booking': booking,
+            'rental_id': f'RNT-00{booking.rental_id}'
+        })
         booking.customer = Customers.objects.get(customer_id=customer_id)
         booking.equipment = Equipments.objects.get(equipment_id=equipment_id)
         booking.rental_date = datetime.strptime(rental_date_str, "%Y-%m-%d").date()
         booking.due_date = datetime.strptime(due_date_str, "%Y-%m-%d").date()
+        
         booking.save()
         if rental_date <= date.today() and equipment.available_quantity > 0:
             equipment.available_quantity -= 1
