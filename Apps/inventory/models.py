@@ -1,5 +1,8 @@
 from django.db import models
 import math
+
+from django.db.models import Q
+from datetime import date, datetime,timedelta
 # Create your models here.
 class Equipments(models.Model):
   equipment_id = models.BigAutoField(primary_key=True, blank=False)
@@ -12,6 +15,52 @@ class Equipments(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
   
+  def get_availability_details(self, start_date, end_date, equipment):
+    from booking.models import rental
+
+    """
+    Returns detailed availability information
+
+    Returns:
+        dict: {
+            'is_available': bool,
+            'unavailable_dates': list[date],
+            'max_available': int
+        }
+    """
+    overlapping_rentals = rental.objects.filter(
+        equipment=equipment,
+        return_date__isnull=True
+    ).exclude(
+        status__in=['Returned', 'Cancelled']
+    ).filter(
+        Q(rental_date__lte=end_date) & Q(due_date__gte=start_date)
+    )
+
+    unavailable_dates = []
+    current_date = start_date
+    max_concurrent = 0
+
+    while current_date <= end_date:
+        concurrent = overlapping_rentals.filter(
+            rental_date__lte=current_date,
+            due_date__gte=current_date
+        ).count()
+
+        max_concurrent = max(max_concurrent, concurrent)
+
+        if concurrent >= self.available_quantity:
+            unavailable_dates.append(current_date)
+
+        current_date += timedelta(days=1)
+
+    return {
+        'is_available': len(unavailable_dates) == 0,
+        'unavailable_dates': unavailable_dates,
+        'max_available': max(0, self.available_quantity - max_concurrent)
+    }
+
+  
   
   @property
   def utilization(self):
@@ -20,3 +69,5 @@ class Equipments(models.Model):
   @property
   def availability(self):
     return math.floor((self.available_quantity / self.total_quantity) * 100)
+
+
