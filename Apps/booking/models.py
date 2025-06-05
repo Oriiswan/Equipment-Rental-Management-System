@@ -5,6 +5,7 @@ from datetime import date,datetime
 from django.utils import timezone
 from datetime import timedelta
 from utils.zapier import notify_overdue_booking
+from decimal import Decimal
 class rental(models.Model):  
     calculated_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     rental_id = models.BigAutoField(primary_key=True)
@@ -81,7 +82,16 @@ class rental(models.Model):
             return self.total_amount
         extra_fee = (self.return_date - self.due_date).days * self.equipment.daily_rate
         return self.total_amount + extra_fee
-        
+   
+    @property
+    def revenue(self):
+        if self.return_date:
+            if self.return_date < self.due_date:
+                return self.total_amount or Decimal('0.00')
+
+            extra_fee = (self.return_date - self.due_date).days * self.equipment.daily_rate
+            total = (self.total_amount or Decimal('0.00')) + extra_fee
+            return total
     @property
     def fullname(self):
         return self.customer.firstname +' '+self.customer.lastname

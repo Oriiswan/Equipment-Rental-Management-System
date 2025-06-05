@@ -1,16 +1,18 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from decimal import Decimal
 from inventory.models import Equipments
 import math
 from booking.models import rental
 from django.db.models import Sum
 from django.db.models import F,Q
+
 def info(request):
   last_four = rental.objects.order_by('-updated_at')[:5]
   most = Equipments.objects.filter(~Q(available_quantity=F('total_quantity')))
   
   records = rental.objects.all()
-  totals = sum(item.total_amount_afterdue for item in records)
+  totals = sum(item.revenue or Decimal('0.00') for item in records)
   equipments =Equipments.objects.all()
   equipments_count = Equipments.objects.count()
   categories = Equipments.objects.values_list('category').distinct()
