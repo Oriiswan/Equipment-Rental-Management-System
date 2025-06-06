@@ -1,109 +1,7 @@
 {% extends "base.html" %}
 {% block 'nav' %}Rentals{% endblock 'nav' %}
 {% block 'content' %}
-<div class="fixed inset-0 flex items-center justify-center z-[1000] pointer-events-none overflow-hidden">
-  
-  <div class="bg-white rounded-lg shadow-2xl w-full max-w-md pointer-events-auto border">
 
-    <div class='bg-gradient-to-r from-blue-600 to-blue-500 py-6 text-center rounded-t-lg'>
-      <div class="text-white text-xl font-bold">RENTAL RECEIPT</div>
-      <div class="text-blue-100 text-sm mt-1">Return Confirmation</div>
-    </div>
-    
-
-    <div class='px-6 py-6 bg-gray-50'>
-
-   
-   
-      <div class="space-y-3 text-sm">
-        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
-          <span class="font-medium text-gray-700">Receipt #:</span>
-          <span class="font-mono text-gray-900">RET-{{booking.rental_id}}</span>
-        </div>
-        
-        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
-          <span class="font-medium text-gray-700">Rental ID:</span>
-          <span class="font-mono text-blue-600">RNT-00{{booking.rental_id}}</span>
-        </div>
-        
-        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
-          <span class="font-medium text-gray-700">Customer:</span>
-          <span class="text-gray-900">{{booking.customer.firstname}} {{booking.customer.lastname}}</span>
-        </div>
-        
-        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
-          <span class="font-medium text-gray-700">Customer ID:</span>
-          <span class="font-mono text-gray-900">CUS-00{{booking.customer.customer_id}}</span>
-        </div>
-        
-        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
-          <span class="font-medium text-gray-700">Equipment:</span>
-          <span class="text-gray-900">{{booking.equipment.name}}</span>
-        </div>
-        
-        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
-          <span class="font-medium text-gray-700">Rental Date:</span>
-          <span class="text-gray-900">{{booking.rental_date}}</span>
-        </div>
-        
-        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
-          <span class="font-medium text-gray-700">Due Date:</span>
-          <span class="text-gray-900">{{booking.due_date}}</span>
-        </div>
-        
-        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
-          <span class="font-medium text-gray-700">Return Date:</span>
-          <span class="text-green-600 font-medium">Today</span>
-        </div>
-      </div>
-      
-   
-      <div class="mt-6 pt-4 border-t-2 border-gray-400">
-        <div class="flex justify-between text-sm mb-2">
-          <span class="text-gray-700">Base Amount:</span>
-          <span class="text-gray-900">₱{{booking.total_amount}}</span>
-        </div>
-        
-        {% if booking.days_left <= 0 %}
-        <div class="flex justify-between text-sm mb-2">
-          <span class="text-red-600">Late Fee {{booking.days_left}} days:</span>
-          <span class="text-red-600">₱{% widthratio booking.days_left 1 booking.equipment.daily_rate %}</span>
-        </div>
-        {% endif %}
-        
-        <div class="flex justify-between font-bold text-lg pt-2 border-t border-gray-300">
-          <span class="text-gray-800">TOTAL AMOUNT:</span>
-          <span class="text-green-600">₱{{booking.total_amount_afterdue}}</span>
-        </div>
-      </div>
-      
-    
-      
-      
-    </div>
-    
-
-    <div class="px-6 py-4 bg-white border-t border-gray-200 rounded-b-lg">
-      <div class="flex justify-end space-x-3">
-        <a href='/booking/overdue/' class="px-6 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg border border-gray-300 transition-colors">
-          Cancel
-        </a>
-        <form action="" method='POST' class="inline">
-          {% csrf_token %}
-          <button class="px-6 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-sm transition-colors flex items-center gap-2" type='submit'>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            Confirm Return
-          </button>
-        </form>
-      </div>
-    </div>
-   
-    
-  </div>
-</div>
- <div class="absolute inset-0 pointer-events-auto"></div>
 <div class='p-3 '>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
   <!-- Active Rentals Card -->
@@ -196,22 +94,24 @@
   </div>
 </div>
 
+
   <div class='px-[30px] py-[20px] shadow-lg border pb-24 border-gray-100 rounded-xl mt-10 bg-white'>
- <div class="absolute inset-0  pointer-events-auto"></div>
+
     <div class='text-2xl mb-5 font-semibold'>Active Rentals</div>
     <div class='flex justify-between'>
     <div class='grid grid-cols-5 gap-3 w-[580px] mb-6'>
-      <div class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>All</div>
+      <a href='/booking/list/' class='text-center bg-gray-100 text-gray-400  py-1 px-5 rounded-full text-[15px] font-semibold'>All</a>
       <a href='/booking/active/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Active</a>
-      <a href='/booking/pending' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</a>
-      <a href='/booking/overdue/' class='text-center bg-gradient-to-br text-white bg-green-500 px-5 py-1 rounded-full text-[15px] font-semibold'>Overdue</a>
-      <a href='/booking/return_list/' class='text-center bg-gray-100 text-gray-400  py-1 px-5 rounded-full text-[15px] font-semibold'>Returned</a>
+      <a href='/booking/pending/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</a>
+      <a href='/booking/overdue/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Overdue</a>
+      <div class='text-center bg-gradient-to-br text-white bg-green-500 px-5 py-1 rounded-full text-[15px] font-semibold'>Returned</div>
+      
     </div>
        
     <div class="relative inline-block">
         <!-- Dropdown Button -->
         <button 
-            id="dropdownButton"
+            id="dropdownButton" onclick="show()" data-dropdown-toggle="dropdownMenu"
             class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
         >
             <!-- Calendar Icon -->
@@ -240,7 +140,7 @@
         >
             <div class="py-1">
                 <!-- Newest First -->
-                <button 
+                <a  href = "/booking/return_list/newest"
                     class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors bg-blue-50 text-blue-700" 
                     data-value="newest"
                 >
@@ -249,10 +149,11 @@
                     </svg>
                     <span>Newest First</span>
                     <div class="ml-auto w-2 h-2 bg-blue-600 rounded-full"></div>
-                </button>
+                  
+                </a>
                 
                 <!-- Oldest First -->
-                <button 
+                <a  href = "/booking/return_list/oldest"
                     class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors text-gray-700" 
                     data-value="oldest"
                 >
@@ -260,10 +161,10 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                     </svg>
                     <span>Oldest First</span>
-                </button>
+                </a>
                 
                 <!-- Today -->
-                <button 
+                <a  href = "/booking/return_list/today"
                     class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors text-gray-700" 
                     data-value="today"
                 >
@@ -271,7 +172,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                     <span>Today</span>
-                </button>
+                </a>
                 
                 <!-- This Week -->
                 <button 
@@ -335,7 +236,10 @@
                     DUE DATE
                 </th>
                 <th scope="col" class="px-3 py-3">
-                    AMOUNT
+                    RETURN DATE
+                </th>
+                <th scope="col" class="px-3 py-3">
+                    TOTAL AMOUNT
                 </th>
                 <th scope="col" class="px-3 py-3">
                     ACTIONS
@@ -344,7 +248,7 @@
         </thead>
         <tbody>
             {% for rental in rentals %}
-            {% if rental.status == 'Overdue' %}
+            {% if rental.status == 'Returned' %}
             <tr class="bg-white  hover:bg-gray-50 ">
                 
                 <th scope="row" class=" py-4 text-gray-900 whitespace-nowrap ">
@@ -380,16 +284,16 @@
                     </div>  
                 </td>
                 <td class=" py-4">
-                    <div class="px-4 py-1 {% if rental.status == 'Active' %}bg-green-100 text-green-600 {% elif rental.status == 'Overdue' %} bg-red-100 text-red-600  {% else%} bg-orange-100 text-orange-600  {% endif %}   rounded-full text-center font-semibold">
-                        {{rental.status}}
+                    <div class="px-4 py-1 bg-sky-100 text-sky-700   rounded-full text-center font-semibold">
+                        Completed
                     </div>
                 </td>
                 
-                <td scope="row" class="flex items-center py-4 text-gray-900 whitespace-nowrap ">
+                <td scope="row" class=" items-center py-4 text-gray-900 whitespace-nowrap ">
                     
                     <div class="ps-3">
                         <div class="text-base ">{{rental.rental_date}}</div>
-                        <div class="font-medium text-gray-400 text-[12px]">{% if rental.days_ago == 0 %}Today {% elif rental.days_ago == 'Pending' %}Pending {% else %}{{rental.days_ago}} days ago{% endif %} </div>
+                        
                     </div>  
                 </td>
 
@@ -397,7 +301,14 @@
                     
                     <div class="ps-3">
                         <div class="text-base ">{{rental.due_date}}</div>
-                        <div class="font-medium {% if rental.days_left < 0 %}text-red-500 {% else %}text-green-500 {% endif %} text-[12px]">{% if rental.days_left == 0 %}Today {% elif rental.days_left < 0 %} {{rental.days_left}} {% if rental.days_left == -1 %} day {% else %} days{% endif %} ago {% else %}In {{rental.days_left}} day {% endif %}</div>
+                        
+                    </div>  
+                </td>
+                <td  class=" items-center  py-4 text-gray-900 whitespace-nowrap ">
+                    
+                    <div class="ps-3">
+                        <div class="text-base ">{{rental.return_date}}</div>
+                        
                     </div>  
                 </td>
 
@@ -405,14 +316,14 @@
                     
                     <div class="ps-3">
                         <div class="text-base font-semibold ">
-                             ₱{{rental.total_amount}}
+                             {% if rental.return_date > rental.due_date %} ₱{{rental.total_amount_afterdue}} {% else %} ₱{{rental.total_amount_afterdue}}{% endif %}
                         </div>
                         
                     </div>  
                 </td>
                 <td class="py-4">
-                    <!-- Modal toggle -->
-                    <a  href="/booking/mark_as_returned_overdue/{{rental.rental_id}}"  data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md {% if rental.status == 'Active' %} bg-green-500 {% elif rental.status == 'Overdue' %} bg-red-600 {% else %} bg-gray-500 pointer-events-none cursor-not-allowed {% endif %} mr-1" >Return</a>
+                    
+                    <a href="/booking/delete_returned/{{rental.rental_id}}" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md bg-red-500 mr-1">Delete</a>
                       <a href="#" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-4 text-white rounded-md bg-blue-500">Edit</a>
                 </td>
             </tr>
@@ -423,7 +334,8 @@
             
         </tbody>
     </table>
-    
+    <!-- Edit user modal -->
+   
   
 </div>
 {% endblock 'content' %}

@@ -111,7 +111,7 @@
     <div class="relative inline-block">
         <!-- Dropdown Button -->
         <button 
-            id="dropdownButton"
+            id="dropdownButton" onclick="show()" data-dropdown-toggle="dropdownMenu"
             class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
         >
             <!-- Calendar Icon -->
@@ -119,7 +119,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
             <span class="text-sm font-medium text-gray-700" id="selectedText">
-                Sort by Date: Newest First
+                Sort by Date:
             </span>
             <!-- Chevron Icon -->
             <svg 
@@ -140,19 +140,19 @@
         >
             <div class="py-1">
                 <!-- Newest First -->
-                <button 
-                    class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors bg-blue-50 text-blue-700" 
+                <a  href="/booking/return_list/newest"
+                    class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors " 
                     data-value="newest"
                 >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
                     </svg>
                     <span>Newest First</span>
-                    <div class="ml-auto w-2 h-2 bg-blue-600 rounded-full"></div>
-                </button>
+                  
+                </a>
                 
                 <!-- Oldest First -->
-                <button 
+                <a  href="/booking/return_list/oldest"
                     class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors text-gray-700" 
                     data-value="oldest"
                 >
@@ -160,10 +160,10 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                     </svg>
                     <span>Oldest First</span>
-                </button>
+                </a>
                 
                 <!-- Today -->
-                <button 
+                <a  href="/booking/return_list/today"
                     class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors text-gray-700" 
                     data-value="today"
                 >
@@ -171,10 +171,10 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                     <span>Today</span>
-                </button>
+                </a>
                 
                 <!-- This Week -->
-                <button 
+                <a 
                     class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors text-gray-700" 
                     data-value="week"
                 >
@@ -182,7 +182,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                     <span>This Week</span>
-                </button>
+                </a>
                 
                 <!-- This Month -->
                 <button 
