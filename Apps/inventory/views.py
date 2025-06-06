@@ -109,3 +109,93 @@ def rented_list(request):
     
   }
   return render(request, 'apps/equipment/rented.html', data)
+
+
+def edit_equipment(request, equipment_id):
+  equipment = Equipments.objects.get(pk=equipment_id)
+  name = request.POST.get('name')
+  category = request.POST.get('category')
+  rate = request.POST.get('rate')
+  quantity = request.POST.get('quantity')
+  image = request.FILES.get('image')
+  
+    
+  if request.method == 'POST':
+    
+    equipment.name = name
+    equipment.category = category
+    equipment.daily_rate = rate
+    if int(quantity) > equipment.total_quantity:
+      equipment.available_quantity = equipment.available_quantity + (int(quantity) - equipment.total_quantity)
+    elif int(quantity) < equipment.total_quantity:
+      equipment.available_quantity = equipment.available_quantity -  (equipment.total_quantity - int(quantity))
+    equipment.total_quantity = int(quantity)
+    if image:
+      equipment.image = image
+    equipment.save()
+    return redirect('equipment_list')
+  return render (request, 'apps/equipment/edit.html', {
+    'name': equipment.name,
+    'category': equipment.category,
+    'daily_rate': equipment.daily_rate,
+    'quantity': equipment.total_quantity,
+    'available_quantity': equipment.available_quantity,
+  })
+def delete_equipment(request,equipment_id):
+    equipments =Equipments.objects.all()
+    equipments_count = Equipments.objects.count()
+    categories = Equipments.objects.values_list('category').distinct()
+    unique = sorted(set(categories))
+    total = 0
+    avail = 0
+    
+    if request.method == 'POST':
+      equip  = Equipments.objects.get(pk = equipment_id)
+      equip.delete()
+   
+      return redirect('equipment_list')
+    for equipment in equipments:
+      total += equipment.total_quantity
+      avail += equipment.available_quantity 
+    data = {
+      'count': equipments_count,
+      'equipment': Equipments.objects.get(pk = equipment_id),
+      'equipments': equipments, 
+      'category': len(unique),
+      'available': avail,
+      'rented': total - avail,
+      'available_percent': math.floor(((avail / total) * 100)),
+      'rented_percent' : math.floor(((total - avail) / total) * 100 ) ,
+      
+      
+    }
+    return render(request, 'apps/equipment/delete.html', data)
+def delete_avail_equipment(request,equipment_id):
+    equipments =Equipments.objects.all()
+    equipments_count = Equipments.objects.count()
+    categories = Equipments.objects.values_list('category').distinct()
+    unique = sorted(set(categories))
+    total = 0
+    avail = 0
+    
+    if request.method == 'POST':
+      equip  = Equipments.objects.get(pk = equipment_id)
+      equip.delete()
+      
+      return redirect('available_list')
+    for equipment in equipments:
+      total += equipment.total_quantity
+      avail += equipment.available_quantity 
+    data = {
+      'count': equipments_count,
+      'equipment': Equipments.objects.get(pk = equipment_id),
+      'equipments': equipments, 
+      'category': len(unique),
+      'available': avail,
+      'rented': total - avail,
+      'available_percent': math.floor(((avail / total) * 100)),
+      'rented_percent' : math.floor(((total - avail) / total) * 100 ) ,
+      
+      
+    }
+    return render(request, 'apps/equipment/delete-available.html', data)
