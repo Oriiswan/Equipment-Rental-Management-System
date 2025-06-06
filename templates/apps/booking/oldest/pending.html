@@ -1,31 +1,8 @@
 {% extends "base.html" %}
 {% block 'nav' %}Rentals{% endblock 'nav' %}
 {% block 'content' %}
-<div class="fixed inset-0 flex items-center justify-center z-[1000] pointer-events-none ">
-  
-  <div class="bg-white  rounded-lg shadow-xl  w-full max-w-md pointer-events-auto">
-    <div class='bg-green-500 py-4 text-center font-medium text-white rounded-lg'>Confirm Return</div>
-    <div class='px-6 py-1 text-sm'>
-      <div>Are you sure you want to mark this rental as returned?</div>
-      <div class='text-gray-500'>Rental ID: RNT-00{{booking.rental_id}} - {{booking.equipment.name}}</div>
-      <div class='text-gray'>Customer: {{booking.customer.firstname}} {{booking.customer.lastname}}</div>
-    </div>
-    <div class="mt-6 flex justify-end space-x-3 mr-5 mb-5">
-      <form action="" method='POST'>
-        {% csrf_token %}
-      
-        <button class="px-4 py-2 text-sm font-medium text-white bg-green-500 hover:bg-green-400 rounded-md" type='submit'>Confirm</button>
-      
-      <a href='/booking/mark_as_returned_pending/' class="px-4 py-2 text-sm font-medium text-white bg-gray-500 hover:bg-gray-400 rounded-md">
-        Cancel
-      </a>
-      </form>
-    </div>
-  </div>
-</div>
- <div class="absolute inset-0 pointer-events-auto"></div>
-<div class='p-3 '>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+<div class='p-3'>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
   <!-- Active Rentals Card -->
   <div class="bg-gradient-to-br from-green-600 to-green-400 rounded-xl p-6 text-white shadow-lg hover:shadow-xl hover:translate-y-[-1px] transition-all duration-200 cursor-pointer">
     <div class="flex justify-between items-start">
@@ -116,14 +93,15 @@
   </div>
 </div>
 
+
   <div class='px-[30px] py-[20px] shadow-lg border pb-24 border-gray-100 rounded-xl mt-10 bg-white'>
- <div class="absolute inset-0  pointer-events-auto"></div>
+
     <div class='text-2xl mb-5 font-semibold'>Active Rentals</div>
     <div class='flex justify-between'>
     <div class='grid grid-cols-5 gap-3 w-[580px] mb-6'>
-      <div class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>All</div>
+      <a href='/booking/list/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>All</a>
       <a href='/booking/active/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Active</a>
-      <a href='/booking/pending' class='text-center bg-gradient-to-br text-white bg-green-500 px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</a>
+      <div class='text-center bg-gradient-to-br text-white bg-green-500 px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</div>
       <a href='/booking/overdue/' class='text-center bg-gray-100 text-gray-400  py-1 px-5 rounded-full text-[15px] font-semibold'>Overdue</a>
       <a href='/booking/return_list/' class='text-center bg-gray-100 text-gray-400  py-1 px-5 rounded-full text-[15px] font-semibold'>Returned</a>
     </div>
@@ -131,7 +109,7 @@
     <div class="relative inline-block">
         <!-- Dropdown Button -->
         <button 
-            id="dropdownButton"
+            id="dropdownButton" onclick="show()" data-dropdown-toggle="dropdownMenu"
             class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
         >
             <!-- Calendar Icon -->
@@ -139,7 +117,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
             <span class="text-sm font-medium text-gray-700" id="selectedText">
-                Sort by Date: Newest First
+                Sort by Date: Oldest First
             </span>
             <!-- Chevron Icon -->
             <svg 
@@ -160,30 +138,31 @@
         >
             <div class="py-1">
                 <!-- Newest First -->
-                <button 
-                    class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors bg-blue-50 text-blue-700" 
+                <a  href = "/booking/pending/newest"
+                    class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors " 
                     data-value="newest"
                 >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
                     </svg>
                     <span>Newest First</span>
-                    <div class="ml-auto w-2 h-2 bg-blue-600 rounded-full"></div>
-                </button>
+                  
+                </a>
                 
                 <!-- Oldest First -->
-                <button 
-                    class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors text-gray-700" 
+                <a  href = "/booking/pending/oldest"
+                    class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm  hover:bg-gray-100 transition-colors bg-blue-50 text-blue-700" 
                     data-value="oldest"
                 >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                     </svg>
                     <span>Oldest First</span>
-                </button>
+                    <div class="ml-auto w-2 h-2 bg-blue-600 rounded-full"></div>
+                </a>
                 
                 <!-- Today -->
-                <button 
+                <a  href = "/booking/pending/today"
                     class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors text-gray-700" 
                     data-value="today"
                 >
@@ -191,7 +170,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                     <span>Today</span>
-                </button>
+                </a>
                 
                 <!-- This Week -->
                 <button 
@@ -264,8 +243,8 @@
         </thead>
         <tbody>
             {% for rental in rentals %}
-            {% if rental.status == 'Pending' %}
-            <tr class="bg-white  hover:bg-gray-50 ">
+             {% if rental.status == 'Pending' %}
+             <tr class="bg-white  hover:bg-gray-50 ">
                 
                 <th scope="row" class=" py-4 text-gray-900 whitespace-nowrap ">
                     
@@ -332,18 +311,23 @@
                 </td>
                 <td class="py-4">
                     <!-- Modal toggle -->
-                    <a href="/booking/mark_as_returned/{{booking.rental_id}}" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md bg-green-500 mr-1">Return</a>
-                      <a href="#" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-4 text-white rounded-md bg-blue-500">Edit</a>
+                    {% if rental.status == 'Pending' %}
+                    <a href="/booking/delete_pending_list/{{rental.rental_id}}" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md bg-red-500 mr-1">Delete</a>
+                    {% else %}
+                    <a  href="/booking/mark_as_returned/{{rental.rental_id}}"  data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md {% if rental.status == 'Active' %} bg-green-500 {% elif rental.status == 'Overdue' %} bg-red-600 {% else %} bg-gray-500 pointer-events-none cursor-not-allowed {% endif %} mr-1" >Return</a>
+                    {% endif %}
+                    
+                    
+                    <a href="/booking/edit/{{rental.rental_id}}"  data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-4 text-white rounded-md bg-blue-500">Edit</a>
                 </td>
-            </tr>
-            {% endif %}
+            </tr>{% endif %}
             {% endfor %}
             
             
             
         </tbody>
     </table>
-    
+   
   
 </div>
 {% endblock 'content' %}

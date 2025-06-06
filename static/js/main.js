@@ -240,3 +240,4 @@
         window.addEventListener('load', () => {
             setTimeout(animateCounters, 500);
         });
+

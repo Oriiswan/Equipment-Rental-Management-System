@@ -1,26 +1,106 @@
 {% extends "base.html" %}
 {% block 'nav' %}Rentals{% endblock 'nav' %}
 {% block 'content' %}
-<div class="fixed inset-0 flex items-center justify-center z-[1000] pointer-events-none ">
+<div class="fixed inset-0 flex items-center justify-center z-[1000] pointer-events-none overflow-hidden">
   
-  <div class="bg-white  rounded-lg shadow-xl  w-full max-w-md pointer-events-auto">
-    <div class='bg-green-500 py-4 text-center font-medium text-white rounded-lg'>Confirm Return</div>
-    <div class='px-6 py-1 text-sm'>
-      <div>Are you sure you want to mark this rental as returned?</div>
-      <div class='text-gray-500'>Rental ID: RNT-00{{booking.rental_id}} - {{booking.equipment.name}}</div>
-      <div class='text-gray'>Customer: {{booking.customer.firstname}} {{booking.customer.lastname}}</div>
+  <div class="bg-white rounded-lg shadow-2xl w-full max-w-md pointer-events-auto border">
+
+    <div class='bg-gradient-to-r from-blue-600 to-blue-500 py-6 text-center rounded-t-lg'>
+      <div class="text-white text-xl font-bold">RENTAL RECEIPT</div>
+      <div class="text-blue-100 text-sm mt-1">Return Confirmation</div>
     </div>
-    <div class="mt-6 flex justify-end space-x-3 mr-5 mb-5">
-      <form action="" method='POST'>
-        {% csrf_token %}
+    
+
+    <div class='px-6 py-6 bg-gray-50'>
+
+   
+   
+      <div class="space-y-3 text-sm">
+        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
+          <span class="font-medium text-gray-700">Receipt #:</span>
+          <span class="font-mono text-gray-900">RET-{{booking.rental_id}}</span>
+        </div>
+        
+        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
+          <span class="font-medium text-gray-700">Rental ID:</span>
+          <span class="font-mono text-blue-600">RNT-00{{booking.rental_id}}</span>
+        </div>
+        
+        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
+          <span class="font-medium text-gray-700">Customer:</span>
+          <span class="text-gray-900">{{booking.customer.firstname}} {{booking.customer.lastname}}</span>
+        </div>
+        
+        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
+          <span class="font-medium text-gray-700">Customer ID:</span>
+          <span class="font-mono text-gray-900">CUS-00{{booking.customer.customer_id}}</span>
+        </div>
+        
+        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
+          <span class="font-medium text-gray-700">Equipment:</span>
+          <span class="text-gray-900">{{booking.equipment.name}}</span>
+        </div>
+        
+        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
+          <span class="font-medium text-gray-700">Rental Date:</span>
+          <span class="text-gray-900">{{booking.rental_date}}</span>
+        </div>
+        
+        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
+          <span class="font-medium text-gray-700">Due Date:</span>
+          <span class="text-gray-900">{{booking.due_date}}</span>
+        </div>
+        
+        <div class="flex justify-between border-b border-dotted border-gray-300 pb-1">
+          <span class="font-medium text-gray-700">Return Date:</span>
+          <span class="text-green-600 font-medium">Today</span>
+        </div>
+      </div>
       
-        <button class="px-4 py-2 text-sm font-medium text-white bg-green-500 hover:bg-green-400 rounded-md" type='submit'>Confirm</button>
+   
+      <div class="mt-6 pt-4 border-t-2 border-gray-400">
+        <div class="flex justify-between text-sm mb-2">
+          <span class="text-gray-700">Base Amount:</span>
+          <span class="text-gray-900">₱{{booking.total_amount}}</span>
+        </div>
+        
+        {% if booking.days_left <= 0 %}
+        <div class="flex justify-between text-sm mb-2">
+          <span class="text-red-600">Late Fee {{booking.days_left}} days:</span>
+          <span class="text-red-600">₱{% widthratio booking.days_left 1 booking.equipment.daily_rate %}</span>
+        </div>
+        {% endif %}
+        
+        <div class="flex justify-between font-bold text-lg pt-2 border-t border-gray-300">
+          <span class="text-gray-800">TOTAL AMOUNT:</span>
+          <span class="text-green-600">₱{{booking.total_amount_afterdue}}</span>
+        </div>
+      </div>
       
-      <a href='/booking/active/' class="px-4 py-2 text-sm font-medium text-white bg-gray-500 hover:bg-gray-400 rounded-md">
-        Cancel
-      </a>
-      </form>
+    
+      
+      
     </div>
+    
+
+    <div class="px-6 py-4 bg-white border-t border-gray-200 rounded-b-lg">
+      <div class="flex justify-end space-x-3">
+        <a href='/booking/active/' class="px-6 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg border border-gray-300 transition-colors">
+          Cancel
+        </a>
+        <form action="" method='POST' class="inline">
+          {% csrf_token %}
+          <button class="px-6 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-sm transition-colors flex items-center gap-2" type='submit'>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            Confirm Return
+          </button>
+        </form>
+      </div>
+    </div>
+   
+    
   </div>
 </div>
  <div class="absolute inset-0 pointer-events-auto"></div>
