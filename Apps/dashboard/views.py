@@ -8,7 +8,7 @@ from django.db.models import Sum
 from django.db.models import F,Q
 
 def info(request):
-  last_four = rental.objects.order_by('-updated_at')[:5]
+  last_four = rental.objects.order_by('-updated_at')[:4]
   most = Equipments.objects.filter(~Q(available_quantity=F('total_quantity')))
   
   records = rental.objects.all()
@@ -38,6 +38,7 @@ def info(request):
     'pending_count': rental.objects.filter(status='Pending').count(),
     'total': totals,
     'recent_activities': last_four,
+    'recent_actcount': last_four.count(),
     'most_popular_equipment': most.order_by('available_quantity')[:4]
     
   }

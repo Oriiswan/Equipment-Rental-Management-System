@@ -2,6 +2,88 @@
 {% block 'nav' %}Equipment Management{% endblock 'nav' %}
 {% block 'content' %}
 {% load static %}
+
+<div class="fixed inset-0 bg-black/30 backdrop-blur-sm  flex items-center justify-center z-50 animate-fade-in">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 animate-scale-in overflow-hidden">
+        
+        <div class="px-6 pt-6 pb-4 text-center">
+            <div class="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Delete Equipment</h3>
+            <p class="text-gray-600">This action cannot be undone. Are you sure?</p>
+        </div>
+
+        <div class="mx-6 mb-6 bg-gray-50 rounded-lg p-4 border-l-4 border-red-500">
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-gray-700">Equipment ID:</span>
+                    <span class="text-sm font-mono bg-white px-2 py-1 rounded text-gray-900">EQ-{{ equipment.equipment_id|stringformat:"05d" }}</span>
+                </div>
+                <div class="flex justify-between items-start">
+                    <span class="text-sm font-medium text-gray-700">Name:</span>
+                    <span class="text-sm text-gray-900 text-right">{{ equipment.name }}</span>
+                </div>
+                <div class="flex justify-between items-start">
+                    <span class="text-sm font-medium text-gray-700">Category:</span>
+                    <span class="text-sm text-gray-900 text-right">{{ equipment.category }}</span>
+                </div>
+                <div class="flex justify-between items-start">
+                    <span class="text-sm font-medium text-gray-700">Daily Rate:</span>
+                    <span class="text-sm text-gray-900 text-right">₱{{ equipment.daily_rate }}</span>
+                </div>
+                <div class="flex justify-between items-start">
+                    <span class="text-sm font-medium text-gray-700">Available/Total:</span>
+                    <span class="text-sm text-gray-900 text-right">{{ equipment.available_quantity }}/{{ equipment.total_quantity }}</span>
+                </div>
+                <div class="flex justify-between items-start">
+                    <span class="text-sm font-medium text-gray-700">Availability:</span>
+                    <span class="text-sm text-gray-900 text-right">{{ equipment.availability }}%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-6 pb-6 flex flex-col-reverse sm:flex-row gap-3">
+            <a href="/equipments/list/" 
+               class="flex-1 px-4 py-3 text-center font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-200 hover:scale-[1.02]">
+                Cancel
+            </a>
+            
+            <form action="" method="POST" class="flex-1">
+                {% csrf_token %}
+                <button type="submit" 
+                        onclick="this.classList.add('animate-shake'); setTimeout(() => this.classList.remove('animate-shake'), 500)"
+                        class="w-full px-4 py-3 font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-all duration-200 hover:scale-[1.02] focus:ring-4 focus:ring-red-200 focus:outline-none">
+                    <span class="flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Delete 
+                    </span>
+                </button>
+            </form>
+        </div>
+
+        <div class="bg-red-50 px-6 py-3 border-t border-red-100">
+            <div class="flex items-center gap-2 text-xs text-red-700">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+                <span>This will permanently remove the equipment from your system</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="fixed top-4 right-4 z-40">
+    <button onclick="location.reload()" 
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+        Reload Demo
+    </button>
+</div>
+
 <div class='p-3'>
   
    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
@@ -113,7 +195,7 @@
     <div class='text-2xl font-semibold mb-5'>Equipment Inventory</div> 
 
     <ul class=' gap-4 grid grid-cols-4 w-[600px]'>
-      <a href="/equipments/list/" class=" text-center px-5 py-1 rounded-full text-[15px] font-semibold   {% if request.path == '/equipments/list/' %}bg-blue-700 text-white{% else %}bg-blue-50  text-gray-400{% endif %}">
+      <a href="/equipments/list/" class=" text-center px-5 py-1 rounded-full text-[15px] font-semibold   {% if request.path == '/equipments/list/' %}bg-blue-700 text-white{% else %}bg-blue-50  text-gray-400{% endif %} bg-blue-700 text-white">
         <li>All</li>
       </a>
       <a href="/equipments/available/" class="bg-blue-50  text-center px-5 py-1 rounded-full text-[15px] font-semibold text-gray-400 ">
@@ -160,12 +242,12 @@
                         </a>
                
                         
-                        <a href="/equipments/delete/{{equipment.equipment_id}}" class="flex-1 bg-red-50 hover:bg-red-100 {% if equipment.available_quantity != equipment.total_quantity %}  cursor-not-allowed hidden{% endif %} text-red-500 py-2 px-3 rounded-lg text-md font-medium transition-colors duration-200 flex items-center justify-center gap-1">
+                        <button class="flex-1 bg-red-50 hover:bg-red-100 {% if equipment.available_quantity != equipment.total_quantity %}  cursor-not-allowed hidden{% endif %} text-red-500 py-2 px-3 rounded-lg text-md font-medium transition-colors duration-200 flex items-center justify-center gap-1">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                             </svg>
                             Delete
-                        </a>
+                        </button>
                     </div>
         </div>
     </div>

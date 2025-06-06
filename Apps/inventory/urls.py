@@ -7,5 +7,8 @@ urlpatterns = [
     path('add/', views.add_equipment, name='add_equipment'),
     path('available/', views.available_list, name='available_list'),
     path('rented/', views.rented_list, name='rented_list'),
+    path('edit/<int:equipment_id>', views.edit_equipment, name='edit_equipment'),
+    path('delete/<int:equipment_id>', views.delete_equipment, name='delete_equipment'),
+    path('delete/available/<int:equipment_id>', views.delete_avail_equipment, name='delete_avail_equipment'),
     
 ]
