@@ -4,7 +4,7 @@ from inventory.models import Equipments
 from datetime import date,datetime
 from django.utils import timezone
 from datetime import timedelta
-from utils.zapier import notify_overdue_booking
+from utils.zapier import notify_overdue_booking, notify_today_booking, notify_reserved_booking, notify_duedate_booking
 from decimal import Decimal
 class rental(models.Model):  
     calculated_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
@@ -162,12 +162,15 @@ class rental(models.Model):
         if self.status != 'Returned':
             if today >= self.rental_date and today <= self.due_date:
                self.status = 'Active'
+               notify_today_booking(self)
             elif today > self.due_date:
                 self.status = 'Overdue'
                 notify_overdue_booking(self)
             else:
                 self.status = 'Pending'
-    
+                notify_reserved_booking(self)
+        if self.due_date == date.today():
+            notify_duedate_booking(self)
     def save(self, *args, **kwargs):
         self.update_status()
         super().save(*args, **kwargs)

@@ -9,11 +9,23 @@ from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Sum
 from decimal import Decimal
-
+from django.db.models import Q
 def booking_list(request):
     records = rental.objects.all()
     today = date.today()
     
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/list.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
     return render(request, 'apps/booking/list.html',{
       'rentals': records,
@@ -27,8 +39,18 @@ def booking_list(request):
     
 def booking_list_newest(request):
     records = rental.objects.all().order_by('-rental_date')
-    today = date.today()
-    
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/newest/all.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
     return render(request, 'apps/booking/newest/all.html',{
       'rentals': records,
@@ -42,8 +64,18 @@ def booking_list_newest(request):
     
 def booking_list_oldest(request):
     records = rental.objects.all().order_by('rental_date')
-    today = date.today()
-    
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/oldest/all.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
     return render(request, 'apps/booking/oldest/all.html',{
       'rentals': records,
@@ -59,6 +91,18 @@ def booking_list_today(request):
     
     today = date.today()
     records = rental.objects.filter(rental_date=today)
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/today/all.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
     return render(request, 'apps/booking/today/all.html',{
       'rentals': records,
@@ -110,6 +154,18 @@ def edit_booking(request, rental_id):
 def active_list(request):
     records = rental.objects.all()
     
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/active.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
     return render(request, 'apps/booking/active.html',{
       'rentals': records,
@@ -118,55 +174,98 @@ def active_list(request):
       'overdue_count': rental.objects.filter(status='Overdue').count(),
       'returned_count': rental.objects.filter(status='Returned').count(),
       'active_count': rental.objects.filter(status='Active').count(),
-      'active_list': rental.objects.filter(status='Active'),
       'total': total
     })
 def active_list_newest(request):
     records = rental.objects.all().order_by('-rental_date')
     
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/newest/active.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
-    return render(request, 'apps/booking/newest/active.html',{
+    return render(request, 'apps/booking//newest/active.html',{
       'rentals': records,
       'equipments': Equipments.objects.all(),
       'customers': Customers.objects.all(),
       'overdue_count': rental.objects.filter(status='Overdue').count(),
       'returned_count': rental.objects.filter(status='Returned').count(),
       'active_count': rental.objects.filter(status='Active').count(),
-      'active_list': rental.objects.filter(status='Active'),
       'total': total
     })
 def active_list_oldest(request):
     records = rental.objects.all().order_by('rental_date')
     
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/oldest/active.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
-    return render(request, 'apps/booking/oldest/active.html',{
+    return render(request, 'apps/booking//oldest/active.html',{
       'rentals': records,
       'equipments': Equipments.objects.all(),
       'customers': Customers.objects.all(),
       'overdue_count': rental.objects.filter(status='Overdue').count(),
       'returned_count': rental.objects.filter(status='Returned').count(),
       'active_count': rental.objects.filter(status='Active').count(),
-      'active_list': rental.objects.filter(status='Active'),
       'total': total
     })
-
 def active_list_today(request):
     records = rental.objects.filter(rental_date = date.today())
     
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/today/active.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
-    return render(request, 'apps/booking/today/active.html',{
+    return render(request, 'apps/booking//today/active.html',{
       'rentals': records,
       'equipments': Equipments.objects.all(),
       'customers': Customers.objects.all(),
       'overdue_count': rental.objects.filter(status='Overdue').count(),
       'returned_count': rental.objects.filter(status='Returned').count(),
       'active_count': rental.objects.filter(status='Active').count(),
-      'active_list': rental.objects.filter(status='Active'),
       'total': total
     })
 def pending_list(request):
     records = rental.objects.all()
     
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/pending.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
     return render(request, 'apps/booking/pending.html',{
       'rentals': records,
@@ -175,13 +274,23 @@ def pending_list(request):
       'overdue_count': rental.objects.filter(status='Overdue').count(),
       'returned_count': rental.objects.filter(status='Returned').count(),
       'active_count': rental.objects.filter(status='Active').count(),
-      'pending_list': rental.objects.filter(status='Pending'),
       'total': total
-      
     })
 def pending_list_newest(request):
     records = rental.objects.all().order_by('-rental_date')
     
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/newest/pending.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
     return render(request, 'apps/booking/newest/pending.html',{
       'rentals': records,
@@ -190,13 +299,23 @@ def pending_list_newest(request):
       'overdue_count': rental.objects.filter(status='Overdue').count(),
       'returned_count': rental.objects.filter(status='Returned').count(),
       'active_count': rental.objects.filter(status='Active').count(),
-      'pending_list': rental.objects.filter(status='Pending'),
       'total': total
-      
     })
 def pending_list_oldest(request):
     records = rental.objects.all().order_by('rental_date')
     
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/oldest/pending.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
     return render(request, 'apps/booking/oldest/pending.html',{
       'rentals': records,
@@ -205,13 +324,23 @@ def pending_list_oldest(request):
       'overdue_count': rental.objects.filter(status='Overdue').count(),
       'returned_count': rental.objects.filter(status='Returned').count(),
       'active_count': rental.objects.filter(status='Active').count(),
-      'pending_list': rental.objects.filter(status='Pending'),
       'total': total
-      
     })
 def pending_list_today(request):
     records = rental.objects.filter(rental_date=date.today())
     
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/today/pending.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
     return render(request, 'apps/booking/today/pending.html',{
       'rentals': records,
@@ -220,13 +349,23 @@ def pending_list_today(request):
       'overdue_count': rental.objects.filter(status='Overdue').count(),
       'returned_count': rental.objects.filter(status='Returned').count(),
       'active_count': rental.objects.filter(status='Active').count(),
-      'pending_list': rental.objects.filter(status='Pending'),
       'total': total
-      
     })
 def overdue_list(request):
     records = rental.objects.all()
     
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/overdue.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
     return render(request, 'apps/booking/overdue.html',{
       'rentals': records,
@@ -234,13 +373,24 @@ def overdue_list(request):
       'customers': Customers.objects.all(),
       'overdue_count': rental.objects.filter(status='Overdue').count(),
       'returned_count': rental.objects.filter(status='Returned').count(),
-      'overdue_list': rental.objects.filter(status='Overdue'),
       'active_count': rental.objects.filter(status='Active').count(),
-      'total': total,
+      'total': total
     })
 def overdue_list_newest(request):
     records = rental.objects.all().order_by('-rental_date')
     
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/newest/overdue.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
     return render(request, 'apps/booking/newest/overdue.html',{
       'rentals': records,
@@ -248,14 +398,25 @@ def overdue_list_newest(request):
       'customers': Customers.objects.all(),
       'overdue_count': rental.objects.filter(status='Overdue').count(),
       'returned_count': rental.objects.filter(status='Returned').count(),
-      'overdue_list': rental.objects.filter(status='Overdue'),
       'active_count': rental.objects.filter(status='Active').count(),
-      'total': total,
+      'total': total
     })
 
 def overdue_list_oldest(request):
     records = rental.objects.all().order_by('rental_date')
     
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/oldest/overdue.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
     return render(request, 'apps/booking/oldest/overdue.html',{
       'rentals': records,
@@ -263,14 +424,25 @@ def overdue_list_oldest(request):
       'customers': Customers.objects.all(),
       'overdue_count': rental.objects.filter(status='Overdue').count(),
       'returned_count': rental.objects.filter(status='Returned').count(),
-      'overdue_list': rental.objects.filter(status='Overdue'),
       'active_count': rental.objects.filter(status='Active').count(),
-      'total': total,
+      'total': total
     })
 
 def overdue_list_today(request):
     records = rental.objects.filter(rental_date=date.today())
     
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/today/overdue.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': rental.objects.filter(status='Active').count(),
+        'total': total
+        })
     total = sum(item.revenue or Decimal('0.00') for item in records)
     return render(request, 'apps/booking/today/overdue.html',{
       'rentals': records,
@@ -278,9 +450,8 @@ def overdue_list_today(request):
       'customers': Customers.objects.all(),
       'overdue_count': rental.objects.filter(status='Overdue').count(),
       'returned_count': rental.objects.filter(status='Returned').count(),
-      'overdue_list': rental.objects.filter(status='Overdue'),
       'active_count': rental.objects.filter(status='Active').count(),
-      'total': total,
+      'total': total
     })
 
 
@@ -386,7 +557,7 @@ def add_booking(request):
                 rental_agreement=request.FILES.get('rental_agreement'),
                 status=determine_status(rental_date, due_date)
             )
-
+           
             # Adjust equipment quantity only if the rental is starting now or earlier
             if now >= rental_date:
                 equipment.available_quantity -= 1
@@ -534,57 +705,110 @@ def mark_as_returned_overdue_list(request, rental_id):
     return render(request, 'apps/booking/return-overdue.html', context)
 
 def return_list(request):
-    rentals = rental.objects.all()
+    records = rental.objects.all()
     
-    return render(request, 'apps/booking/return_list.html', {
-        'rentals': rentals,
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in records)
+        return render(request, 'apps/booking/return_list.html',{
+        'rentals': records.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
         'overdue_count': rental.objects.filter(status='Overdue').count(),
         'returned_count': rental.objects.filter(status='Returned').count(),
         'active_count': rental.objects.filter(status='Active').count(),
-        'total': sum(item.revenue or Decimal('0.00') for item in rentals),
-        'equipments': Equipments.objects.all(),
-        'customers': Customers.objects.all(),
+        'total': total
+        })
+    total = sum(item.revenue or Decimal('0.00') for item in records)
+    return render(request, 'apps/booking/return_list.html',{
+      'rentals': records,
+      'equipments': Equipments.objects.all(),
+      'customers': Customers.objects.all(),
+      'overdue_count': rental.objects.filter(status='Overdue').count(),
+      'returned_count': rental.objects.filter(status='Returned').count(),
+      'active_count': rental.objects.filter(status='Active').count(),
+      'total': total
     })
     
 def return_list_today(request):
-    rentals = rental.objects.filter(rental_date = date.today())
+    rentals = rental.objects.filter(return_date = date.today())
     
-    return render(request, 'apps/booking/today/returned.html', {
-        'rentals': rentals,
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in rentals)
+        return render(request, 'apps/booking/today/returned.html',{
+        'rentals': rentals.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
         'overdue_count': rental.objects.filter(status='Overdue').count(),
         'returned_count': rental.objects.filter(status='Returned').count(),
         'active_count': rental.objects.filter(status='Active').count(),
-        'total': sum(item.revenue or Decimal('0.00') for item in rentals),
-        'equipments': Equipments.objects.all(),
-        'customers': Customers.objects.all(),
+        'total': total
+        })
+    total = sum(item.revenue or Decimal('0.00') for item in rentals)
+    return render(request, 'apps/booking/today/returned.html',{
+      'rentals': rentals,
+      'equipments': Equipments.objects.all(),
+      'customers': Customers.objects.all(),
+      'overdue_count': rental.objects.filter(status='Overdue').count(),
+      'returned_count': rental.objects.filter(status='Returned').count(),
+      'active_count': rental.objects.filter(status='Active').count(),
+      'total': total
     })
+    
     
 
 def return_list_newest(request):
     rentals = rental.objects.all().order_by('-rental_date')
 
     
-    return render(request, 'apps/booking/newest/returned.html', {
-        'rentals': rentals,
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in rentals)
+        return render(request, 'apps/booking/newest/returned.html',{
+        'rentals': rentals.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
         'overdue_count': rental.objects.filter(status='Overdue').count(),
         'returned_count': rental.objects.filter(status='Returned').count(),
         'active_count': rental.objects.filter(status='Active').count(),
-        'total': sum(item.revenue or Decimal('0.00') for item in rentals),
-        'equipments': Equipments.objects.all(),
-        'customers': Customers.objects.all(),
+        'total': total
+        })
+    total = sum(item.revenue or Decimal('0.00') for item in rentals)
+    return render(request, 'apps/booking/newest/returned.html',{
+      'rentals': rentals,
+      'equipments': Equipments.objects.all(),
+      'customers': Customers.objects.all(),
+      'overdue_count': rental.objects.filter(status='Overdue').count(),
+      'returned_count': rental.objects.filter(status='Returned').count(),
+      'active_count': rental.objects.filter(status='Active').count(),
+      'total': total
     })
-    
 
 def return_list_oldest(request):
     rentals = rental.objects.all().order_by('rental_date')
     
-    return render(request, 'apps/booking/oldest/returned.html', {
-        'rentals':rentals,
+    if request.method == 'POST':
+        search = request.POST.get('search')
+        total = sum(item.revenue or Decimal('0.00') for item in rentals)
+        return render(request, 'apps/booking/oldest/returned.html',{
+        'rentals': rentals.filter(Q(customer__firstname__icontains=search) | Q(customer__lastname__icontains=search) | Q(rental_id__icontains=search) | Q(equipment__name__contains=search)),
+        'equipments': Equipments.objects.all(),
+        'customers': Customers.objects.all(),
         'overdue_count': rental.objects.filter(status='Overdue').count(),
         'returned_count': rental.objects.filter(status='Returned').count(),
         'active_count': rental.objects.filter(status='Active').count(),
-        'total': sum(item.revenue or Decimal('0.00') for item in rentals),
-        'equipments': Equipments.objects.all(),
-        'customers': Customers.objects.all(),
+        'total': total
+        })
+    total = sum(item.revenue or Decimal('0.00') for item in rentals)
+    return render(request, 'apps/booking/oldest/returned.html',{
+      'rentals': rentals,
+      'equipments': Equipments.objects.all(),
+      'customers': Customers.objects.all(),
+      'overdue_count': rental.objects.filter(status='Overdue').count(),
+      'returned_count': rental.objects.filter(status='Returned').count(),
+      'active_count': rental.objects.filter(status='Active').count(),
+      'total': total
     })
     
+

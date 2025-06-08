@@ -5,6 +5,7 @@ from django.contrib import messages
 from booking.models import rental
 from django.db.models import Q
 def customer_list(request):
+    
   rentals = rental.objects.all()
   customers = Customers.objects.all()
   
@@ -19,7 +20,21 @@ def customer_list(request):
       customer.total_rent = rentals.filter(Q(customer=customer) & (Q(status='Active') | Q(status ='Overdue'))).count()
       customer.save()
       
+  if request.method == 'POST':
+    search = request.POST.get('search')
+    overdue = Customers.objects.filter(total_rent = 0)
+    active = Customers.objects.filter(total_rent__gt=0)
+    data = {
+      'customers': customers.filter(Q(firstname__icontains=search) | Q(lastname__icontains=search) | Q(customer_id__icontains=search)),
+      'count': len(customers),
+      'overdue': len(overdue),
+      'active': len(active),
+      'rentals': rental.objects.all(),
       
+    }
+    return render(request, 'apps/customers/list.html', data)
+
+    
   overdue = Customers.objects.filter(total_rent = 0)
   active = Customers.objects.filter(total_rent__gt=0)
   data = {
@@ -94,6 +109,7 @@ def delete_customer(request, customer_id):
     }
     return render(request, 'apps/customers/delete_customer.html', data)
 def active_customer(request):
+   
   rentals = rental.objects.all()
   customers = Customers.objects.all()
   
@@ -108,7 +124,21 @@ def active_customer(request):
       customer.total_rent = rentals.filter(Q(customer=customer) & (Q(status='Active') | Q(status ='Overdue'))).count()
       customer.save()
       
+  if request.method == 'POST':
+    search = request.POST.get('search')
+    overdue = Customers.objects.filter(total_rent = 0)
+    active = Customers.objects.filter(total_rent__gt=0)
+    data = {
+      'customers': customers.filter(Q(firstname__icontains=search) | Q(lastname__icontains=search) | Q(customer_id__icontains=search)),
+      'count': len(customers),
+      'overdue': len(overdue),
+      'active': len(active),
+      'rentals': rental.objects.all(),
       
+    }
+    return render(request, 'apps/customers/active-list.html', data)
+
+    
   overdue = Customers.objects.filter(total_rent = 0)
   active = Customers.objects.filter(total_rent__gt=0)
   data = {
@@ -124,6 +154,7 @@ def active_customer(request):
   return render(request, 'apps/customers/active-list.html', data)
 
 def overdue_customer(request):
+    
   rentals = rental.objects.all()
   customers = Customers.objects.all()
   
@@ -138,7 +169,21 @@ def overdue_customer(request):
       customer.total_rent = rentals.filter(Q(customer=customer) & (Q(status='Active') | Q(status ='Overdue'))).count()
       customer.save()
       
+  if request.method == 'POST':
+    search = request.POST.get('search')
+    overdue = Customers.objects.filter(total_rent = 0)
+    active = Customers.objects.filter(total_rent__gt=0)
+    data = {
+       'customers': customers.filter(Q(firstname__icontains=search) | Q(lastname__icontains=search) | Q(customer_id__icontains=search)),
+      'count': len(customers),
+      'overdue': len(overdue),
+      'active': len(active),
+      'rentals': rental.objects.all(),
       
+    }
+    return render(request, 'apps/customers/overdue.html', data)
+
+    
   overdue = Customers.objects.filter(total_rent = 0)
   active = Customers.objects.filter(total_rent__gt=0)
   data = {
