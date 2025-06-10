@@ -4,51 +4,70 @@ from .models import Customers
 from django.contrib import messages
 from booking.models import rental
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth import login, authenticate
+@login_required
 def customer_list(request):
+    rentals = rental.objects.all()
+    customers = Customers.objects.all()
     
-  rentals = rental.objects.all()
-  customers = Customers.objects.all()
-  
-  for customer in customers:
-    for record in rentals:
-      if customer == record.customer:
-        customer.recent_pickups = record.equipment.name
-        customer.last_rent = record.rental_date
+    # Update customer data
+    for customer in customers:
+        for record in rentals:
+            if customer == record.customer:
+                customer.recent_pickups = record.equipment.name
+                customer.last_rent = record.rental_date
+                customer.save()
+                
+    for customer in customers:
+        customer.total_rent = rentals.filter(Q(customer=customer) & (Q(status='Active') | Q(status='Overdue'))).count()
         customer.save()
-        
-  for customer in customers:
-      customer.total_rent = rentals.filter(Q(customer=customer) & (Q(status='Active') | Q(status ='Overdue'))).count()
-      customer.save()
-      
-  if request.method == 'POST':
-    search = request.POST.get('search')
-    overdue = Customers.objects.filter(total_rent = 0)
+    
+    # Get search parameter
+    search = request.POST.get('search') if request.method == 'POST' else request.GET.get('search', '')
+    
+    # Filter customers based on search
+    if search:
+        customers_filtered = customers.filter(
+            Q(firstname__icontains=search) | 
+            Q(lastname__icontains=search) | 
+            Q(customer_id__icontains=search) |
+            Q(email__icontains=search) |
+            Q(contact_number__icontains=search)
+        )
+    else:
+        customers_filtered = customers
+    
+    # Pagination
+    items_per_page = 10  # You can adjust this number
+    paginator = Paginator(customers_filtered, items_per_page)
+    
+    page = request.GET.get('page', 1)
+    try:
+        customers_page = paginator.page(page)
+    except PageNotAnInteger:
+        customers_page = paginator.page(1)
+    except EmptyPage:
+        customers_page = paginator.page(paginator.num_pages)
+    
+    # Calculate statistics
+    overdue = Customers.objects.filter(total_rent=0)
     active = Customers.objects.filter(total_rent__gt=0)
+    
     data = {
-      'customers': customers.filter(Q(firstname__icontains=search) | Q(lastname__icontains=search) | Q(customer_id__icontains=search)),
-      'count': len(customers),
-      'overdue': len(overdue),
-      'active': len(active),
-      'rentals': rental.objects.all(),
-      
+        'customers': customers_page,  
+        'count': len(customers),
+        'overdue': len(overdue),
+        'active': len(active),
+        'rentals': rental.objects.all(),
+        'search': search,
+        'paginator': paginator,
+        'page_obj': customers_page,
     }
+    
     return render(request, 'apps/customers/list.html', data)
-
-    
-  overdue = Customers.objects.filter(total_rent = 0)
-  active = Customers.objects.filter(total_rent__gt=0)
-  data = {
-    'customers': customers,
-    'count': len(customers),
-    'overdue': len(overdue),
-    'active': len(active),
-    'rentals': rental.objects.all(),
-    
-    
-    
-  }
-  return render(request, 'apps/customers/list.html', data)
-
+@login_required
 def edit_customer(request,customer_id):
   try:
     customer_obj = get_object_or_404(Customers, pk=customer_id)
@@ -73,7 +92,7 @@ def edit_customer(request,customer_id):
       })
   except Exception as e:
     return HttpResponse(f'Error occurred during{e}')
-  
+@login_required
 def delete_customer(request, customer_id):
     customers = Customers.objects.all()
     rentals = rental.objects.all()
@@ -108,96 +127,134 @@ def delete_customer(request, customer_id):
       'rentals': rental.objects.all(),
     }
     return render(request, 'apps/customers/delete_customer.html', data)
+@login_required
 def active_customer(request):
-   
-  rentals = rental.objects.all()
-  customers = Customers.objects.all()
-  
-  for customer in customers:
-    for record in rentals:
-      if customer == record.customer:
-        customer.recent_pickups = record.equipment.name
-        customer.last_rent = record.rental_date
+    rentals = rental.objects.all()
+    customers = Customers.objects.all()
+    
+    
+    for customer in customers:
+        for record in rentals:
+            if customer == record.customer:
+                customer.recent_pickups = record.equipment.name
+                customer.last_rent = record.rental_date
+                customer.save()
+                
+    for customer in customers:
+        customer.total_rent = rentals.filter(Q(customer=customer) & (Q(status='Active') | Q(status='Overdue'))).count()
         customer.save()
-        
-  for customer in customers:
-      customer.total_rent = rentals.filter(Q(customer=customer) & (Q(status='Active') | Q(status ='Overdue'))).count()
-      customer.save()
-      
-  if request.method == 'POST':
-    search = request.POST.get('search')
-    overdue = Customers.objects.filter(total_rent = 0)
+    
+   
+    search = request.POST.get('search') if request.method == 'POST' else request.GET.get('search', '')
+    
+
+    active_customers = customers.filter(total_rent__gt=0)
+    
+
+    if search:
+        customers_filtered = active_customers.filter(
+            Q(firstname__icontains=search) | 
+            Q(lastname__icontains=search) | 
+            Q(customer_id__icontains=search) |
+            Q(email__icontains=search) |
+            Q(contact_number__icontains=search)
+        )
+    else:
+        customers_filtered = active_customers
+    
+
+    items_per_page = 10  
+    paginator = Paginator(customers_filtered, items_per_page)
+    
+    page = request.GET.get('page', 1)
+    try:
+        customers_page = paginator.page(page)
+    except PageNotAnInteger:
+        customers_page = paginator.page(1)
+    except EmptyPage:
+        customers_page = paginator.page(paginator.num_pages)
+    
+ 
+    overdue = Customers.objects.filter(total_rent=0)
     active = Customers.objects.filter(total_rent__gt=0)
+    
     data = {
-      'customers': customers.filter(Q(firstname__icontains=search) | Q(lastname__icontains=search) | Q(customer_id__icontains=search)),
-      'count': len(customers),
-      'overdue': len(overdue),
-      'active': len(active),
-      'rentals': rental.objects.all(),
-      
+        'customers': customers_page,  
+        'count': len(customers),
+        'overdue': len(overdue),
+        'active': len(active),
+        'rentals': rental.objects.all(),
+        'search': search,
+        'paginator': paginator,
+        'page_obj': customers_page,
     }
+    
     return render(request, 'apps/customers/active-list.html', data)
 
-    
-  overdue = Customers.objects.filter(total_rent = 0)
-  active = Customers.objects.filter(total_rent__gt=0)
-  data = {
-    'customers': customers,
-    'count': len(customers),
-    'overdue': len(overdue),
-    'active': len(active),
-    'rentals': rental.objects.all(),
-    
-    
-    
-  }
-  return render(request, 'apps/customers/active-list.html', data)
-
+@login_required
 def overdue_customer(request):
+    rentals = rental.objects.all()
+    customers = Customers.objects.all()
     
-  rentals = rental.objects.all()
-  customers = Customers.objects.all()
-  
-  for customer in customers:
-    for record in rentals:
-      if customer == record.customer:
-        customer.recent_pickups = record.equipment.name
-        customer.last_rent = record.rental_date
+
+    for customer in customers:
+        for record in rentals:
+            if customer == record.customer:
+                customer.recent_pickups = record.equipment.name
+                customer.last_rent = record.rental_date
+                customer.save()
+                
+    for customer in customers:
+        customer.total_rent = rentals.filter(Q(customer=customer) & (Q(status='Active') | Q(status='Overdue'))).count()
         customer.save()
-        
-  for customer in customers:
-      customer.total_rent = rentals.filter(Q(customer=customer) & (Q(status='Active') | Q(status ='Overdue'))).count()
-      customer.save()
-      
-  if request.method == 'POST':
-    search = request.POST.get('search')
-    overdue = Customers.objects.filter(total_rent = 0)
+    
+ 
+    search = request.POST.get('search') if request.method == 'POST' else request.GET.get('search', '')
+    
+ 
+    overdue_customers = customers.filter(total_rent=0)
+    
+
+    if search:
+        customers_filtered = overdue_customers.filter(
+            Q(firstname__icontains=search) | 
+            Q(lastname__icontains=search) | 
+            Q(customer_id__icontains=search) |
+            Q(email__icontains=search) |
+            Q(contact_number__icontains=search)
+        )
+    else:
+        customers_filtered = overdue_customers
+    
+    
+    items_per_page = 10  
+    paginator = Paginator(customers_filtered, items_per_page)
+    
+    page = request.GET.get('page', 1)
+    try:
+        customers_page = paginator.page(page)
+    except PageNotAnInteger:
+        customers_page = paginator.page(1)
+    except EmptyPage:
+        customers_page = paginator.page(paginator.num_pages)
+    
+    
+    overdue = Customers.objects.filter(total_rent=0)
     active = Customers.objects.filter(total_rent__gt=0)
+    
     data = {
-       'customers': customers.filter(Q(firstname__icontains=search) | Q(lastname__icontains=search) | Q(customer_id__icontains=search)),
-      'count': len(customers),
-      'overdue': len(overdue),
-      'active': len(active),
-      'rentals': rental.objects.all(),
-      
+        'customers': customers_page,  
+        'count': len(customers),
+        'overdue': len(overdue),
+        'active': len(active),
+        'rentals': rental.objects.all(),
+        'search': search,
+        'paginator': paginator,
+        'page_obj': customers_page,
     }
+    
     return render(request, 'apps/customers/overdue.html', data)
-
-    
-  overdue = Customers.objects.filter(total_rent = 0)
-  active = Customers.objects.filter(total_rent__gt=0)
-  data = {
-    'customers': customers,
-    'count': len(customers),
-    'overdue': len(overdue),
-    'active': len(active),
-    'rentals': rental.objects.all(),
-    
-    
-    
-  }
-  return render(request, 'apps/customers/overdue.html', data)
-
+@login_required
 def add_customer(request):
   try:
     if request.method == 'POST':

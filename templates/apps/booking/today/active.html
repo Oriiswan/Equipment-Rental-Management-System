@@ -96,6 +96,30 @@
   <div class='px-[30px] py-[20px] shadow-lg border pb-24 border-gray-100 rounded-xl mt-10 bg-white'>
 
     <div class='text-2xl mb-5 font-semibold'>Active Rentals</div>
+    <div class="mb-6 mt-4">
+  <form  method="POST" class="flex items-center gap-2" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="relative flex-grow">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </div>
+      <input 
+        type="text" 
+        name="search"
+        class="bg-white border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" 
+        placeholder="Search rentals by customer, equipment, or ID..."
+      >
+    </div>
+    <button 
+      type="submit"
+      class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors"
+    >
+      Search
+    </button>
+  </form>
+</div>
     <div class='flex justify-between'>
     <div class='grid grid-cols-5 gap-3 w-[580px] mb-6'>
       <a href='/booking/list/' class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>All</a>
@@ -105,7 +129,7 @@
       <a href='/booking/return_list/' class='text-center bg-gray-100 text-gray-400  py-1 px-5 rounded-full text-[15px] font-semibold'>Returned</a>
     </div>
 
-    <div class="relative inline-block">
+     <div class="relative inline-block">
         <!-- Dropdown Button -->
         <button 
             id="dropdownButton" onclick="show()" data-dropdown-toggle="dropdownMenu"
@@ -116,7 +140,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
             <span class="text-sm font-medium text-gray-700" id="selectedText">
-                Sort by Date:  Today
+                Sort by Date:
             </span>
             <!-- Chevron Icon -->
             <svg 
@@ -137,7 +161,7 @@
         >
             <div class="py-1">
                 <!-- Newest First -->
-                <a  href = "/booking/active/newest"
+                <a  href = "/booking/list/newest"
                     class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors " 
                     data-value="newest"
                 >
@@ -149,7 +173,7 @@
                 </a>
                 
                 <!-- Oldest First -->
-                <a  href = "/booking/active/oldest"
+                <a  href = "/booking/list/oldest"
                     class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors text-gray-700" 
                     data-value="oldest"
                 >
@@ -160,15 +184,14 @@
                 </a>
                 
                 <!-- Today -->
-                <a  href = "/booking/active/today"
-                    class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm transition-colors bg-blue-50 text-blue-700" 
+                <a  href = "/booking/list/today"
+                    class="dropdown-item w-full flex items-center gap-3 px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors text-gray-700" 
                     data-value="today"
                 >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                     <span>Today</span>
-                    <div class="ml-auto w-2 h-2 bg-blue-600 rounded-full"></div>
                 </a>
                 
                 <!-- This Week -->
@@ -206,8 +229,7 @@
             </div>
         </div>
     </div>
-</div>
-
+    </div>
     <! Table !>
 
 

@@ -5,6 +5,9 @@ from django.contrib import messages
 import math
 from booking.models import rental
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate
+@login_required
 def equipment_list(request):
   equipments =Equipments.objects.all()
   equipments_count = Equipments.objects.count()
@@ -30,6 +33,7 @@ def equipment_list(request):
   }
   return render(request, 'apps/equipment/list.html', data)
 
+@login_required
 def add_equipment(request):
   try:
     if request.method == 'POST':
@@ -61,7 +65,7 @@ def add_equipment(request):
       return render(request, 'apps/equipment/Add-equipment.html')
   except Exception as e:
     return HttpResponse(f'Error occurred during {e}')
-  
+@login_required
 def available_list(request):
   equipments =Equipments.objects.all()
   equipments_count = Equipments.objects.count()
@@ -85,7 +89,7 @@ def available_list(request):
     
   }
   return render(request, 'apps/equipment/available-list.html', data)
-
+@login_required
 def rented_list(request):
   equipments =Equipments.objects.all()
   equipments_count = Equipments.objects.count()
@@ -110,7 +114,7 @@ def rented_list(request):
   }
   return render(request, 'apps/equipment/rented.html', data)
 
-
+@login_required
 def edit_equipment(request, equipment_id):
   equipment = Equipments.objects.get(pk=equipment_id)
   name = request.POST.get('name')
@@ -141,6 +145,7 @@ def edit_equipment(request, equipment_id):
     'quantity': equipment.total_quantity,
     'available_quantity': equipment.available_quantity,
   })
+@login_required
 def delete_equipment(request,equipment_id):
     equipments =Equipments.objects.all()
     equipments_count = Equipments.objects.count()
@@ -170,6 +175,7 @@ def delete_equipment(request,equipment_id):
       
     }
     return render(request, 'apps/equipment/delete.html', data)
+@login_required
 def delete_avail_equipment(request,equipment_id):
     equipments =Equipments.objects.all()
     equipments_count = Equipments.objects.count()

@@ -6,11 +6,12 @@ from datetime import date, datetime, timedelta
 from decimal import Decimal
 import calendar
 from collections import defaultdict
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate
 from inventory.models import Equipments
 from customers.models import Customers
 from booking.models import rental
-
+@login_required
 def reports_dashboard(request):
  
     end_date = date.today()

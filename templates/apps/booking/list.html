@@ -94,9 +94,68 @@
   </div>
 </div>
 
-  <div class='px-[30px] py-[20px] shadow-lg border pb-24 border-gray-100 rounded-xl mt-10 bg-white'>
+  <div class='px-[30px] py-[20px] shadow-lg border pb-6 border-gray-100 rounded-xl mt-10 bg-white'>
 
     <div class='text-2xl mb-5 font-semibold'>Active Rentals</div>
+    
+    <!-- Search Bar -->
+    <div class="mb-6 mt-4">
+      <form method="GET" class="flex items-center gap-2">
+        <div class="relative flex-grow">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <input 
+            type="text" 
+            name="search"
+            value="{{ search|default:'' }}"
+            class="bg-white border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" 
+            placeholder="Search rentals by customer, equipment, or ID..."
+          >
+        </div>
+        <button 
+          type="submit"
+          class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors"
+        >
+          Search
+        </button>
+        {% if search %}
+        <a 
+          href="/booking/list/" 
+          class="text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors"
+        >
+          Clear
+        </a>
+        {% endif %}
+      </form>
+    </div>
+
+    <!-- Search Results Banner -->
+    {% if search %}
+    <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <p class="text-sm text-blue-700">
+                    <span class="font-medium">Search Results:</span> 
+                    Found <span class="font-semibold">{{ rentals.paginator.count }}</span> rental(s) for 
+                    "<span class="font-semibold">{{ search }}</span>"
+                </p>
+            </div>
+            <a 
+                href="/booking/list/" 
+                class="text-sm text-blue-600 hover:text-blue-800 font-medium"
+            >
+                Clear Search
+            </a>
+        </div>
+    </div>
+    {% endif %}
+    
     <div class='flex justify-between'>
     <div class='grid grid-cols-5 gap-3 w-[580px] mb-6'>
       <div class='text-center bg-gradient-to-br text-white bg-green-500 px-5 py-1 rounded-full text-[15px] font-semibold'>All</div>
@@ -207,10 +266,25 @@
         </div>
     </div>
     </div>
-    <! Table !>
 
+    <!-- Pagination Info -->
+    {% if rentals %}
+    <div class="mb-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+        <div class="flex items-center justify-between">
+            <p class="text-sm text-gray-700">
+                Showing <span class="font-medium">{{ rentals.start_index }}</span> to 
+                <span class="font-medium">{{ rentals.end_index }}</span> of 
+                <span class="font-medium">{{ rentals.paginator.count }}</span> rentals
+            </p>
+            <div class="text-sm text-gray-500">
+                Page {{ rentals.number }} of {{ rentals.paginator.num_pages }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
 
-    
+    <!-- Table -->
+    <div class="overflow-x-auto">
     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-sky-50 dark:text-gray-400">
             <tr>
@@ -242,7 +316,6 @@
         </thead>
         <tbody>
             {% for rental in rentals %}
-             {% if rental.status != 'Returned' %}
              <tr class="bg-white  hover:bg-gray-50 ">
                 
                 <th scope="row" class=" py-4 text-gray-900 whitespace-nowrap ">
@@ -320,15 +393,138 @@
                     
                       <a href="/booking/edit/{{rental.rental_id}}"  data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-4 text-white rounded-md bg-blue-500">Edit</a>
                 </td>
-            </tr>{% endif %}
+            </tr>
             {% endfor %}
             
             
             
         </tbody>
     </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    {% if rentals.has_other_pages %}
+    <div class="mt-6 bg-white border-t border-gray-200">
+        <div class="flex items-center justify-between py-3">
+            
+            <!-- Previous Button -->
+            <div class="flex-1 flex justify-start">
+                {% if rentals.has_previous %}
+                    <a href="?{% if search %}search={{ search }}&{% endif %}page={{ rentals.previous_page_number }}" 
+                       class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Previous
+                    </a>
+                {% endif %}
+            </div>
+
+            <!-- Page Numbers -->
+            <div class="hidden md:flex">
+                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    
+                    {% for num in rentals.paginator.page_range %}
+                        {% if rentals.number == num %}
+                            <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600">
+                                {{ num }}
+                            </span>
+                        {% elif num > rentals.number|add:'-3' and num < rentals.number|add:'3' %}
+                            <a href="?{% if search %}search={{ search }}&{% endif %}page={{ num }}" 
+                               class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                {{ num }}
+                            </a>
+                        {% elif num == 1 %}
+                            <a href="?{% if search %}search={{ search }}&{% endif %}page=1" 
+                               class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                1
+                            </a>
+                            {% if rentals.number > 4 %}
+                                <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300">
+                                    ...
+                                </span>
+                            {% endif %}
+                        {% elif num == rentals.paginator.num_pages %}
+                            {% if rentals.number < rentals.paginator.num_pages|add:'-3' %}
+                                <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300">
+                                    ...
+                                </span>
+                            {% endif %}
+                            <a href="?{% if search %}search={{ search }}&{% endif %}page={{ rentals.paginator.num_pages }}" 
+                               class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                {{ rentals.paginator.num_pages }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                    
+                </nav>
+            </div>
+
+            <!-- Next Button -->
+            <div class="flex-1 flex justify-end">
+                {% if rentals.has_next %}
+                    <a href="?{% if search %}search={{ search }}&{% endif %}page={{ rentals.next_page_number }}" 
+                       class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Next
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Mobile pagination info -->
+        <div class="md:hidden mt-4 text-center">
+            <span class="text-sm text-gray-700">
+                Page {{ rentals.number }} of {{ rentals.paginator.num_pages }}
+            </span>
+        </div>
+    </div>
+    {% else %}
+    <!-- No rentals message when no results -->
+    {% if not rentals %}
+    <div class="text-center py-16">
+        {% if search %}
+        <!-- No Search Results -->
+        <div class="text-gray-400 mb-4">
+            <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">No rentals found</h3>
+        <p class="text-gray-500 mb-6">No rentals match your search for "{{ search }}".</p>
+        <div class="flex justify-center gap-4">
+            <a href="/booking/list/" class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                Show All Rentals
+            </a>
+            <a href="/booking/add/" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Create New Rental
+            </a>
+        </div>
+        {% else %}
+        <!-- No Rentals at All -->
+        <div class="text-gray-400 mb-4">
+            <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">No active rentals</h3>
+        <p class="text-gray-500 mb-6">Get started by creating your first rental.</p>
+        <a href="/booking/add/" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Create Your First Rental
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+    {% endif %}
    
 </div>
 
 {% endblock 'content' %}
-

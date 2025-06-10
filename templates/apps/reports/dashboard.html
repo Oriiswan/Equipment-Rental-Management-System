@@ -1,0 +1,386 @@
+{% extends "base.html" %}
+{% block 'nav' %}Reports{% endblock 'nav' %}
+{% block 'content' %}
+
+<div class='p-6 max-w-7xl mx-auto pb-10'>
+  
+
+  <div class="mb-8">
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Business Reports</h1>
+        <p class="text-gray-600 mt-1">Comprehensive analytics and insights for your rental business</p>
+      </div>
+     
+    </div>
+  </div>
+
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    
+
+    <div class="bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+      <div class="flex justify-between items-start mb-4">
+        <div class="bg-white/20 p-3 rounded-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div class="text-right">
+          <p class="text-sm font-medium opacity-90">Total Revenue</p>
+          <h2 class="text-3xl font-bold mt-1">₱{{total_revenue|default:"0"|floatformat:0}}</h2>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-white/20">
+        <div class="flex items-center justify-between">
+          <span class="text-sm opacity-90">vs last month</span>
+          <span class="text-sm font-semibold flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+            </svg>
+            100%
+          </span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="bg-gradient-to-br from-green-600 to-green-500 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+      <div class="flex justify-between items-start mb-4">
+        <div class="bg-white/20 p-3 rounded-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+        </div>
+        <div class="text-right">
+          <p class="text-sm font-medium opacity-90">Avg Rental Value</p>
+          <h2 class="text-3xl font-bold mt-1">₱{{avg_rental_value|default:"0"|floatformat:0}}</h2>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-white/20">
+        <div class="flex items-center justify-between">
+          <span class="text-sm opacity-90">per rental</span>
+          <span class="text-sm font-semibold flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+            </svg>
+            +8%
+          </span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="bg-gradient-to-br from-purple-600 to-purple-500 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+      <div class="flex justify-between items-start mb-4">
+        <div class="bg-white/20 p-3 rounded-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+        </div>
+        <div class="text-right">
+          <p class="text-sm font-medium opacity-90">Avg Utilization</p>
+          <h2 class="text-3xl font-bold mt-1">{{avg_utilization|default:"0"}}%</h2>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-white/20">
+        <div class="flex items-center justify-between">
+          <span class="text-sm opacity-90">equipment usage</span>
+          <span class="text-sm font-semibold flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+            </svg>
+            +12%
+          </span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="bg-gradient-to-br from-amber-500 to-amber-400 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+      <div class="flex justify-between items-start mb-4">
+        <div class="bg-white/20 p-3 rounded-lg">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+        </div>
+        <div class="text-right">
+          <p class="text-sm font-medium opacity-90">Repeat Customers</p>
+          <h2 class="text-3xl font-bold mt-1">{{repeat_customers|default:"0"}}%</h2>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-white/20">
+        <div class="flex items-center justify-between">
+          <span class="text-sm opacity-90">customer loyalty</span>
+          <span class="text-sm font-semibold flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+            </svg>
+            +5%
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    
+   
+    <div class="lg:col-span-2">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-6 border-b border-gray-100">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                Revenue Trends
+              </h2>
+              <p class="text-sm text-gray-600 mt-1">Monthly revenue performance</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Last 12 months</span>
+            </div>
+          </div>
+        </div>
+        
+     
+        <div class="p-6">
+          <div class="h-64 bg-gray-50 rounded-lg flex items-center justify-center mb-6">
+            <canvas id="revenueChart" width="400" height="200" class="w-full h-full"></canvas>
+          </div>
+          
+     
+          <div class="grid grid-cols-3 gap-4">
+            <div class="text-center p-4 bg-blue-50 rounded-lg">
+              <p class="text-xs text-gray-500 mb-1">This Month</p>
+              <p class="text-lg font-bold text-blue-600">₱{{current_month_revenue|default:"0"|floatformat:0}}</p>
+              <p class="text-xs text-green-600 flex items-center justify-center mt-1">
+                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                </svg>
+                +15%
+              </p>
+            </div>
+            <div class="text-center p-4 bg-green-50 rounded-lg">
+              <p class="text-xs text-gray-500 mb-1">Last Month</p>
+              <p class="text-lg font-bold text-green-600">₱{{last_month_revenue|default:"0"|floatformat:0}}</p>
+              <p class="text-xs text-gray-500 mt-1">Previous period</p>
+            </div>
+            <div class="text-center p-4 bg-purple-50 rounded-lg">
+              <p class="text-xs text-gray-500 mb-1">YTD Total</p>
+              <p class="text-lg font-bold text-purple-600">₱{{ytd_revenue|default:"0"|floatformat:0}}</p>
+              <p class="text-xs text-purple-600 flex items-center justify-center mt-1">
+                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                </svg>
+                +28%
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="lg:col-span-1">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-6 border-b border-gray-100">
+          <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+            <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+            </svg>
+            Top Performers
+          </h2>
+          <p class="text-sm text-gray-600 mt-1">Highest revenue equipment</p>
+        </div>
+        
+        <div class="divide-y divide-gray-100 max-h-96 overflow-y-auto">
+          {% for equipment in top_equipment|slice:":5" %}
+          <div class="p-4 hover:bg-gray-50 transition-colors">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-gradient-to-br 
+                  {% if forloop.counter == 1 %}from-yellow-400 to-yellow-500
+                  {% elif forloop.counter == 2 %}from-gray-400 to-gray-500
+                  {% elif forloop.counter == 3 %}from-amber-600 to-amber-700
+                  {% else %}from-blue-500 to-blue-600{% endif %} 
+                  rounded-lg flex items-center justify-center text-white text-xs font-bold">
+                  {{forloop.counter}}
+                </div>
+                <div>
+                  <h4 class="font-medium text-gray-900 text-sm">{{equipment.name|truncatechars:20}}</h4>
+                  <p class="text-xs text-gray-500">{{equipment.category}}</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="text-sm font-semibold text-gray-900">₱{{equipment.total_revenue|default:"0"|floatformat:0}}</p>
+                <p class="text-xs text-gray-500">{{equipment.rental_count|default:"0"}} rentals</p>
+              </div>
+            </div>
+            
+
+            <div class="mt-3">
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="h-2 rounded-full 
+                  {% if forloop.counter == 1 %}bg-yellow-500
+                  {% elif forloop.counter == 2 %}bg-gray-500
+                  {% elif forloop.counter == 3 %}bg-amber-600
+                  {% else %}bg-blue-500{% endif %}" 
+                  style="width: {{equipment.revenue_percentage|default:0}}%">
+                </div>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+          <div class="p-6 text-center text-gray-500">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            <p class="mt-2 text-sm">No equipment data available</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+    <div class="p-6 border-b border-gray-100">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold text-gray-900">Detailed Equipment Reports</h2>
+        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+          Export Data
+        </button>
+      </div>
+    </div>
+    
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm text-left">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+          <tr>
+            <th class="px-6 py-3">Equipment</th>
+            <th class="px-6 py-3">Category</th>
+            <th class="px-6 py-3">Total Rentals</th>
+            <th class="px-6 py-3">Revenue</th>
+            <th class="px-6 py-3">Utilization</th>
+            <th class="px-6 py-3">Avg Duration</th>
+            <th class="px-6 py-3">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          {% for equipment in detailed_equipment_reports %}
+          <tr class="bg-white hover:bg-gray-50 transition-colors">
+            <td class="px-6 py-4">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium text-gray-900">{{equipment.name}}</p>
+                  <p class="text-gray-500 text-xs">ID: EQ-{{equipment.equipment_id}}</p>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                {{equipment.category}}
+              </span>
+            </td>
+            <td class="px-6 py-4 font-medium text-gray-900">{{equipment.rental_count|default:"0"}}</td>
+            <td class="px-6 py-4 font-semibold text-gray-900">₱{{equipment.total_revenue|default:"0"|floatformat:0}}</td>
+            <td class="px-6 py-4">
+              <div class="flex items-center">
+                <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                  <div class="h-2 rounded-full {% if equipment.utilization > 75 %}bg-green-500{% elif equipment.utilization > 50 %}bg-blue-500{% elif equipment.utilization > 25 %}bg-amber-500{% else %}bg-red-500{% endif %}" 
+                       style="width: {{equipment.utilization}}%"></div>
+                </div>
+                <span class="text-sm font-medium">{{equipment.utilization}}%</span>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-gray-900">{{equipment.avg_duration|default:"0"}} days</td>
+            <td class="px-6 py-4">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                {% if equipment.utilization > 75 %}bg-green-100 text-green-800
+                {% elif equipment.utilization > 50 %}bg-blue-100 text-blue-800
+                {% elif equipment.utilization > 25 %}bg-amber-100 text-amber-800
+                {% else %}bg-red-100 text-red-800{% endif %}">
+                {% if equipment.utilization > 75 %}Excellent
+                {% elif equipment.utilization > 50 %}Good
+                {% elif equipment.utilization > 25 %}Fair
+                {% else %}Needs Attention{% endif %}
+              </span>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="px-6 py-12 text-center">
+              <div class="flex flex-col items-center">
+                <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                <h3 class="text-lg font-medium text-gray-900 mb-1">No data available</h3>
+                <p class="text-gray-500">Equipment reports will appear here once you have rental data.</p>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+const ctx = document.getElementById('revenueChart');
+if (ctx) {
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      datasets: [{
+        label: 'Revenue',
+        data: [12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, 32000, 40000, 38000, 45000],
+        borderColor: 'rgb(59, 130, 246)',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        tension: 0.4,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.1)'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
+        }
+      }
+    }
+  });
+}
+</script>
+
+{% endblock 'content' %}

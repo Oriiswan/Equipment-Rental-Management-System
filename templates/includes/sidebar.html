@@ -18,14 +18,14 @@
    {% endif %} > " >
          <li>
 
-            <a href="{% url 'info' %}" class="flex items-center p-2  rounded-lg     {% if request.path == '/' %}dark:bg-blue-200 text-blue-700 dark:hover:bg-blue-200 {% else %}opacity-100{% endif %} dark:hover:bg-blue-50">
+            <a href="{% url 'info' %}" class="flex items-center p-2  rounded-lg     {% if request.path == '/' %}bg-blue-100 text-blue-700 border-r-2 border-blue-500{% else %}opacity-100{% endif %} dark:hover:bg-blue-50">
                <div class='shrink-0 w-6 h-6'>📊</div>
                <span class="ms-3 ">Dashboard</span>
             </a>
          </li>
          <li>
             <a href="/equipments/list" class="flex items-center p-2  rounded-lg    {% if request.path|slice:":11" == "/equipments" %} 
-      dark:bg-blue-200 dark:hover:bg-blue-200 text-blue-700 
+      bg-blue-100 text-blue-700 border-r-2 border-blue-500 
    {% else %} 
       dark:hover:bg-blue-50 
    {% endif %} ">
@@ -35,7 +35,7 @@
          </li>
          <li>
             <a href="/customers/list/" class="flex items-center p-2  rounded-lg {% if request.path|slice:":10" == "/customers" %} 
-      dark:bg-blue-200 dark:hover:bg-blue-200 text-blue-700 
+      bg-blue-100 text-blue-700 border-r-2 border-blue-500 
    {% else %} 
       dark:hover:bg-blue-50 
    {% endif %}  ">
@@ -45,7 +45,7 @@
          </li>
          <li>
                <a href="/booking/list" class="flex items-center p-2 text-gray-900 rounded-lg {% if request.path|slice:":8" == "/booking" %} 
-      dark:bg-blue-200 dark:hover:bg-blue-200 text-blue-700 
+      bg-blue-100 text-blue-700 border-r-2 border-blue-500 
    {% else %} 
       dark:hover:bg-blue-50 
    {% endif %}  ">
@@ -53,25 +53,31 @@
                <span class="ms-3">Rentals</span>
             </a>
          </li>
-         <li>
-            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg  dark:hover:bg-blue-50 ">
-               <div class='shrink-0 w-6 h-6'>📈</div>
-               <span class="ms-3">Reports</span>
-            </a>
-         </li>
+          <li>
+        <a href="{% url 'reports:dashboard' %}" class="flex items-center px-3 py-3  rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 {% if '/reports/' in request.path %}bg-blue-100 text-blue-700 border-r-2 border-blue-500{% endif %}">
+          <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          <span class="font-medium">Reports</span>
+        </a>
+      </li>
          
          
       </ul>
-      <div class='bg-gray-100 border border-gray-200 shadow-xl p-2 pl-5 rounded-lg absolute bottom-0 left-4 right-4  '>
-        <a href="" class='flex items-center'>
-          <div class='bg-blue-700 text-white py-1 px-2 rounded-full mr-4'>JD</div>
-          <div>
-            <h3 class='font-semibold text-sm/4 '>John Doe</h3>
-            <h4 class='text-[11px] my-0 text-gray-400'>Administrator</h4>
-          </div>
-        </a>
-        
-
-      </div>
+      
+      <!-- User Profile Section with Logout -->
+      <div class='bg-gray-100 border border-gray-200 shadow-xl p-2 pl-5 rounded-lg absolute bottom-0 left-4 right-4'>
+     
+        <!-- Logout Button -->
+        <form method="post" action="{% url 'logout' %}" class="w-full">
+          {% csrf_token %}
+          <button type="submit" class="w-full flex items-center justify-center p-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors duration-200 border border-red-200 hover:border-red-300">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            Logout
+          </button>
+        </form>
+      
    </div>
 </aside>
