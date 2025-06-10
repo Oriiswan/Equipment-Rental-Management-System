@@ -6,7 +6,9 @@ import math
 from booking.models import rental
 from django.db.models import Sum
 from django.db.models import F,Q
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate
+@login_required
 def info(request):
   last_four = rental.objects.order_by('-updated_at')
   most = Equipments.objects.filter(~Q(available_quantity=F('total_quantity')))

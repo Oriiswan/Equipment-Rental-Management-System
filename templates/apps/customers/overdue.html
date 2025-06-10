@@ -3,8 +3,8 @@
 {% block 'content' %}
 
 <div class='p-3'>
-   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+   
         <div class="bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow duration-200">
             <div class="flex justify-between items-start">
                 <div>
@@ -26,7 +26,7 @@
             </div>
         </div>
 
-
+       
         <div class="bg-gradient-to-br from-green-600 to-green-400 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow duration-200">
             <div class="flex justify-between items-start">
                 <div>
@@ -70,7 +70,7 @@
             </div>
         </div>
 
-  
+
         <div class="bg-gradient-to-br from-red-600 to-red-400 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow duration-200">
             <div class="flex justify-between items-start">
                 <div>
@@ -92,7 +92,7 @@
             </div>
         </div>
 
-       
+  
         <div class="flex justify-center items-center">
             <a href="/customers/add/" class="bg-white shadow-lg hover:shadow-xl w-full rounded-xl cursor-pointer h-full flex flex-col justify-center items-center text-center p-6 transition-all duration-200 hover:scale-105">
                 <div class="bg-blue-100 p-4 rounded-full mb-3">
@@ -106,106 +106,320 @@
         </div>
     </div>
 
+    <!-- Main Content Card -->
+    <div class='shadow-lg border border-gray-100 rounded-xl bg-white overflow-hidden'>
 
-
-  <div class='px-[30px] py-[20px] shadow-lg border pb-24 border-gray-100 rounded-xl mt-10 bg-white'>
-
-    <div class='text-2xl mb-5 font-semibold'>Customer Directory</div>
-    <div class='grid grid-cols-4 gap-3 w-[600px] mb-6'>
-      <a href="/customers/list/" class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>
-        <div >All</div>
-      </a>
-      <a href="/customers/active/" class='text-center bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>
-        <div >Active</div>
-      </a>
-      <div class='text-center bg-gradient-to-br text-white from-blue-700 to-blue-500 px-5 py-1 rounded-full text-[15px] font-semibold'>Not Active</div>
-      <div class='text-center hidden bg-gray-100 text-gray-400   px-5 py-1 rounded-full text-[15px] font-semibold'>Pending</div>
-    </div>
-
-    <! Table !>
-
-
-    
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-sky-50 dark:text-gray-400">
-            <tr>
-              
-                <th scope="col" class="px-6 py-3">
-                    Customer
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Contact
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Status
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    TOTAL RENTALS
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    LAST RENTALS
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    ACTIONS
-                </th>
-            </tr>
-        </thead>
-       <tbody>
-            {% for customer in customers  %}
-            {% if not customer.total_rent%}
-            <tr class="bg-white  ">
+        <!-- Card Header -->
+        <div class='px-8 py-6 bg-gray-50 border-b border-gray-200'>
+            <div class='flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6'>
                 
-                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
-                    <div class="ps-3">
-                        <div class="text-base font-semibold">{{customer.firstname}} {{customer.lastname}}</div>
-                        <div class="font-normal text-gray-500">ID: CUS-00{{customer.customer_id}}</div>
-                    </div>  
-                </th>
-                <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
-                    
-                    <div class="ps-3">
-                        <div class="text-base ">{{customer.contact_number}}</div>
-                        <div class="font-normal text-gray-500">{{customer.email}}</div>
-                    </div>  
-                </td>
-                <td class="px-6 py-4">
-                    <div class="px-4 {% if customer.total_rent %}  bg-green-100 text-green-600 {% else %}bg-red-100 text-red-600{% endif %}   w-[60%] rounded-full text-center font-semibold">
-                        {% if customer.total_rent %}Active {% else %}Not Active{% endif %}
-                    </div>
-                </td>
+                <!-- Title and Description -->
+                <div>
+                    <h2 class='text-2xl font-bold text-gray-900 mb-2'>Not Active Customers</h2>
+                    <p class="text-sm text-gray-600">Customers with no active rentals</p>
+                </div>
                 
-                <td scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
+               
+            </div>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class='px-8 py-6 bg-white border-b border-gray-100'>
+            
+            <!-- Search Form -->
+            <div class="mb-6">
+                <form method="GET" class="flex flex-col sm:flex-row gap-4">
                     
-                    <div class="ps-3">
-                        <div class="text-base ">
-                            {{customer.total_rent}}
+                    <!-- Search Input Group -->
+                    <div class="flex-1">
+                      
+                        <div class="relative">
+                            <input 
+                                type="text" 
+                                id="customerSearch"
+                                name="search"
+                                value="{{ search|default:'' }}"
+                                placeholder="Search by name, email, or phone..." 
+                                class="w-full px-4 py-3 pl-11 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all hover:border-gray-400"
+                            >
+                           
                         </div>
-                        <div class="font-normal text-gray-500">rentals</div>
-                    </div>  
-                </td>
-
-                <td  class=" items-center px-6 py-4 text-gray-900 whitespace-nowrap ">
+                    </div>
                     
-                    <div class="ps-3">
-                        <div class="text-base ">{{customer.last_rent}}</div>
-                        <div class="font-normal text-gray-500">{{customer.recent_pickups}}</div>
-                    </div>  
-                </td>
-                <td class="px-6 py-4">
-                  
-                    <a href="#" type="button" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
-                </td>
-            </tr>
+                    <!-- Action Buttons -->
+                    <div class="flex items-end gap-3">
+                        <!-- Search Button -->
+                        <button 
+                            type="submit" 
+                            class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors font-medium shadow-sm"
+                        >
+                            Search
+                        </button>
+                        
+                        <!-- Show All Button (only visible when searching) -->
+                        {% if search %}
+                        <a 
+                            href="/customers/overdue/" 
+                            class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors font-medium shadow-sm"
+                        >
+                            Show All
+                        </a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+
+            <!-- Search Results Banner -->
+            {% if search %}
+            <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <p class="text-sm text-blue-700">
+                            <span class="font-medium">Search Results:</span> 
+                            Found <span class="font-semibold">{{ customers.paginator.count }}</span> not active customer(s) for 
+                            "<span class="font-semibold">{{ search }}</span>"
+                        </p>
+                    </div>
+                    <a 
+                        href="/customers/overdue/" 
+                        class="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                        Clear Search
+                    </a>
+                </div>
+            </div>
             {% endif %}
             
-        
-            {% endfor %}
-        </tbody>
-    </table>
+            <!-- Filter Tabs -->
+            <div class='flex flex-wrap gap-3'>
+                <a href="/customers/list" class='bg-white border border-gray-200 text-gray-600 px-5 py-2.5 rounded-full text-sm font-semibold shadow-sm hover:bg-gray-50 hover:border-gray-300 transition-colors'>
+                    All Customers
+                </a>
+                <a href="/customers/active/" class='bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors shadow-sm'>
+                    Active Only
+                </a>
+                <a href="/customers/overdue/" class='bg-blue-600 text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow-sm'>
+                    Not Active
+                </a>
+            </div>
+        </div>
 
-   
-  
-  
+        <!-- Table Section -->
+        <div class="overflow-x-auto">
+            {% if customers %}
+            
+            <!-- Pagination Info -->
+            <div class="px-8 py-4 bg-gray-50 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-gray-700">
+                        Showing <span class="font-medium">{{ customers.start_index }}</span> to 
+                        <span class="font-medium">{{ customers.end_index }}</span> of 
+                        <span class="font-medium">{{ customers.paginator.count }}</span> not active customers
+                    </p>
+                    
+                    <!-- Items per page selector (optional) -->
+                    <div class="text-sm text-gray-500">
+                        Page {{ customers.number }} of {{ customers.paginator.num_pages }}
+                    </div>
+                </div>
+            </div>
+            
+            <table class="w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
+                    <tr>
+                        <th scope="col" class="px-6 py-4 font-semibold">Customer</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Contact</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Status</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Total Rentals</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Last Rental</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for customer in customers %}
+                    <tr class="bg-white hover:bg-gray-50 transition-colors">
+                        
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10">
+                                    <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                        <span class="text-sm font-medium text-gray-600">
+                                            {{ customer.firstname|first }}{{ customer.lastname|first }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-semibold text-gray-900">
+                                        {{ customer.firstname }} {{ customer.lastname }}
+                                    </div>
+                                    <div class="text-xs text-gray-500">ID: CUS-00{{ customer.customer_id }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ customer.contact_number }}</div>
+                            <div class="text-xs text-gray-500">{{ customer.email }}</div>
+                        </td>
+                        
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                Not Active
+                            </span>
+                        </td>
+                        
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ customer.total_rent }}</div>
+                            <div class="text-xs text-gray-500">rentals</div>
+                        </td>
+
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ customer.last_rent }}</div>
+                            <div class="text-xs text-gray-500">{{ customer.recent_pickups }}</div>
+                        </td>
+                        
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <div class="flex space-x-2">
+                                <a href="/customers/delete_customer/{{ customer.customer_id }}" 
+                                   class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors">
+                                    Delete
+                                </a>
+                                
+                                <a href="/customers/edit/{{ customer.customer_id }}" 
+                                   class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+                                    Edit
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Pagination Controls -->
+            {% if customers.has_other_pages %}
+            <div class="px-8 py-6 bg-white border-t border-gray-200">
+                <div class="flex items-center justify-between">
+                    
+                    <!-- Previous Button -->
+                    <div class="flex-1 flex justify-start">
+                        {% if customers.has_previous %}
+                            <a href="?{% if search %}search={{ search }}&{% endif %}page={{ customers.previous_page_number }}" 
+                               class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                                Previous
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <!-- Page Numbers -->
+                    <div class="hidden md:flex">
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                            
+                            {% for num in customers.paginator.page_range %}
+                                {% if customers.number == num %}
+                                    <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600">
+                                        {{ num }}
+                                    </span>
+                                {% elif num > customers.number|add:'-3' and num < customers.number|add:'3' %}
+                                    <a href="?{% if search %}search={{ search }}&{% endif %}page={{ num }}" 
+                                       class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        {{ num }}
+                                    </a>
+                                {% elif num == 1 %}
+                                    <a href="?{% if search %}search={{ search }}&{% endif %}page=1" 
+                                       class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        1
+                                    </a>
+                                    {% if customers.number > 4 %}
+                                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300">
+                                            ...
+                                        </span>
+                                    {% endif %}
+                                {% elif num == customers.paginator.num_pages %}
+                                    {% if customers.number < customers.paginator.num_pages|add:'-3' %}
+                                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300">
+                                            ...
+                                        </span>
+                                    {% endif %}
+                                    <a href="?{% if search %}search={{ search }}&{% endif %}page={{ customers.paginator.num_pages }}" 
+                                       class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        {{ customers.paginator.num_pages }}
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                            
+                        </nav>
+                    </div>
+
+                    <!-- Next Button -->
+                    <div class="flex-1 flex justify-end">
+                        {% if customers.has_next %}
+                            <a href="?{% if search %}search={{ search }}&{% endif %}page={{ customers.next_page_number }}" 
+                               class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                Next
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Mobile pagination info -->
+                <div class="md:hidden mt-4 text-center">
+                    <span class="text-sm text-gray-700">
+                        Page {{ customers.number }} of {{ customers.paginator.num_pages }}
+                    </span>
+                </div>
+            </div>
+            {% endif %}
+
+            {% else %}
+            <!-- No Results State -->
+            <div class="text-center py-16">
+                {% if search %}
+                <!-- No Search Results -->
+                <div class="text-gray-400 mb-4">
+                    <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No not active customers found</h3>
+                <p class="text-gray-500 mb-6">No not active customers match your search for "{{ search }}".</p>
+                <div class="flex justify-center gap-4">
+                    <a href="/customers/overdue/" class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                        Show All Not Active
+                    </a>
+                    <a href="/customers/list/" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        View All Customers
+                    </a>
+                </div>
+                {% else %}
+                <!-- No Not Active Customers -->
+                <div class="text-gray-400 mb-4">
+                    <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No not active customers</h3>
+                <p class="text-gray-500 mb-6">All customers currently have active rentals.</p>
+                <a href="/customers/list/" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                    </svg>
+                    View All Customers
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
-{% endblock 'content' %}
 
+{% endblock 'content' %}

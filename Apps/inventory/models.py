@@ -15,50 +15,55 @@ class Equipments(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
   
-  def get_availability_details(self, start_date, end_date, equipment):
-    from booking.models import rental
+  def get_availability_details(self, start_date, end_date):
+        """
+        Returns detailed availability information for this equipment
+        
+        Args:
+            start_date (date): Start date to check
+            end_date (date): End date to check
+            
+        Returns:
+            dict: {
+                'is_available': bool,
+                'unavailable_dates': list[date],
+                'max_available': int
+            }
+        """
+        from booking.models import rental
+        
+        # Filter rentals for THIS equipment (self)
+        overlapping_rentals = rental.objects.filter(
+            equipment=self,  # Use self instead of the parameter
+            return_date__isnull=True
+        ).exclude(
+            status__in=['Returned', 'Cancelled']
+        ).filter(
+            Q(rental_date__lte=end_date) & Q(due_date__gte=start_date)
+        )
 
-    """
-    Returns detailed availability information
+        unavailable_dates = []
+        current_date = start_date
+        max_concurrent = 0
 
-    Returns:
-        dict: {
-            'is_available': bool,
-            'unavailable_dates': list[date],
-            'max_available': int
+        while current_date <= end_date:
+            concurrent = overlapping_rentals.filter(
+                rental_date__lte=current_date,
+                due_date__gte=current_date
+            ).count()
+
+            max_concurrent = max(max_concurrent, concurrent)
+
+            if concurrent >= self.available_quantity:
+                unavailable_dates.append(current_date)
+
+            current_date += timedelta(days=1)
+
+        return {
+            'is_available': len(unavailable_dates) == 0,
+            'unavailable_dates': unavailable_dates,
+            'max_available': max(0, self.available_quantity - max_concurrent)
         }
-    """
-    overlapping_rentals = rental.objects.filter(
-        equipment=equipment,
-        return_date__isnull=True
-    ).exclude(
-        status__in=['Returned', 'Cancelled']
-    ).filter(
-        Q(rental_date__lte=end_date) & Q(due_date__gte=start_date)
-    )
-
-    unavailable_dates = []
-    current_date = start_date
-    max_concurrent = 0
-
-    while current_date <= end_date:
-        concurrent = overlapping_rentals.filter(
-            rental_date__lte=current_date,
-            due_date__gte=current_date
-        ).count()
-
-        max_concurrent = max(max_concurrent, concurrent)
-
-        if concurrent >= self.available_quantity:
-            unavailable_dates.append(current_date)
-
-        current_date += timedelta(days=1)
-
-    return {
-        'is_available': len(unavailable_dates) == 0,
-        'unavailable_dates': unavailable_dates,
-        'max_available': max(0, self.available_quantity - max_concurrent)
-    }
 
   
   
