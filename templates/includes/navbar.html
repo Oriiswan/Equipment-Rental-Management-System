@@ -1,16 +1,474 @@
-<header class="bg-white shadow-sm">
-        <div class="flex items-center justify-between px-6 py-3 h-20">
-          <div class="flex items-center">
-            <button class="text-gray-500 focus:outline-none lg:hidden">
-              <i class="fas fa-bars"></i>
+<!-- Updated Navbar with Hamburger Menu -->
+<header class="bg-white shadow-sm border-b border-gray-200 fixed w-full z-50 top-0">
+    <div class="flex items-center justify-between px-3 sm:px-4 lg:px-6 py-2 sm:py-3 h-14 sm:h-16 lg:h-20">
+        <div class="flex items-center flex-1 min-w-0">
+            <!-- Mobile Hamburger Button (visible only on screens ≤640px) -->
+            <button 
+                id="mobile-menu-btn" 
+                type="button" 
+                class="inline-flex items-center justify-center p-2 mr-3 text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                aria-controls="mobile-sidebar-dropdown"
+                aria-expanded="false"
+                aria-label="Open navigation menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
             </button>
-            <h2 class="text-xl font-semibold text-gray-800 ml-4">Add New User</h2>
-          </div>
-          <div class="flex items-center">
-            <div class="relative">
-              
+            
+            <!-- Page Title -->
+            <div class="flex-1 min-w-0">
+                <h1 class="text-sm sm:text-lg lg:text-xl xl:text-2xl font-semibold text-gray-800 truncate">
+                    {% block 'nav' %}Dashboard{% endblock 'nav' %}
+                </h1>
+                <!-- Breadcrumb for larger screens -->
+                <div class="hidden lg:block">
+                    <nav class="flex text-xs text-gray-500 mt-0.5" aria-label="Breadcrumb">
+                        <span>Equipment Rental</span>
+                        <svg class="w-3 h-3 mx-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="text-gray-700 font-medium">{% block 'nav' %}Dashboard{% endblock 'nav' %}</span>
+                    </nav>
+                </div>
             </div>
-          
-          </div>
         </div>
-      </header>
+        
+        <!-- Header Actions -->
+        <div class="flex items-center space-x-2 sm:space-x-3 lg:space-x-4">
+            <!-- Notifications (hidden on small mobile) -->
+            <button class="hidden sm:inline-flex p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-3.403-3.403A6.5 6.5 0 1117 6.5z"></path>
+                </svg>
+            </button>
+            
+            <!-- User Menu -->
+            <div class="relative">
+                <button 
+                    onclick="toggleUserMenu()" 
+                    class="flex items-center p-1.5 sm:p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                    aria-label="User menu">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <span class="hidden sm:inline ml-2 text-sm font-medium text-gray-700">Admin</span>
+                    <svg class="hidden sm:inline w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                
+                <!-- User Dropdown Menu -->
+                <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                    <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        Profile
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Settings
+                    </a>
+                    <hr class="my-1">
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                            </svg>
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Mobile Navigation Dropdown (positioned below navbar, visible only ≤640px) -->
+<div id="mobile-sidebar-dropdown" class="hidden sm:hidden fixed top-14 left-0 right-0 z-40 bg-white border-b border-gray-200 shadow-lg max-h-[calc(100vh-3.5rem)] overflow-y-auto">
+    <!-- Mobile Logo Section -->
+    <div class="p-4 border-b border-gray-100">
+        <div class="text-center p-3 text-white bg-gradient-to-br from-blue-800 to-blue-400 rounded-lg">
+            <p class="text-lg font-bold tracking-wider">Equipment</p>
+            <h4 class="text-xs opacity-90">Rental Management</h4>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav class="p-3" role="navigation" aria-label="Mobile navigation">
+        <ul class="space-y-1">
+            <li>
+                <a href="{% url 'info' %}" 
+                   class="flex items-center px-4 py-3 text-base font-medium rounded-lg transition-colors duration-200
+                   {% if request.path == '/' %}
+                       bg-blue-100 text-blue-700 border-l-4 border-blue-500
+                   {% else %}
+                       text-gray-700 hover:bg-gray-100 hover:text-blue-700
+                   {% endif %}">
+                    <span class="w-6 h-6 mr-3 text-lg">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="/equipments/list" 
+                   class="flex items-center px-4 py-3 text-base font-medium rounded-lg transition-colors duration-200
+                   {% if request.path|slice:':11' == '/equipments' %}
+                       bg-blue-100 text-blue-700 border-l-4 border-blue-500
+                   {% else %}
+                       text-gray-700 hover:bg-gray-100 hover:text-blue-700
+                   {% endif %}">
+                    <span class="w-6 h-6 mr-3 text-lg">📦</span>
+                    <span>Equipment</span>
+                </a>
+            </li>
+            <li>
+                <a href="/customers/list/" 
+                   class="flex items-center px-4 py-3 text-base font-medium rounded-lg transition-colors duration-200
+                   {% if request.path|slice:':10' == '/customers' %}
+                       bg-blue-100 text-blue-700 border-l-4 border-blue-500
+                   {% else %}
+                       text-gray-700 hover:bg-gray-100 hover:text-blue-700
+                   {% endif %}">
+                    <span class="w-6 h-6 mr-3 text-lg">👥</span>
+                    <span>Customers</span>
+                </a>
+            </li>
+            <li>
+                <a href="/booking/list" 
+                   class="flex items-center px-4 py-3 text-base font-medium rounded-lg transition-colors duration-200
+                   {% if request.path|slice:':8' == '/booking' %}
+                       bg-blue-100 text-blue-700 border-l-4 border-blue-500
+                   {% else %}
+                       text-gray-700 hover:bg-gray-100 hover:text-blue-700
+                   {% endif %}">
+                    <span class="w-6 h-6 mr-3 text-lg">📅</span>
+                    <span>Rentals</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'reports:dashboard' %}" 
+                   class="flex items-center px-4 py-3 text-base font-medium rounded-lg transition-colors duration-200
+                   {% if '/reports/' in request.path %}
+                       bg-blue-100 text-blue-700 border-l-4 border-blue-500
+                   {% else %}
+                       text-gray-700 hover:bg-gray-100 hover:text-blue-700
+                   {% endif %}">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span>Reports</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Mobile Logout Section -->
+    <div class="p-3 border-t border-gray-100 bg-gray-50">
+        <form method="post" action="{% url 'logout' %}" class="w-full">
+            {% csrf_token %}
+            <button type="submit" class="w-full flex items-center justify-center px-4 py-3 text-base font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors duration-200 border border-red-200 hover:border-red-300">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                Logout
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Desktop/Tablet Sidebar (hidden on screens ≤640px) -->
+<aside id="logo-sidebar" class="hidden sm:block fixed top-0 left-0 z-30 w-64 h-screen bg-white border-r border-gray-200 shadow-lg">
+    <div class="h-full px-3 py-4 overflow-y-auto relative">
+        <!-- Desktop Logo Section -->
+        <div class="mb-6">
+            <div class="text-center p-4 text-white bg-gradient-to-br from-blue-800 to-blue-400 rounded-lg shadow-lg">
+                <p class="text-xl font-bold tracking-wider">Equipment</p>
+                <h4 class="text-xs opacity-90">Rental Management</h4>
+            </div>
+        </div>
+
+        <!-- Desktop Navigation Menu -->
+        <nav role="navigation" aria-label="Main navigation">
+            <ul class="space-y-2 font-medium {% if request.path|slice:':25' == '/booking/mark_as_returned' %}cursor-none pointer-events-none{% endif %}">
+                <li>
+                    <a href="{% url 'info' %}" 
+                       class="flex items-center p-3 rounded-lg transition-all duration-200
+                       {% if request.path == '/' %}
+                           bg-blue-100 text-blue-700 border-r-4 border-blue-500 shadow-sm
+                       {% else %}
+                           text-gray-700 hover:bg-blue-50 hover:text-blue-700
+                       {% endif %}">
+                        <div class="shrink-0 w-6 h-6 mr-3 text-lg">📊</div>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/equipments/list" 
+                       class="flex items-center p-3 rounded-lg transition-all duration-200
+                       {% if request.path|slice:':11' == '/equipments' %}
+                           bg-blue-100 text-blue-700 border-r-4 border-blue-500 shadow-sm
+                       {% else %}
+                           text-gray-700 hover:bg-blue-50 hover:text-blue-700
+                       {% endif %}">
+                        <div class="shrink-0 w-6 h-6 mr-3 text-lg">📦</div>
+                        <span>Equipment</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/customers/list/" 
+                       class="flex items-center p-3 rounded-lg transition-all duration-200
+                       {% if request.path|slice:':10' == '/customers' %}
+                           bg-blue-100 text-blue-700 border-r-4 border-blue-500 shadow-sm
+                       {% else %}
+                           text-gray-700 hover:bg-blue-50 hover:text-blue-700
+                       {% endif %}">
+                        <div class="shrink-0 w-6 h-6 mr-3 text-lg">👥</div>
+                        <span>Customers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/booking/list" 
+                       class="flex items-center p-3 rounded-lg transition-all duration-200
+                       {% if request.path|slice:':8' == '/booking' %}
+                           bg-blue-100 text-blue-700 border-r-4 border-blue-500 shadow-sm
+                       {% else %}
+                           text-gray-700 hover:bg-blue-50 hover:text-blue-700
+                       {% endif %}">
+                        <div class="shrink-0 w-6 h-6 mr-3 text-lg">📅</div>
+                        <span>Rentals</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'reports:dashboard' %}" 
+                       class="flex items-center p-3 rounded-lg transition-all duration-200
+                       {% if '/reports/' in request.path %}
+                           bg-blue-100 text-blue-700 border-r-4 border-blue-500 shadow-sm
+                       {% else %}
+                           text-gray-700 hover:bg-blue-50 hover:text-blue-700
+                       {% endif %}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <span class="font-medium">Reports</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Desktop Logout Section -->
+        <div class="bg-gray-50 border border-gray-200 shadow-sm p-3 rounded-lg absolute bottom-4 left-4 right-4">
+            <form method="post" action="{% url 'logout' %}" class="w-full">
+                {% csrf_token %}
+                <button type="submit" class="w-full flex items-center justify-center p-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors duration-200 border border-red-200 hover:border-red-300">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</aside>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    initializeMobileNavigation();
+    initializeUserMenu();
+});
+
+function initializeMobileNavigation() {
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileDropdown = document.getElementById('mobile-sidebar-dropdown');
+    
+    if (mobileMenuBtn && mobileDropdown) {
+        // Toggle mobile dropdown
+        mobileMenuBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleMobileDropdown();
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 640) {
+                const isClickInsideDropdown = mobileDropdown.contains(event.target);
+                const isClickOnButton = mobileMenuBtn.contains(event.target);
+                const isDropdownOpen = !mobileDropdown.classList.contains('hidden');
+                
+                if (isDropdownOpen && !isClickInsideDropdown && !isClickOnButton) {
+                    closeMobileDropdown();
+                }
+            }
+        });
+
+        // Close dropdown on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && window.innerWidth <= 640) {
+                closeMobileDropdown();
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 640) {
+                closeMobileDropdown();
+            }
+        });
+
+        // Auto-close dropdown when navigating
+        const mobileLinks = mobileDropdown.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                setTimeout(() => {
+                    closeMobileDropdown();
+                }, 150);
+            });
+        });
+    }
+}
+
+function initializeUserMenu() {
+    // Close user dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const userDropdown = document.getElementById('user-dropdown');
+        const userButton = event.target.closest('[onclick="toggleUserMenu()"]');
+        
+        if (userDropdown && !userButton && !userDropdown.contains(event.target)) {
+            userDropdown.classList.add('hidden');
+        }
+    });
+}
+
+function toggleMobileDropdown() {
+    const mobileDropdown = document.getElementById('mobile-sidebar-dropdown');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    
+    if (mobileDropdown && mobileMenuBtn) {
+        const isOpen = !mobileDropdown.classList.contains('hidden');
+        
+        if (isOpen) {
+            closeMobileDropdown();
+        } else {
+            openMobileDropdown();
+        }
+    }
+}
+
+function openMobileDropdown() {
+    const mobileDropdown = document.getElementById('mobile-sidebar-dropdown');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    
+    if (mobileDropdown && mobileMenuBtn) {
+        mobileDropdown.classList.remove('hidden');
+        mobileMenuBtn.setAttribute('aria-expanded', 'true');
+        
+        // Animate dropdown entrance
+        mobileDropdown.style.opacity = '0';
+        mobileDropdown.style.transform = 'translateY(-8px)';
+        
+        requestAnimationFrame(() => {
+            mobileDropdown.style.transition = 'opacity 250ms ease-out, transform 250ms ease-out';
+            mobileDropdown.style.opacity = '1';
+            mobileDropdown.style.transform = 'translateY(0)';
+        });
+
+        // Prevent background scroll on mobile
+        if (window.innerWidth <= 640) {
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Change hamburger to X icon
+        const hamburgerIcon = mobileMenuBtn.querySelector('svg');
+        if (hamburgerIcon) {
+            hamburgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+        }
+    }
+}
+
+function closeMobileDropdown() {
+    const mobileDropdown = document.getElementById('mobile-sidebar-dropdown');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    
+    if (mobileDropdown && mobileMenuBtn) {
+        mobileDropdown.style.opacity = '0';
+        mobileDropdown.style.transform = 'translateY(-8px)';
+        
+        setTimeout(() => {
+            mobileDropdown.classList.add('hidden');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            
+            // Reset styles
+            mobileDropdown.style.opacity = '';
+            mobileDropdown.style.transform = '';
+            mobileDropdown.style.transition = '';
+        }, 250);
+
+        // Restore background scroll
+        document.body.style.overflow = '';
+
+        // Change X back to hamburger icon
+        const hamburgerIcon = mobileMenuBtn.querySelector('svg');
+        if (hamburgerIcon) {
+            hamburgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+        }
+    }
+}
+
+function toggleUserMenu() {
+    const dropdown = document.getElementById('user-dropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('hidden');
+    }
+}
+
+// Expose functions globally
+window.toggleMobileDropdown = toggleMobileDropdown;
+window.toggleUserMenu = toggleUserMenu;
+</script>
+
+<style>
+/* Ensure mobile dropdown doesn't interfere with content */
+@media (max-width: 640px) {
+    #mobile-sidebar-dropdown {
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+    }
+}
+
+/* Smooth scrolling for mobile dropdown */
+#mobile-sidebar-dropdown {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for mobile dropdown */
+#mobile-sidebar-dropdown::-webkit-scrollbar {
+    width: 4px;
+}
+
+#mobile-sidebar-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#mobile-sidebar-dropdown::-webkit-scrollbar-thumb {
+    background: #e5e7eb;
+    border-radius: 2px;
+}
+
+#mobile-sidebar-dropdown::-webkit-scrollbar-thumb:hover {
+    background: #d1d5db;
+}
+
+/* Ensure proper layering */
+header {
+    position: relative;
+    z-index: 50;
+}
+
+#mobile-sidebar-dropdown {
+    z-index: 40;
+}
+</style>

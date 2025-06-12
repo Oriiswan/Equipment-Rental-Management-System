@@ -241,3 +241,57 @@
             setTimeout(animateCounters, 500);
         });
 
+  // Sidebar toggle functionality
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const isOpen = !sidebar.classList.contains('-translate-x-full');
+            
+            if (isOpen) {
+                // Close sidebar
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            } else {
+                // Open sidebar
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            }
+        }
+
+        // Close sidebar on window resize if desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 1024) {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('sidebar-overlay');
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        });
+
+        // Dropdown menu toggle
+        function show() {
+            const menu = document.getElementById('dropdownMenu');
+            if (menu) {
+                menu.classList.toggle('hidden');
+            }
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            if (window.innerWidth < 1024) {
+                const isClickInsideSidebar = sidebar.contains(event.target);
+                const isClickOnMenuButton = mobileMenuBtn.contains(event.target);
+                const isSidebarOpen = !sidebar.classList.contains('-translate-x-full');
+                
+                if (isSidebarOpen && !isClickInsideSidebar && !isClickOnMenuButton) {
+                    toggleSidebar();
+                }
+            }
+        });

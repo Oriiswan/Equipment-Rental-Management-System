@@ -1,83 +1,261 @@
-<button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar" type="button" class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
-   <span class="sr-only">Open sidebar</span>
-   <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-   <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
-   </svg>
-</button>
 
-<aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 pb-10 h-screen transition-transform shadow-lg -translate-x-full sm:translate-x-0" aria-label="Sidebar" >
-   <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 relative ">
-      <a href="https://flowbite.com/" class="">
-        <div class='text-center p-1 text-white mb-7 rounded-lgdark:hover:bg-blue-100 bg-gradient-to-br from-blue-800 to-blue-400 rounded-lg'>
-          <p class='text-xl font-bold tracking-wider '>Equipment</p>
-          <h4 class='text-[11px]'>Rental Management</h4>
+
+
+   
+
+<!-- Desktop/Tablet Sidebar (hidden on screens 640px and below) -->
+<aside id="logo-sidebar" class="hidden sm:block fixed top-0 left-0 z-40 w-64 pb-10 h-screen transition-transform shadow-lg translate-x-0" aria-label="Sidebar">
+    <div class="h-full px-3 py-4 overflow-y-auto bg-white border-r border-gray-200 relative">
+        <!-- Desktop Logo Section -->
+        <div class="mb-6">
+            <div class="text-center p-4 text-white bg-gradient-to-br from-blue-800 to-blue-400 rounded-lg shadow-lg">
+                <p class="text-xl font-bold tracking-wider">Equipment</p>
+                <h4 class="text-xs opacity-90">Rental Management</h4>
+            </div>
         </div>
-      </a>
-      <ul class="space-y-2 font-medium {% if request.path|slice:":25" == "/booking/mark_as_returned" %} 
-      cursor-none pointer-events-none
-   {% endif %} > " >
-         <li>
 
-            <a href="{% url 'info' %}" class="flex items-center p-2  rounded-lg     {% if request.path == '/' %}bg-blue-100 text-blue-700 border-r-2 border-blue-500{% else %}opacity-100{% endif %} dark:hover:bg-blue-50">
-               <div class='shrink-0 w-6 h-6'>📊</div>
-               <span class="ms-3 ">Dashboard</span>
-            </a>
-         </li>
-         <li>
-            <a href="/equipments/list" class="flex items-center p-2  rounded-lg    {% if request.path|slice:":11" == "/equipments" %} 
-      bg-blue-100 text-blue-700 border-r-2 border-blue-500 
-   {% else %} 
-      dark:hover:bg-blue-50 
-   {% endif %} ">
-               <div class='shrink-0 w-6 h-6'>📦</div>
-               <span class="ms-3">Equipment</span>
-            </a>
-         </li>
-         <li>
-            <a href="/customers/list/" class="flex items-center p-2  rounded-lg {% if request.path|slice:":10" == "/customers" %} 
-      bg-blue-100 text-blue-700 border-r-2 border-blue-500 
-   {% else %} 
-      dark:hover:bg-blue-50 
-   {% endif %}  ">
-               <div class='shrink-0 w-6 h-6'>👥</div>
-               <span class="ms-3">Customers</span>
-            </a>
-         </li>
-         <li>
-               <a href="/booking/list" class="flex items-center p-2 text-gray-900 rounded-lg {% if request.path|slice:":8" == "/booking" %} 
-      bg-blue-100 text-blue-700 border-r-2 border-blue-500 
-   {% else %} 
-      dark:hover:bg-blue-50 
-   {% endif %}  ">
-               <div class='shrink-0 w-6 h-6'>📅</div>
-               <span class="ms-3">Rentals</span>
-            </a>
-         </li>
-          <li>
-        <a href="{% url 'reports:dashboard' %}" class="flex items-center px-3 py-3  rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 {% if '/reports/' in request.path %}bg-blue-100 text-blue-700 border-r-2 border-blue-500{% endif %}">
-          <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-          </svg>
-          <span class="font-medium">Reports</span>
-        </a>
-      </li>
-         
-         
-      </ul>
-      
-      <!-- User Profile Section with Logout -->
-      <div class='bg-gray-100 border border-gray-200 shadow-xl p-2 pl-5 rounded-lg absolute bottom-0 left-4 right-4'>
-     
-        <!-- Logout Button -->
-        <form method="post" action="{% url 'logout' %}" class="w-full">
-          {% csrf_token %}
-          <button type="submit" class="w-full flex items-center justify-center p-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors duration-200 border border-red-200 hover:border-red-300">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-            </svg>
-            Logout
-          </button>
-        </form>
-      
-   </div>
+        <!-- Desktop Navigation Menu -->
+        <nav role="navigation" aria-label="Main navigation">
+            <ul class="space-y-2 font-medium {% if request.path|slice:':25' == '/booking/mark_as_returned' %}cursor-none pointer-events-none{% endif %}">
+                <li>
+                    <a href="{% url 'info' %}" 
+                       class="flex items-center p-3 rounded-lg transition-all duration-200 group
+                       {% if request.path == '/' %}
+                           bg-blue-100 text-blue-700 border-r-4 border-blue-500 shadow-sm
+                       {% else %}
+                           text-gray-700 hover:bg-blue-50 hover:text-blue-700
+                       {% endif %}">
+                        <div class="shrink-0 w-6 h-6 mr-3 text-lg">📊</div>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/equipments/list" 
+                       class="flex items-center p-3 rounded-lg transition-all duration-200 group
+                       {% if request.path|slice:':11' == '/equipments' %}
+                           bg-blue-100 text-blue-700 border-r-4 border-blue-500 shadow-sm
+                       {% else %}
+                           text-gray-700 hover:bg-blue-50 hover:text-blue-700
+                       {% endif %}">
+                        <div class="shrink-0 w-6 h-6 mr-3 text-lg">📦</div>
+                        <span>Equipment</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/customers/list/" 
+                       class="flex items-center p-3 rounded-lg transition-all duration-200 group
+                       {% if request.path|slice:':10' == '/customers' %}
+                           bg-blue-100 text-blue-700 border-r-4 border-blue-500 shadow-sm
+                       {% else %}
+                           text-gray-700 hover:bg-blue-50 hover:text-blue-700
+                       {% endif %}">
+                        <div class="shrink-0 w-6 h-6 mr-3 text-lg">👥</div>
+                        <span>Customers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/booking/list" 
+                       class="flex items-center p-3 rounded-lg transition-all duration-200 group
+                       {% if request.path|slice:':8' == '/booking' %}
+                           bg-blue-100 text-blue-700 border-r-4 border-blue-500 shadow-sm
+                       {% else %}
+                           text-gray-700 hover:bg-blue-50 hover:text-blue-700
+                       {% endif %}">
+                        <div class="shrink-0 w-6 h-6 mr-3 text-lg">📅</div>
+                        <span>Rentals</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'reports:dashboard' %}" 
+                       class="flex items-center p-3 rounded-lg transition-all duration-200 group
+                       {% if '/reports/' in request.path %}
+                           bg-blue-100 text-blue-700 border-r-4 border-blue-500 shadow-sm
+                       {% else %}
+                           text-gray-700 hover:bg-blue-50 hover:text-blue-700
+                       {% endif %}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <span class="font-medium">Reports</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Desktop Logout Section -->
+        <div class="bg-gray-50 border border-gray-200 shadow-sm p-3 rounded-lg absolute bottom-4 left-4 right-4">
+            <form method="post" action="{% url 'logout' %}" class="w-full">
+                {% csrf_token %}
+                <button type="submit" class="w-full flex items-center justify-center p-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors duration-200 border border-red-200 hover:border-red-300">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
 </aside>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    initializeMobileMenu();
+});
+
+function initializeMobileMenu() {
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileDropdown = document.getElementById('mobile-sidebar-dropdown');
+    
+    if (mobileMenuBtn && mobileDropdown) {
+        // Toggle mobile dropdown
+        mobileMenuBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleMobileDropdown();
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth < 640) {
+                const isClickInsideDropdown = mobileDropdown.contains(event.target);
+                const isClickOnButton = mobileMenuBtn.contains(event.target);
+                const isDropdownOpen = !mobileDropdown.classList.contains('hidden');
+                
+                if (isDropdownOpen && !isClickInsideDropdown && !isClickOnButton) {
+                    closeMobileDropdown();
+                }
+            }
+        });
+
+        // Close dropdown on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && window.innerWidth < 640) {
+                closeMobileDropdown();
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 640) {
+                closeMobileDropdown();
+            }
+        });
+
+        // Auto-close dropdown when navigating (for single-page feel)
+        const mobileLinks = mobileDropdown.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                // Small delay to allow navigation to start
+                setTimeout(() => {
+                    closeMobileDropdown();
+                }, 100);
+            });
+        });
+    }
+}
+
+function toggleMobileDropdown() {
+    const mobileDropdown = document.getElementById('mobile-sidebar-dropdown');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    
+    if (mobileDropdown && mobileMenuBtn) {
+        const isOpen = !mobileDropdown.classList.contains('hidden');
+        
+        if (isOpen) {
+            closeMobileDropdown();
+        } else {
+            openMobileDropdown();
+        }
+    }
+}
+
+function openMobileDropdown() {
+    const mobileDropdown = document.getElementById('mobile-sidebar-dropdown');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    
+    if (mobileDropdown && mobileMenuBtn) {
+        mobileDropdown.classList.remove('hidden');
+        mobileMenuBtn.setAttribute('aria-expanded', 'true');
+        
+        // Add animation
+        mobileDropdown.style.opacity = '0';
+        mobileDropdown.style.transform = 'translateY(-10px)';
+        
+        requestAnimationFrame(() => {
+            mobileDropdown.style.transition = 'opacity 200ms ease-out, transform 200ms ease-out';
+            mobileDropdown.style.opacity = '1';
+            mobileDropdown.style.transform = 'translateY(0)';
+        });
+
+        // Prevent body scroll on mobile when dropdown is open
+        if (window.innerWidth < 640) {
+            document.body.style.overflow = 'hidden';
+        }
+    }
+}
+
+function closeMobileDropdown() {
+    const mobileDropdown = document.getElementById('mobile-sidebar-dropdown');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    
+    if (mobileDropdown && mobileMenuBtn) {
+        mobileDropdown.style.opacity = '0';
+        mobileDropdown.style.transform = 'translateY(-10px)';
+        
+        setTimeout(() => {
+            mobileDropdown.classList.add('hidden');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            
+            // Reset styles
+            mobileDropdown.style.opacity = '';
+            mobileDropdown.style.transform = '';
+            mobileDropdown.style.transition = '';
+        }, 200);
+
+        // Restore body scroll
+        document.body.style.overflow = '';
+    }
+}
+
+// Expose functions globally for potential external use
+window.toggleMobileDropdown = toggleMobileDropdown;
+window.openMobileDropdown = openMobileDropdown;
+window.closeMobileDropdown = closeMobileDropdown;
+</script>
+
+<style>
+/* Additional responsive styles for smooth animations */
+#mobile-sidebar-dropdown {
+    max-height: calc(100vh - 5rem);
+    overflow-y: auto;
+}
+
+/* Ensure proper stacking and positioning */
+@media (max-width: 640px) {
+    #mobile-sidebar-dropdown {
+        position: fixed;
+        top: 4rem;
+        left: 0.75rem;
+        right: 0.75rem;
+        z-index: 50;
+    }
+}
+
+/* Hide scrollbar but keep functionality */
+#mobile-sidebar-dropdown::-webkit-scrollbar {
+    width: 4px;
+}
+
+#mobile-sidebar-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#mobile-sidebar-dropdown::-webkit-scrollbar-thumb {
+    background: #e5e7eb;
+    border-radius: 2px;
+}
+
+#mobile-sidebar-dropdown::-webkit-scrollbar-thumb:hover {
+    background: #d1d5db;
+}
+</style>
