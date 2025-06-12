@@ -10,24 +10,132 @@
     <link href="{% static 'css/input.css' %}" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+      @media (max-width: 2000px) {
+  body {
+    padding-left: 256px;
+  }
+  @media (max-width: 640px) {
+  body {
+    padding-left: 0px;
+  }
+}
+    </style>
 </head>
-<body class="bg-gray-50 pl-[256px]   pb-10 pt-[80px] ">
-    <header class="bg-white shadow-md fixed w-full z-50 top-0">
-        <div class="flex items-center justify-between px-3 py-3 h-20">
-          <div class="flex items-center">
-            <button class="text-gray-500 focus:outline-none lg:hidden">
-              <i class="fas fa-bars"></i>
+<body class="bg-gray-50   pb-10 pt-[80px] ">
+   <header class="bg-white shadow-md fixed w-full z-50 top-0">
+    <div class="flex items-center justify-between px-3 py-3 h-20">
+        <div class="flex items-center">
+            <!-- Updated Mobile Hamburger Button (visible only on screens ≤640px) -->
+            <button 
+                id="mobile-menu-btn" 
+                type="button" 
+                class="text-gray-500 hover:text-gray-700 focus:outline-none sm:hidden mr-3 p-1 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+                aria-controls="mobile-sidebar-dropdown"
+                aria-expanded="false"
+                aria-label="Open navigation menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
             </button>
-            <h2 class="text-2xl font-semibold text-gray-800 ml-4">{% block 'nav' %}{% endblock 'nav' %}</h2>
-          </div>
-          <div class="flex items-center">
-            <div class="relative">
-              
-            </div>
-          
-          </div>
+            <h2 class="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-800 ml-1 sm:ml-4 truncate">{% block 'nav' %}{% endblock 'nav' %}</h2>
         </div>
-      </header>
+      
+    </div>
+</header>
+
+<!-- Mobile Navigation Dropdown (positioned below navbar, visible only ≤640px) -->
+<div id="mobile-sidebar-dropdown" class="hidden sm:hidden fixed top-20 left-0 right-0 z-40 bg-white border-b border-gray-200 shadow-lg max-h-[calc(100vh-5rem)] overflow-y-auto">
+    <!-- Mobile Logo Section -->
+    <div class="p-4 border-b border-gray-100">
+        <div class="text-center p-3 text-white bg-gradient-to-br from-blue-800 to-blue-400 rounded-lg">
+            <p class="text-lg font-bold tracking-wider">Equipment</p>
+            <h4 class="text-xs opacity-90">Rental Management</h4>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav class="p-3" role="navigation" aria-label="Mobile navigation">
+        <ul class="space-y-1">
+            <li>
+                <a href="{% url 'info' %}" 
+                   class="flex items-center px-4 py-3 text-base font-medium rounded-lg transition-colors duration-200
+                   {% if request.path == '/' %}
+                       bg-blue-100 text-blue-700 border-l-4 border-blue-500
+                   {% else %}
+                       text-gray-700 hover:bg-gray-100 hover:text-blue-700
+                   {% endif %}">
+                    <span class="w-6 h-6 mr-3 text-lg">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="/equipments/list" 
+                   class="flex items-center px-4 py-3 text-base font-medium rounded-lg transition-colors duration-200
+                   {% if request.path|slice:':11' == '/equipments' %}
+                       bg-blue-100 text-blue-700 border-l-4 border-blue-500
+                   {% else %}
+                       text-gray-700 hover:bg-gray-100 hover:text-blue-700
+                   {% endif %}">
+                    <span class="w-6 h-6 mr-3 text-lg">📦</span>
+                    <span>Equipment</span>
+                </a>
+            </li>
+            <li>
+                <a href="/customers/list/" 
+                   class="flex items-center px-4 py-3 text-base font-medium rounded-lg transition-colors duration-200
+                   {% if request.path|slice:':10' == '/customers' %}
+                       bg-blue-100 text-blue-700 border-l-4 border-blue-500
+                   {% else %}
+                       text-gray-700 hover:bg-gray-100 hover:text-blue-700
+                   {% endif %}">
+                    <span class="w-6 h-6 mr-3 text-lg">👥</span>
+                    <span>Customers</span>
+                </a>
+            </li>
+            <li>
+                <a href="/booking/list" 
+                   class="flex items-center px-4 py-3 text-base font-medium rounded-lg transition-colors duration-200
+                   {% if request.path|slice:':8' == '/booking' %}
+                       bg-blue-100 text-blue-700 border-l-4 border-blue-500
+                   {% else %}
+                       text-gray-700 hover:bg-gray-100 hover:text-blue-700
+                   {% endif %}">
+                    <span class="w-6 h-6 mr-3 text-lg">📅</span>
+                    <span>Rentals</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'reports:dashboard' %}" 
+                   class="flex items-center px-4 py-3 text-base font-medium rounded-lg transition-colors duration-200
+                   {% if '/reports/' in request.path %}
+                       bg-blue-100 text-blue-700 border-l-4 border-blue-500
+                   {% else %}
+                       text-gray-700 hover:bg-gray-100 hover:text-blue-700
+                   {% endif %}">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span>Reports</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Mobile Logout Section -->
+    <div class="p-3 border-t border-gray-100 bg-gray-50">
+        <form method="post" action="{% url 'logout' %}" class="w-full">
+            {% csrf_token %}
+            <button type="submit" class="w-full flex items-center justify-center px-4 py-3 text-base font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors duration-200 border border-red-200 hover:border-red-300">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                Logout
+            </button>
+        </form>
+    </div>
+</div>
+
    
     {%include 'includes/sidebar.html'%}
     {% if messages %}
@@ -84,6 +192,159 @@
 
   <script>
     // Auto-hide toasts after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+    initializeMobileNavigation();
+    initializeUserMenu();
+});
+
+function initializeMobileNavigation() {
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileDropdown = document.getElementById('mobile-sidebar-dropdown');
+    
+    if (mobileMenuBtn && mobileDropdown) {
+        // Toggle mobile dropdown
+        mobileMenuBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleMobileDropdown();
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 640) {
+                const isClickInsideDropdown = mobileDropdown.contains(event.target);
+                const isClickOnButton = mobileMenuBtn.contains(event.target);
+                const isDropdownOpen = !mobileDropdown.classList.contains('hidden');
+                
+                if (isDropdownOpen && !isClickInsideDropdown && !isClickOnButton) {
+                    closeMobileDropdown();
+                }
+            }
+        });
+
+        // Close dropdown on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && window.innerWidth <= 640) {
+                closeMobileDropdown();
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 640) {
+                closeMobileDropdown();
+            }
+        });
+
+        // Auto-close dropdown when navigating
+        const mobileLinks = mobileDropdown.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                setTimeout(() => {
+                    closeMobileDropdown();
+                }, 150);
+            });
+        });
+    }
+}
+
+function initializeUserMenu() {
+    // Close user dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const userDropdown = document.getElementById('user-dropdown');
+        const userButton = event.target.closest('[onclick="toggleUserMenu()"]');
+        
+        if (userDropdown && !userButton && !userDropdown.contains(event.target)) {
+            userDropdown.classList.add('hidden');
+        }
+    });
+}
+
+function toggleMobileDropdown() {
+    const mobileDropdown = document.getElementById('mobile-sidebar-dropdown');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    
+    if (mobileDropdown && mobileMenuBtn) {
+        const isOpen = !mobileDropdown.classList.contains('hidden');
+        
+        if (isOpen) {
+            closeMobileDropdown();
+        } else {
+            openMobileDropdown();
+        }
+    }
+}
+
+function openMobileDropdown() {
+    const mobileDropdown = document.getElementById('mobile-sidebar-dropdown');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    
+    if (mobileDropdown && mobileMenuBtn) {
+        mobileDropdown.classList.remove('hidden');
+        mobileMenuBtn.setAttribute('aria-expanded', 'true');
+        
+        // Animate dropdown entrance
+        mobileDropdown.style.opacity = '0';
+        mobileDropdown.style.transform = 'translateY(-8px)';
+        
+        requestAnimationFrame(() => {
+            mobileDropdown.style.transition = 'opacity 250ms ease-out, transform 250ms ease-out';
+            mobileDropdown.style.opacity = '1';
+            mobileDropdown.style.transform = 'translateY(0)';
+        });
+
+        // Prevent background scroll on mobile
+        if (window.innerWidth <= 640) {
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Change hamburger to X icon
+        const hamburgerIcon = mobileMenuBtn.querySelector('svg');
+        if (hamburgerIcon) {
+            hamburgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+        }
+    }
+}
+
+function closeMobileDropdown() {
+    const mobileDropdown = document.getElementById('mobile-sidebar-dropdown');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    
+    if (mobileDropdown && mobileMenuBtn) {
+        mobileDropdown.style.opacity = '0';
+        mobileDropdown.style.transform = 'translateY(-8px)';
+        
+        setTimeout(() => {
+            mobileDropdown.classList.add('hidden');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            
+            // Reset styles
+            mobileDropdown.style.opacity = '';
+            mobileDropdown.style.transform = '';
+            mobileDropdown.style.transition = '';
+        }, 250);
+
+        // Restore background scroll
+        document.body.style.overflow = '';
+
+        // Change X back to hamburger icon
+        const hamburgerIcon = mobileMenuBtn.querySelector('svg');
+        if (hamburgerIcon) {
+            hamburgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+        }
+    }
+}
+
+function toggleUserMenu() {
+    const dropdown = document.getElementById('user-dropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('hidden');
+    }
+}
+
+// Expose functions globally
+window.toggleMobileDropdown = toggleMobileDropdown;
+window.toggleUserMenu = toggleUserMenu;
     document.addEventListener('DOMContentLoaded', function() {
       const toasts = document.querySelectorAll('.toast-message');
       toasts.forEach(function(toast) {

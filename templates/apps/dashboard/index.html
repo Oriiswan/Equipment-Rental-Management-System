@@ -1,13 +1,185 @@
 {% extends "base.html" %}
 {% block 'nav' %}Dashboard{% endblock 'nav' %}
 {% block 'content' %}
+<style>
+  
+    @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes bounceIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -468px 0;
+    }
+    100% {
+      background-position: 468px 0;
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes progressFill {
+    from {
+      width: 0%;
+    }
+    to {
+      width: var(--progress-width);
+    }
+  }
+
+  @keyframes countUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes glow {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(59, 130, 246, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.4);
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes typewriter {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  /* Animation Classes */
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  .slide-in-right {
+    animation: slideInRight 0.9s ease-out forwards;
+  }
+
+  .slide-in-left {
+    animation: slideInLeft 0.9s ease-out forwards;
+  }
+
+  .scale-in {
+    animation: scaleIn 0.7s ease-out forwards;
+  }
+
+  .bounce-in {
+    animation: bounceIn 0.8s ease-out forwards;
+  }
+
+  .float-animation {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .glow-animation {
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  .slide-down {
+    animation: slideDown 0.5s ease-out forwards;
+  }
+</style>
 <div class="p-6 mx-auto">
 
   <!-- Stats Cards -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <!-- Ongoing Rentals -->
-    <div class="bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+    <div class="bg-gradient-to-br scale-in from-blue-600 to-blue-500 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
       <div class="flex justify-between items-start mb-4">
         <div class="bg-white/20 p-3 rounded-lg">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -33,7 +205,7 @@
     </div>
 
     <!-- Upcoming Bookings -->
-    <div class="bg-gradient-to-br from-green-600 to-green-500 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+    <div class="bg-gradient-to-br scale-in from-green-600 to-green-500 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
       <div class="flex justify-between items-start mb-4">
         <div class="bg-white/20 p-3 rounded-lg">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,7 +226,7 @@
     </div>
 
     <!-- Monthly Revenue -->
-    <div class="bg-gradient-to-br from-purple-600 to-purple-500 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+    <div class="bg-gradient-to-br scale-in from-purple-600 to-purple-500 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
       <div class="flex justify-between items-start mb-4">
         <div class="bg-white/20 p-3 rounded-lg">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,7 +258,7 @@
     </div>
 
     <!-- Overdue Returns -->
-    <div class="bg-gradient-to-br from-red-600 to-red-500 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+    <div class="bg-gradient-to-br scale-in from-red-600 to-red-500 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
       <div class="flex justify-between items-start mb-4">
         <div class="bg-white/20 p-3 rounded-lg">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,7 +283,7 @@
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     
     <!-- Recent Activity -->
-    <div class="lg:col-span-1">
+    <div class="lg:col-span-1 slide-in-left" >
       <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div class="p-6 border-b border-gray-100">
           <div class="flex items-center justify-between">
@@ -212,7 +384,7 @@
     </div>
 
     <!-- Advanced Equipment Analytics -->
-    <div class="lg:col-span-2">
+    <div class="lg:col-span-2 slide-in-right">
       <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         
         <!-- Analytics Header -->
