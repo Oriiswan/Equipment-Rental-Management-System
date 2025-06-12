@@ -13,8 +13,40 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
+def update_rental_statuses():
+    """Update all rental statuses based on current date"""
+    today = date.today()
+    rentals_to_update = rental.objects.exclude(status='returned').exclude(status='cancelled')
+    updated_count = 0
+    
+    for rental_obj in rentals_to_update:
+        old_status = rental_obj.status
+        new_status = old_status
+        
+        # Determine new status based on dates
+        if rental_obj.return_date:
+            new_status = 'returned'
+        elif today < rental_obj.rental_date:
+            new_status = 'pending'
+        elif rental_obj.rental_date <= today <= rental_obj.due_date:
+            new_status = 'active'
+        elif today > rental_obj.due_date:
+            new_status = 'overdue'
+        
+        # Update if status changed
+        if old_status != new_status:
+            rental_obj.status = new_status
+            rental_obj.save(update_fields=['status'])
+            updated_count += 1
+    
+    return updated_count
+@login_required
 @login_required
 def booking_list(request):
+    # Update statuses before displaying list
+    update_rental_statuses()
+    
+    # Rest of your existing booking_list code remains the same
     records = rental.objects.all()
     today = date.today()
     
@@ -22,7 +54,7 @@ def booking_list(request):
     search = request.POST.get('search') if request.method == 'POST' else request.GET.get('search', '')
     
     # Filter rentals that are not returned
-    active_rentals = records.exclude(status='Returned')
+    active_rentals = records.exclude(status='returned')
     
     # Apply search filter if search term exists
     if search:
@@ -35,7 +67,7 @@ def booking_list(request):
     else:
         rentals_filtered = active_rentals
     
-  
+    # Rest of your existing code...
     items_per_page = 10  
     paginator = Paginator(rentals_filtered, items_per_page)
     
@@ -46,17 +78,17 @@ def booking_list(request):
         rentals_page = paginator.page(1)
     except EmptyPage:
         rentals_page = paginator.page(paginator.num_pages)
-    
 
-    total = sum(item.revenue or Decimal('0.00') for item in records)
+    total = sum(item.revenue or Decimal('0.00') for item in records if item.revenue)
     
     data = {
         'rentals': rentals_page,  
         'equipments': Equipments.objects.all(),
         'customers': Customers.objects.all(),
-        'overdue_count': rental.objects.filter(status='Overdue').count(),
-        'returned_count': rental.objects.filter(status='Returned').count(),
-        'active_count': rental.objects.filter(status='Active').count(),
+        'overdue_count': rental.objects.filter(status='overdue').count(),
+        'returned_count': rental.objects.filter(status='returned').count(),
+        'active_count': rental.objects.filter(status='active').count(),
+        'pending_count': rental.objects.filter(status='pending').count(),
         'total': total,
         'search': search,
         'paginator': paginator,
@@ -64,7 +96,6 @@ def booking_list(request):
     }
     
     return render(request, 'apps/booking/list.html', data)
-@login_required
 def booking_list_newest(request):
     records = rental.objects.all().order_by('-rental_date')
     if request.method == 'POST':
