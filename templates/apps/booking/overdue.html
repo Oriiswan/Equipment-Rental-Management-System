@@ -96,7 +96,15 @@
 
   <div class='px-[30px] py-[20px] shadow-lg border pb-24 border-gray-100 rounded-xl mt-10 bg-white'>
    
-    <div class='text-2xl mb-5 font-semibold'>Active Rentals</div>
+      <div class="mb-8">
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Booking Overview</h1>
+        <p class="text-gray-600 mt-1">Monitor active, pending, and completed rentals</p>
+      </div>
+     
+    </div>
+  </div>
     <!-- Search Bar -->
 <div class="mb-6 mt-4">
   <form  method="POST" class="flex items-center gap-2" enctype="multipart/form-data">
@@ -334,9 +342,21 @@
                     </div>  
                 </td>
                 <td class="py-4">
-                    <!-- Modal toggle -->
-                    <a  href="/booking/mark_as_returned_overdue/{{rental.rental_id}}"  data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md {% if rental.status == 'Active' %} bg-green-500 {% elif rental.status == 'Overdue' %} bg-red-600 {% else %} bg-gray-500 pointer-events-none cursor-not-allowed {% endif %} mr-1" >Return</a>
-                     <a href="/booking/edit/{{rental.rental_id}}"  data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-4 text-white rounded-md bg-blue-500">Edit</a>
+                    <div class="flex gap-1">
+                    {% if rental.status == 'Pending' %}
+                        <a href="/booking/delete/{{rental.rental_id}}" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md bg-red-500">Delete</a>
+                    {% elif rental.status == 'Pickup' %}
+                        <a href="/booking/mark_as_active/{{rental.rental_id}}" class="font-medium p-1 px-2 text-white rounded-md bg-blue-600 hover:bg-blue-700 transition-colors">Pick Up</a>
+                    {% elif rental.status == 'Cancelled' %}
+                    {% else %}
+                        <a href="/booking/mark_as_returned/{{rental.rental_id}}" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md {% if rental.status == 'Active' %} bg-green-500 {% elif rental.status == 'Overdue' %} bg-red-600 {% else %} bg-gray-500 pointer-events-none cursor-not-allowed {% endif %}">Return</a>
+                    {% endif %}
+                    
+                    {% if rental.status == 'Cancelled' %}
+                    {% else %}
+                    <a href="/booking/edit/{{rental.rental_id}}" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-4 text-white rounded-md bg-blue-500">Edit</a>
+                    </div>
+                    {% endif %}
                 </td>
             </tr>
            {% endif %}

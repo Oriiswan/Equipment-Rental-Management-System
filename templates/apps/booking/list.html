@@ -96,7 +96,15 @@
 
   <div class='px-[30px] py-[20px] shadow-lg border pb-6 border-gray-100 rounded-xl mt-10 bg-white'>
 
-    <div class='text-2xl mb-5 font-semibold'>Active Rentals</div>
+      <div class="mb-8">
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Booking Overview</h1>
+        <p class="text-gray-600 mt-1">Monitor active, pending, and completed rentals</p>
+      </div>
+     
+    </div>
+  </div>
     
     <!-- Search Bar -->
     <div class="mb-6 mt-4">
@@ -351,7 +359,7 @@
                     </div>  
                 </td>
                 <td class=" py-4">
-                    <div class="px-4 py-1 {% if rental.status == 'Active' %}bg-green-100 text-green-600 {% elif rental.status == 'Overdue' %} bg-red-100 text-red-600  {% else%} bg-orange-100 text-orange-600  {% endif %}   rounded-full text-center font-semibold">
+                    <div class="px-4 py-1 {% if rental.status == 'Active' %}bg-green-100 text-green-600 {% elif rental.status == 'Overdue' %} bg-red-100 text-red-600  {% elif rental.status == 'Cancelled' %} bg-gray-100 text-gray-400 {% elif rental.status == 'Pickup' %}  bg-sky-100 text-blue-600 {% else%} bg-orange-100 text-orange-600  {% endif %}   rounded-full text-center font-semibold">
                         {{rental.status}}
                     </div>
                 </td>
@@ -383,15 +391,21 @@
                 </td>
                 <td class="py-4">
                     <!-- Modal toggle -->
-                    
+                    <div class="flex gap-1">
                     {% if rental.status == 'Pending' %}
-                    <a href="/booking/delete/{{rental.rental_id}}" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md bg-red-500 mr-1">Delete</a>
+                        <a href="/booking/delete/{{rental.rental_id}}" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md bg-red-500">Delete</a>
+                    {% elif rental.status == 'Pickup' %}
+                        <a href="/booking/mark_as_active/{{rental.rental_id}}" class="font-medium p-1 px-2 text-white rounded-md bg-blue-600 hover:bg-blue-700 transition-colors">Pick Up</a>
+                    {% elif rental.status == 'Cancelled' %}
                     {% else %}
-                    <a  href="/booking/mark_as_returned/{{rental.rental_id}}"  data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md {% if rental.status == 'Active' %} bg-green-500 {% elif rental.status == 'Overdue' %} bg-red-600 {% else %} bg-gray-500 pointer-events-none cursor-not-allowed {% endif %} mr-1" >Return</a>
+                        <a href="/booking/mark_as_returned/{{rental.rental_id}}" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-2 text-white rounded-md {% if rental.status == 'Active' %} bg-green-500 {% elif rental.status == 'Overdue' %} bg-red-600 {% else %} bg-gray-500 pointer-events-none cursor-not-allowed {% endif %}">Return</a>
                     {% endif %}
                     
-                    
-                      <a href="/booking/edit/{{rental.rental_id}}"  data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-4 text-white rounded-md bg-blue-500">Edit</a>
+                    {% if rental.status == 'Cancelled' %}
+                    {% else %}
+                    <a href="/booking/edit/{{rental.rental_id}}" data-modal-target="editUserModal" data-modal-show="editUserModal" class="font-medium p-1 px-4 text-white rounded-md bg-blue-500">Edit</a>
+                    </div>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
@@ -430,26 +444,6 @@
                                 {{ num }}
                             </span>
                         {% elif num > rentals.number|add:'-3' and num < rentals.number|add:'3' %}
-                            <a href="?{% if search %}search={{ search }}&{% endif %}page={{ num }}" 
-                               class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                {{ num }}
-                            </a>
-                        {% elif num == 1 %}
-                            <a href="?{% if search %}search={{ search }}&{% endif %}page=1" 
-                               class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                1
-                            </a>
-                            {% if rentals.number > 4 %}
-                                <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300">
-                                    ...
-                                </span>
-                            {% endif %}
-                        {% elif num == rentals.paginator.num_pages %}
-                            {% if rentals.number < rentals.paginator.num_pages|add:'-3' %}
-                                <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300">
-                                    ...
-                                </span>
-                            {% endif %}
                             <a href="?{% if search %}search={{ search }}&{% endif %}page={{ rentals.paginator.num_pages }}" 
                                class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 {{ rentals.paginator.num_pages }}
@@ -526,5 +520,32 @@
     {% endif %}
    
 </div>
+
+<script>
+function show() {
+    const dropdown = document.getElementById('dropdownMenu');
+    const chevron = document.getElementById('chevron');
+    
+    if (dropdown.classList.contains('hidden')) {
+        dropdown.classList.remove('hidden');
+        chevron.style.transform = 'rotate(180deg)';
+    } else {
+        dropdown.classList.add('hidden');
+        chevron.style.transform = 'rotate(0deg)';
+    }
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const dropdown = document.getElementById('dropdownMenu');
+    const button = document.getElementById('dropdownButton');
+    const chevron = document.getElementById('chevron');
+    
+    if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.classList.add('hidden');
+        chevron.style.transform = 'rotate(0deg)';
+    }
+});
+</script>
 
 {% endblock 'content' %}

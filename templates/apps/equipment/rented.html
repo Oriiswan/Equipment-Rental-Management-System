@@ -3,6 +3,7 @@
 {% block 'content' %}
 {% load static %}
 <div class='p-3'>
+  
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
      
         <div class="bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow duration-200">
@@ -75,7 +76,7 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-sm font-medium opacity-90">Under Maintenance</p>
-                    <h2 class="text-4xl font-bold mt-2">0</h2>
+                    <h2 class="text-4xl font-bold mt-2">{{maintenance_count|default:'0'}}</h2>
                     <p class="text-xs opacity-80 mt-2">All Operational</p>
                 </div>
                 <div class="bg-white/20 p-3 rounded-full">
