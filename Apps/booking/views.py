@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
+#
 def update_rental_statuses():
     """Update all rental statuses based on current date"""
     today = date.today()
