@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path('list/', views.booking_list, name='booking_list'),
+    path('mark_as_active/<int:rental_id>', views.pickup_confirmation, name='pickup'),
     path('list/today', views.booking_list_today),
     path('list/newest', views.booking_list_newest ),
     path('list/oldest', views.booking_list_oldest),

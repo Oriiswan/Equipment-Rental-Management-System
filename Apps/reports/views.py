@@ -161,7 +161,7 @@ def calculate_ytd_revenue(year):
 def calculate_average_rental_value():
  
     total_revenue = calculate_total_revenue()
-    total_rentals = rental.objects.count()
+    total_rentals = rental.objects.filter(status='Returned').count()
     
     if total_rentals > 0:
         return total_revenue / total_rentals

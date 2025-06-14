@@ -21,6 +21,7 @@ class rental(models.Model):
         
         related_name='equipment_rentals'
     )
+    is_pickup = models.BooleanField(default=False)
     rental_date = models.DateField(
         help_text="Date when the equipment rental starts"
     )
@@ -157,20 +158,4 @@ class rental(models.Model):
     def save(self, *args, **kwargs):
         self.calculated_amount = self.total_amount  # Uses your property
         super().save(*args, **kwargs)
-    def update_status(self):
-        today = timezone.now().date()
-        if self.status != 'Returned':
-            if today >= self.rental_date and today <= self.due_date:
-               self.status = 'Active'
-               notify_today_booking(self)
-            elif today > self.due_date:
-                self.status = 'Overdue'
-                notify_overdue_booking(self)
-            else:
-                self.status = 'Pending'
-                notify_reserved_booking(self)
-        if self.due_date == date.today():
-            notify_duedate_booking(self)
-    def save(self, *args, **kwargs):
-        self.update_status()
-        super().save(*args, **kwargs)
+    

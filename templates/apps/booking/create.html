@@ -34,11 +34,9 @@
           <option value="">Select Equipment</option>
           <!-- Add dynamic equipment options here -->
           {% for equipment in equipments %}
-          {% if equipment.available_quantity == 0  %}
-          <option class='text-gray-400 cursor-not-allowed  hover:bg-white' name='equipment' value="{{equipment.equipment_id}}" disabled>{{equipment.name}} is out of stock </option>
-          {% else %}
+          
           <option name='equipment' value="{{equipment.equipment_id}}" >{{equipment.name}} </option>
-          {% endif %}
+          
           
           {% endfor %}
           
