@@ -105,7 +105,6 @@
             </a>
         </div>
     </div>
-    </div>
 
     <!-- Equipment Inventory Section -->
   <div class="bg-white rounded-xl shadow-sm border border-gray-200">
@@ -114,29 +113,37 @@
     <div class="px-6 py-5 border-b border-gray-200">
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 class="text-xl font-semibold text-gray-900">Equipment Inventory</h2>
-          <p class="text-sm text-gray-600 mt-1">Manage your equipment collection</p>
+          <h2 class="text-xl font-semibold text-gray-900">Rented Equipment</h2>
+          <p class="text-sm text-gray-600 mt-1">
+            {% if search_query %}
+              {{ total_results }} result{{ total_results|pluralize }} for "{{ search_query }}"
+            {% else %}
+              Equipment currently on rental
+            {% endif %}
+          </p>
         </div>
         
-        <!-- Search and Filter Section -->
+        <!-- Search Form -->
         <div class="flex flex-col sm:flex-row gap-3">
-          <!-- Search Bar -->
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-              </svg>
+          <form method="GET" action="" class="flex gap-2">
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+              <input type="text" name="search" value="{{ search_query }}" placeholder="Search equipment..." 
+                     class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-64">
             </div>
-            <input type="text" placeholder="Search equipment..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm w-64">
-          </div>
-          
-          <!-- Sort Dropdown -->
-          <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
-            <option>Sort by Name</option>
-            <option>Sort by Price</option>
-            <option>Sort by Availability</option>
-            <option>Sort by Date Added</option>
-          </select>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium">
+              Search
+            </button>
+            {% if search_query %}
+            <a href="?" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200 text-sm font-medium">
+              Clear
+            </a>
+            {% endif %}
+          </form>
         </div>
       </div>
     </div>
@@ -144,16 +151,20 @@
     <!-- Filter Tabs -->
     <div class="px-6 py-4 border-b border-gray-200">
       <div class="flex flex-wrap gap-2">
-        <a href="/equipments/list/" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 {% if request.path == '/equipments/list/' %}bg-blue-100 text-blue-700 border border-blue-200{% else %}text-gray-600 hover:text-gray-900 hover:bg-gray-50{% endif %}">
+        <a href="/equipments/list/{% if search_query %}?search={{ search_query }}{% endif %}" 
+           class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50">
           All Equipment
         </a>
-        <a href="/equipments/available/" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 {% if request.path == '/equipments/available/' %}bg-green-100 text-green-700 border border-green-200{% else %}text-gray-600 hover:text-gray-900 hover:bg-gray-50{% endif %}">
+        <a href="/equipments/available/{% if search_query %}?search={{ search_query }}{% endif %}" 
+           class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50">
           Available
         </a>
-        <a href="/equipments/rented/" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 {% if request.path == '/equipments/rented/' %}bg-purple-100 text-purple-700 border border-purple-200{% else %}text-gray-600 hover:text-gray-900 hover:bg-gray-50{% endif %}">
+        <a href="/equipments/rented/{% if search_query %}?search={{ search_query }}{% endif %}" 
+           class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 bg-purple-100 text-purple-700 border border-purple-200">
           Rented
         </a>
-        <a href="/equipments/maintenance/" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 {% if request.path == '/equipments/maintenance/' %}bg-amber-100 text-amber-700 border border-amber-200{% else %}text-gray-600 hover:text-gray-900 hover:bg-gray-50{% endif %}">
+        <a href="/equipments/maintenance/{% if search_query %}?search={{ search_query }}{% endif %}" 
+           class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50">
           Maintenance
         </a>
       </div>
@@ -162,80 +173,160 @@
     <!-- Equipment Grid -->
     <div class="p-6">
       {% if equipments %}
-      
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
           {% for equipment in equipments %}
-          {% if equipment.available_quantity != equipment.total_quantity %}
-          <div class="group bg-white border border-gray-200 rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-            
-            <!-- Equipment Image -->
+         <div class="group bg-white border border-gray-200 rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
             <div class="relative">
-              <!-- Status Badge -->
-              <div class="absolute top-3 left-3 z-10">
-                <span class="px-3 py-1 text-xs font-semibold rounded-full {% if equipment.available_quantity >= 3 %}bg-green-100 text-green-700{% elif equipment.available_quantity >= 1 %}bg-amber-100 text-amber-700{% else %}bg-red-100 text-red-700{% endif %}">
-                  {% if equipment.available_quantity == 0 %}
-                    Out of Stock
-                  {% else %}
-                    {{ equipment.available_quantity }} of {{ equipment.total_quantity }} Available
-                  {% endif %}
+              <!-- Rented Badge -->
+              <div class="absolute top-4 left-4 z-10">
+                <span class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-purple-500 text-white shadow-sm">
+                  RENTED
                 </span>
               </div>
               
-              <!-- Equipment ID Badge -->
-              <div class="absolute top-3 right-3 z-10">
-                <span class="px-2 py-1 text-xs font-medium bg-white/90 backdrop-blur-sm text-gray-600 rounded-md">
-                  #EQ00{{equipment.equipment_id}}
+              <div class="absolute top-4 right-4 z-10">
+                <span class="px-2.5 py-1 text-xs font-medium bg-black/10 backdrop-blur-sm text-gray-700 rounded-md border border-white/20">
+                  #EQ{{equipment.equipment_id}}
                 </span>
               </div>
               
-              <!-- Image Container -->
-              <div class="h-48 bg-gray-50 flex items-center justify-center p-4 group-hover:bg-gray-100 transition-colors duration-300">
-                <img class="w-full h-full object-contain" src="{{equipment.image.url}}" alt="{{equipment.name}}" loading="lazy">
+              <div class="h-52 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6 group-hover:from-gray-100 group-hover:to-gray-150 transition-all duration-300">
+                <img class="w-full h-24 object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300" 
+                     src="{{equipment.image.url}}" alt="{{equipment.name}}" loading="lazy">
               </div>
             </div>
 
-            <!-- Equipment Details -->
-            <div class="p-5">
-              <div class="mb-3">
-                <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">
+            <div class="p-6">
+              <div class="mb-4">
+                <h3 class="text-xl font-bold text-gray-900 mb-2 leading-tight group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">
                   {{equipment.name}}
                 </h3>
-                <div class="flex items-center justify-between mt-2">
-                  <p class="text-lg font-bold text-blue-600">₱{{equipment.daily_rate}}</p>
-                  <span class="text-xs text-gray-500">/day</span>
+                
+                <div class="flex items-baseline justify-between">
+                  <div class="flex items-baseline gap-1">
+                    <span class="text-2xl font-bold text-blue-600">₱{{equipment.daily_rate}}</span>
+                    <span class="text-sm font-medium text-gray-500">/day</span>
+                  </div>
+                  
+                  <div class="text-right">
+                    <div class="flex items-center gap-2">
+                      <div class="w-2 h-2 rounded-full bg-purple-500"></div>
+                      <span class="text-sm font-medium text-gray-600">In Use</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <!-- Action Buttons -->
-              <div class="flex gap-2 mt-4">
-                <a href="/equipments/edit/{{equipment.equipment_id}}" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 py-2.5 px-3 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-2 group">
-                  <svg class="w-4 h-4 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="mb-5">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-medium text-gray-500">Rental Status</span>
+                  <span class="text-xs font-semibold text-gray-700">{{equipment.available_quantity}}/{{equipment.total_quantity}} available</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  {% widthratio equipment.available_quantity equipment.total_quantity 100 as stock_percent %}
+                  <div class="h-2 rounded-full transition-all duration-500 {% if equipment.availability > 60 %}bg-green-500{% elif equipment.availability > 30 %}bg-amber-500{% else %}bg-red-500{% endif %}" 
+                       style="width: {{ stock_percent }}%">
+                  </div>
+                </div>
+                
+              </div>
+
+              <div class="flex gap-3">
+                <a href="/equipments/edit/{{equipment.equipment_id}}" 
+                   class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md group/btn">
+                  <svg class="w-4 h-4 group-hover/btn:rotate-12 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                   </svg>
                   Edit
                 </a>
                 
-                {% if equipment.available_quantity == equipment.total_quantity %}
-                <a href="/equipments/delete/{{equipment.equipment_id}}" class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 py-2.5 px-3 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-2 group">
-                  <svg class="w-4 h-4 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                  </svg>
-                  Delete
-                </a>
-                {% else %}
-                <div class="flex-1 bg-gray-100 text-gray-400 py-2.5 px-3 rounded-lg text-sm font-medium flex items-center justify-center gap-2 cursor-not-allowed">
+                <div class="flex-1 bg-gray-100 text-gray-500 border-2 border-gray-200 py-3 px-4 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 cursor-not-allowed">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18 21l-1.636-1.636m0 0L5.636 5.636"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                   </svg>
                   In Use
                 </div>
-                {% endif %}
               </div>
             </div>
           </div>
-          {% endif %}
           {% endfor %}
         </div>
+
+        <!-- Pagination -->
+        {% if equipments.has_other_pages %}
+        <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+          <div class="flex flex-1 justify-between sm:hidden">
+            {% if equipments.has_previous %}
+              <a href="?page={{ equipments.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                 class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                Previous
+              </a>
+            {% endif %}
+            {% if equipments.has_next %}
+              <a href="?page={{ equipments.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                 class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                Next
+              </a>
+            {% endif %}
+          </div>
+          
+          <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+            <div>
+              <p class="text-sm text-gray-700">
+                Showing
+                <span class="font-medium">{{ equipments.start_index }}</span>
+                to
+                <span class="font-medium">{{ equipments.end_index }}</span>
+                of
+                <span class="font-medium">{{ equipments.paginator.count }}</span>
+                results
+              </p>
+            </div>
+            
+            <div>
+              <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                {% if equipments.has_previous %}
+                  <a href="?page={{ equipments.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                     class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                    <span class="sr-only">Previous</span>
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                    </svg>
+                  </a>
+                {% endif %}
+
+                {% for num in equipments.paginator.page_range %}
+                  {% if equipments.number == num %}
+                    <span class="relative z-10 inline-flex items-center bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                      {{ num }}
+                    </span>
+                  {% elif num > equipments.number|add:'-3' and num < equipments.number|add:'3' %}
+                    <a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                       class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                      {{ num }}
+                    </a>
+                  {% elif num == equipments.number|add:'-4' or num == equipments.number|add:'3' %}
+                    <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
+                      ...
+                    </span>
+                  {% endif %}
+                {% endfor %}
+
+                {% if equipments.has_next %}
+                  <a href="?page={{ equipments.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                     class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                    <span class="sr-only">Next</span>
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                    </svg>
+                  </a>
+                {% endif %}
+              </nav>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
       {% else %}
         <!-- Empty State -->
         <div class="text-center py-12">
@@ -244,23 +335,47 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
             </svg>
           </div>
-          <h3 class="text-lg font-medium text-gray-900 mb-1">No equipment found</h3>
-          <p class="text-gray-500 mb-4">Start by adding your first piece of equipment to the inventory.</p>
-          <a href="/equipments/add/" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+          <h3 class="text-lg font-medium text-gray-900 mb-1">
+            {% if search_query %}
+              No rented equipment found for "{{ search_query }}"
+            {% else %}
+              No equipment currently rented
+            {% endif %}
+          </h3>
+          <p class="text-gray-500 mb-4">
+            {% if search_query %}
+              Try adjusting your search terms or view all equipment.
+            {% else %}
+              All equipment is currently available for rental.
+            {% endif %}
+          </p>
+          {% if search_query %}
+            <a href="?" class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 mr-3">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+              View All Rented
+            </a>
+          {% endif %}
+          <a href="/equipments/available/" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            Add Equipment
+            View Available Equipment
           </a>
         </div>
       {% endif %}
     </div>
   </div>
-
-  
-
- 
-
 </div>
-{% endblock 'content' %}
 
+<style>
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>
+
+{% endblock 'content' %}

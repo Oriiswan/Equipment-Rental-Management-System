@@ -118,6 +118,9 @@ def pickup_confirmation(request, rental_id):
         # Mark as picked up
         record.status = 'Active'
         record.is_pickup = True
+        equipment = record.equipment
+        equipment.available_quantity -= 1
+        equipment.save()
         record.save()
         
         # If this is the first time being picked up, reduce available quantity
@@ -251,7 +254,7 @@ def edit_booking(request, rental_id):
             })
         
         # If equipment changed and booking is active/pickup/overdue, check availability
-        if old_equipment != new_equipment and old_status in ['active', 'pickup', 'overdue']:
+        if old_equipment != new_equipment and old_status in ['Active', 'Pickup', 'Overdue']:
             new_equipment.sync_available_quantity()
             if new_equipment.available_quantity <= 0:
                 messages.error(request, 'Selected equipment is not available')
@@ -275,6 +278,7 @@ def edit_booking(request, rental_id):
         booking.equipment = new_equipment
         booking.rental_date = rental_date
         booking.due_date = due_date
+        
         booking.save()
         
         messages.success(request, 'Booking updated successfully!')
@@ -722,17 +726,14 @@ def add_booking(request):
             if status == 'Overdue':
                 notify_overdue_booking(new_rental)
             elif status == 'Active':
-               
-                pass
+                equipment.available_quantity -= 1
+                equipment.save()
             elif status == 'Pickup':
                 notify_today_booking(new_rental)
             else:  
                 notify_reserved_booking(new_rental)
 
-            # Adjust equipment quantity only if the rental is starting now or earlier
-            if now >= rental_date:
-                equipment.available_quantity -= 1
-                equipment.save()
+            
 
             messages.success(request, "Booking created successfully!")
             return redirect('booking_list')
