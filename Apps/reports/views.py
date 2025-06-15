@@ -61,7 +61,7 @@ def reports_dashboard(request):
     top_customers = get_top_customers()
   
     repeat_customers = calculate_repeat_customer_percentage()
-
+    monthly_revenue_data = get_monthly_revenue_chart_data(end_date.year)
 
     
     rental_summary = get_rental_summary()
@@ -100,9 +100,22 @@ def reports_dashboard(request):
         'start_date': start_date,
         'end_date': end_date,
         'price': 20000,
+        'monthly_revenue_data': monthly_revenue_data,
     }
     
     return render(request, 'apps/reports/dashboard.html', context)
+
+
+
+def get_monthly_revenue_chart_data(year):
+  
+    monthly_data = []
+    
+    for month in range(1, 13):
+        revenue = calculate_monthly_revenue(year, month)
+        monthly_data.append(float(revenue))
+    
+    return monthly_data
 
 def calculate_total_revenue():
     
@@ -114,12 +127,7 @@ def calculate_total_revenue():
         if r.revenue:
             total += r.revenue
     
-    # Revenue from active/overdue rentals (projected)
-    # active_rentals = rental.objects.filter(status__in=['Active', 'Overdue'])
-    # for r in active_rentals:
-    #     if r.total_amount_afterdue:
-    #         total += r.total_amount_afterdue
-            
+     
     return total
 
 def calculate_monthly_revenue(year, month):
@@ -138,8 +146,7 @@ def calculate_monthly_revenue(year, month):
     for r in month_rentals:
         if r.status == 'Returned' and r.revenue:
             monthly_revenue += r.revenue
-        # elif r.status in ['Active', 'Overdue']:
-        #     monthly_revenue += r.total_amount or Decimal('0.00')
+       
             
     return monthly_revenue
 
@@ -153,8 +160,7 @@ def calculate_ytd_revenue(year):
     for r in ytd_rentals:
         if r.status == 'Returned' and r.revenue:
             ytd_revenue += r.revenue
-        # elif r.status in ['Active', 'Overdue'] and r.total_amount:
-        #     ytd_revenue += r.total_amount
+       
             
     return ytd_revenue
 
@@ -174,8 +180,10 @@ def get_equipment_analytics():
     for equipment in Equipments.objects.all():
        
         equipment_rentals = rental.objects.filter(equipment=equipment)
+        equipment_rental = rental.objects.filter(equipment=equipment).exclude(Q(status='Cancelled')| Q(status='Pending') )
+        utilization = equipment_rental.filter(Q(status = 'Active') | Q(status = 'Overdue')).count() / equipment.total_quantity * 100
         
-        rental_count = equipment_rentals.count()
+        rental_count = equipment_rentals.filter(Q(status='Active') | Q(status='Overdue') | Q(status='Returned')).count()
         total_revenue = Decimal('0.00')
         
         for r in equipment_rentals:
@@ -188,7 +196,7 @@ def get_equipment_analytics():
             'equipment_id': equipment.equipment_id,
             'name': equipment.name,
             'category': equipment.category,
-            'utilization': equipment.utilization,
+            'utilization': utilization,
             'rental_count': rental_count,
             'total_revenue': total_revenue,
             'avg_duration': calculate_avg_duration_for_equipment(equipment),
@@ -301,7 +309,7 @@ def get_rental_summary():
  
     all_rentals = rental.objects.all()
     
-    total = all_rentals.count()
+    total = all_rentals.exclude(Q(status='Pending'), Q(status='Cancelled')).count()
     active = all_rentals.filter(status='Active').count()
     pending = all_rentals.filter(status='Pending').count()
     overdue = all_rentals.filter(status='Overdue').count()
@@ -329,21 +337,20 @@ def get_rental_summary():
     }
 
 def calculate_avg_duration_for_equipment(equipment):
-
     equipment_rentals = rental.objects.filter(
         equipment=equipment,
         status='Returned',
         return_date__isnull=False
     )
     
-    if equipment_rentals.exists():
-        total_days = sum(
-            (r.return_date - r.rental_date).days 
-            for r in equipment_rentals
-        )
-        return round(total_days / equipment_rentals.count(), 1)
+    count = equipment_rentals.count()
+    if count > 0:
+        total_days = sum(r.duration for r in equipment_rentals)
+        average = total_days / count
+        return round(average, 1)
     
     return 0
+
 
 
 

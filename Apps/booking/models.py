@@ -158,4 +158,7 @@ class rental(models.Model):
     def save(self, *args, **kwargs):
         self.calculated_amount = self.total_amount  # Uses your property
         super().save(*args, **kwargs)
-    
+    @property
+    def duration(self):
+        if self.return_date:
+         return (self.return_date - self.rental_date).days

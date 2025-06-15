@@ -2,18 +2,10 @@
 {% block 'nav' %}Reports{% endblock 'nav' %}
 {% block 'content' %}
 
-<div class='p-6  mx-auto pb-10'>
+<div class='p-3  mx-auto pb-10'>
   
 
-  <div class="mb-8">
-    <div class="flex justify-between items-center">
-      <div>
-        <h1 class="text-3xl font-bold text-gray-900">Business Reports</h1>
-        <p class="text-gray-600 mt-1">Comprehensive analytics and insights for your rental business</p>
-      </div>
-     
-    </div>
-  </div>
+
 
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -298,7 +290,7 @@
             <td class="px-6 py-4">
               <div class="flex items-center">
                 <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
-                  <div class="h-2 rounded-full {% if equipment.utilization > 75 %}bg-green-500{% elif equipment.utilization > 50 %}bg-blue-500{% elif equipment.utilization > 25 %}bg-amber-500{% else %}bg-red-500{% endif %}" 
+                  <div class="h-2 rounded-full {% if utilization > 75 %}bg-green-500{% elif equipment.utilization > 50 %}bg-blue-500{% elif equipment.utilization > 25 %}bg-amber-500{% else %}bg-red-500{% endif %}" 
                        style="width: {{equipment.utilization}}%"></div>
                 </div>
                 <span class="text-sm font-medium">{{equipment.utilization}}%</span>
@@ -342,17 +334,29 @@
 
 const ctx = document.getElementById('revenueChart');
 if (ctx) {
+  
+  const monthlyRevenue = [
+    {% for revenue in monthly_revenue_data %}
+      {{ revenue }}{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ];
+
   new Chart(ctx, {
     type: 'line',
     data: {
       labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
       datasets: [{
-        label: 'Revenue',
-        data: [0, 0, 0, 0, 0, {{total_revenue}}, 0, 0, 0, 0, 0, 0],
+        label: 'Revenue (₱)',
+        data: monthlyRevenue,
         borderColor: 'rgb(59, 130, 246)',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
         tension: 0.4,
-        fill: true
+        fill: true,
+        pointBackgroundColor: 'rgb(59, 130, 246)',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6
       }]
     },
     options: {
@@ -361,6 +365,18 @@ if (ctx) {
       plugins: {
         legend: {
           display: false
+        },
+        tooltip: {
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          borderColor: 'rgb(59, 130, 246)',
+          borderWidth: 1,
+          callbacks: {
+            label: function(context) {
+              return 'Revenue: ₱' + context.parsed.y.toLocaleString();
+            }
+          }
         }
       },
       scales: {
@@ -368,6 +384,11 @@ if (ctx) {
           beginAtZero: true,
           grid: {
             color: 'rgba(0, 0, 0, 0.1)'
+          },
+          ticks: {
+            callback: function(value) {
+              return '₱' + value.toLocaleString();
+            }
           }
         },
         x: {
@@ -375,6 +396,10 @@ if (ctx) {
             display: false
           }
         }
+      },
+      interaction: {
+        intersect: false,
+        mode: 'index'
       }
     }
   });
