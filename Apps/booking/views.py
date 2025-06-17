@@ -13,7 +13,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
-from utils.zapier import notify_overdue_booking, notify_today_booking, notify_reserved_booking, notify_duedate_booking
+from utils.zapier import notify_overdue_booking, notify_today_booking, notify_reserved_booking, notify_duedate_booking,notify_pickup_booking
 from datetime import date
 from django.utils import timezone
 
@@ -122,6 +122,7 @@ def pickup_confirmation(request, rental_id):
         equipment.available_quantity -= 1
         equipment.save()
         record.save()
+        notify_today_booking(record)
         
         # If this is the first time being picked up, reduce available quantity
         if record.status == 'Pickup':
@@ -231,6 +232,7 @@ def booking_list_today(request):
     })
 @login_required
 def edit_booking(request, rental_id):
+    now = timezone.now().date()
     booking = rental.objects.get(rental_id=rental_id)
     old_equipment = booking.equipment
     old_status = booking.status
@@ -278,7 +280,14 @@ def edit_booking(request, rental_id):
         booking.equipment = new_equipment
         booking.rental_date = rental_date
         booking.due_date = due_date
-        
+        if now > due_date:
+            notify_overdue_booking(booking)
+        elif now > rental_date:
+            notify_today_booking(booking)
+        elif now == rental_date:
+             notify_pickup_booking(booking)
+        elif now < rental_date:
+             notify_reserved_booking(booking)
         booking.save()
         
         messages.success(request, 'Booking updated successfully!')
@@ -729,7 +738,7 @@ def add_booking(request):
                 equipment.available_quantity -= 1
                 equipment.save()
             elif status == 'Pickup':
-                notify_today_booking(new_rental)
+                notify_pickup_booking(new_rental)
             else:  
                 notify_reserved_booking(new_rental)
 
