@@ -20,7 +20,7 @@ from django.utils import timezone
 def update_rental_statuses():
     """Update all rental statuses based on current date"""
     today = timezone.now().date()  # Using timezone-aware date
-    rentals_to_update = rental.objects.exclude(status__in=['returned', 'cancelled'])
+    rentals_to_update = rental.objects.exclude(status__in=['Returned', 'Cancelled'])
     updated_count = 0
     
     for rental_obj in rentals_to_update:

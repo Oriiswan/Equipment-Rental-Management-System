@@ -26,7 +26,7 @@ class rental(models.Model):
         help_text="Date when the equipment rental starts"
     )
     due_date = models.DateField(
-        help_text="Date when the equipment should be returned"
+        help_text="Date when the equipment should be returneds"
     )
     return_date = models.DateField(
         null=True, 

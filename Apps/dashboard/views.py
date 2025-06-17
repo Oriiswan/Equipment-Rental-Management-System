@@ -41,10 +41,10 @@ def info(request):
         'rented': total - avail,
         'available_percent': math.floor((avail / total) * 100) if total > 0 else 0,
         'rented_percent': math.floor(((total - avail) / total) * 100) if total > 0 else 0,
-        'overdue_count': rental.objects.filter(status='overdue').count(),
-        'returned_count': rental.objects.filter(status='returned').count(),
-        'active_count': rental.objects.filter(status='active').count(),
-        'pending_count': rental.objects.filter(status='pending').count(),
+        'overdue_count': rental.objects.filter(status='Overdue').count(),
+        'returned_count': rental.objects.filter(status='Returned').count(),
+        'active_count': records.filter(status='Active').count(),
+        'pending_count': rental.objects.filter(status='Pending').count(),
         'total': totals,
         'recent_activities': last_four,
         'recent_actcount': last_four.count(),
@@ -55,7 +55,7 @@ def info(request):
 def update_rental_statuses():
     """Update all rental statuses based on current date"""
     today = date.today()
-    rentals_to_update = rental.objects.exclude(status='returned').exclude(status='cancelled')
+    rentals_to_update = rental.objects.exclude(status=' Returned').exclude(status='Cancelled')
     updated_count = 0
     
     for rental_obj in rentals_to_update:
@@ -70,7 +70,7 @@ def update_rental_statuses():
         elif rental_obj.rental_date < today:
             new_status = 'Active'
         elif rental_obj.rental_date == today:
-            new_status = 'Pending'
+            new_status = 'Pickup'
         elif today > rental_obj.due_date:
             new_status = 'Overdue'
         
