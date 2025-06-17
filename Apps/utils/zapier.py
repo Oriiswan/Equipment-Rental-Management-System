@@ -11,6 +11,19 @@ def notify_overdue_booking(booking):
        'booking_id': booking.rental_id
      } 
      requests.post(webhook_url, json=data)
+     
+def notify_pickup_booking(booking):
+   if booking.status == "Pickup":
+     webhook_url = 'https://hooks.zapier.com/hooks/catch/23224648/uo3uid6/'
+     data ={
+       'customer_email': booking.customer.email,
+       'customer_name': f'{booking.customer.firstname} {booking.customer.lastname}',
+       'equipment': booking.equipment.name,
+       'due_date': str(booking.due_date),
+       'rental_date': str(booking.rental_date),
+       'booking_id': booking.rental_id
+     } 
+     requests.post(webhook_url, json=data)
 def notify_reserved_booking(booking):
    if booking.status == "Pending":
      webhook_url = 'https://hooks.zapier.com/hooks/catch/23224648/uyuy7el/'
